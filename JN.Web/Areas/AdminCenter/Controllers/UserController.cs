@@ -158,7 +158,6 @@ namespace JN.Web.Areas.AdminCenter.Controllers
             try
             {
                 var entity = new User();
-                var onUser = entity.ToModel<Data.User>();
                 TryUpdateModel(entity, fc.AllKeys);
 
                 if (string.IsNullOrEmpty(entity.UserName))
@@ -197,7 +196,7 @@ namespace JN.Web.Areas.AdminCenter.Controllers
                 wlog2.ResultMsg = "通过";
                 wlog2.UserName = entity.UserName;
                 MvcCore.Unity.Get<IWarningLogService>().Add(wlog2);
-                 LogDBTool.Commit();
+                LogDBTool.Commit();
                 #endregion
                 SysDBTool.Commit();
                 result.Status = 200;
@@ -225,7 +224,6 @@ namespace JN.Web.Areas.AdminCenter.Controllers
                 var entity = UserService.Single(x=>x.ID== userid);
                 var onUser = entity.ToModel<Data.User>();
                 TryUpdateModel(entity, fc.AllKeys);
-
                 if (string.IsNullOrEmpty(entity.UserName))
                     throw new Exception("用户名不能为空");
                 if (string.IsNullOrEmpty(entity.StudentNumber))
@@ -234,21 +232,16 @@ namespace JN.Web.Areas.AdminCenter.Controllers
                     throw new Exception("联系电话不能为空");
                 if (!Regex.IsMatch(entity.UserName, @"^[A-Za-z0-9_]+$"))
                     throw new Exception("用户名只能为字母、数字和下划线");
-                if (string.IsNullOrEmpty(entity.Password))
-                    throw new Exception("登录密码不能为空");
-                if (string.IsNullOrEmpty(entity.Password2))
-                    throw new Exception("支付密码不能为空");
                 if (UserService.List(x => x.UserName == entity.UserName&&x.ID!=entity.ID).Count() > 0)
                     throw new Exception("用户名已被使用");
                 if (UserService.List(x => x.StudentNumber == entity.StudentNumber && x.ID != entity.ID).Count() > 0)
                     throw new Exception("学号已被使用");
-
-                string passowrd = fc["passowrd"];
+                string passowrd = fc["resetpassowrd"];
                 if (!string.IsNullOrEmpty(passowrd))
                 {
                     entity.Password = passowrd.ToMD5().ToMD5();
                 }
-                string passowrd2 = fc["passowrd2"];
+                string passowrd2 = fc["resetpassowrd2"];
                 if (!string.IsNullOrEmpty(passowrd2))
                 {
                     entity.Password2 = passowrd2.ToMD5().ToMD5();
@@ -301,8 +294,7 @@ namespace JN.Web.Areas.AdminCenter.Controllers
                 {
                     throw new Exception("数据不存在");
                 }
-                UserService.Delete(id);
-                UserService.Update(model);
+                UserService.Delete(model.ID);
                 result.Status = 200;
                 result.Message = "操作成功";
                 SysDBTool.Commit();

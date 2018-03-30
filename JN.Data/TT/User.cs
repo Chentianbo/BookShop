@@ -399,6 +399,7 @@ namespace JN.Data
         public User()
         {
             ID = Guid.NewGuid().ToString();
+            CreateTime = DateTime.Now;
         }
         public void CreateSign()
         {

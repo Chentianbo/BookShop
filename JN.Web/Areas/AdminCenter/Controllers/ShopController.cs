@@ -156,14 +156,47 @@ namespace JN.Web.Areas.AdminCenter.Controllers
         [HttpPost]
         public ActionResult AddBookInfo(FormCollection fc)
         {
+            ReturnResult result = new ReturnResult();
             try
             {
               
                 var entity =new  JN.Data.BookInfo();
                 TryUpdateModel(entity, fc.AllKeys);
+                if (string.IsNullOrEmpty(entity.BookCategoryId))
+                {
+                    throw new Exception("请选择图书分类");
+                }
+                if (string.IsNullOrEmpty(entity.BookName))
+                {
+                    throw new Exception("请输入图书名称");
+                }
+                if (string.IsNullOrEmpty(entity.Author))
+                {
+                    throw new Exception("请输入作者");
+                }
+                if (string.IsNullOrEmpty(entity.ISBN))
+                {
+                    throw new Exception("请输入图书ISBN码");
+                }
+                if (entity.PrintDate==null)
+                {
+                    throw new Exception("请输入印刷日期");
+                }
+                if (entity.OlaPrice<=0)
+                {
+                    throw new Exception("请正确输入原价");
+                }
+                if (entity.CurrentPrice <= 0)
+                {
+                    throw new Exception("请正确输入售价");
+                }
+                if (entity.CurrentPrice < 0)
+                {
+                    throw new Exception("请正确输入运费");
+                }
                 HttpPostedFileBase file = Request.Files["ImageUrl"];
                 string imgurl = "";
-                if (!string.IsNullOrEmpty(file.FileName))
+                if (file!=null)
                 {
                     if (!FileValidation.IsAllowedExtension(file, new FileExtension[] { FileExtension.PNG, FileExtension.JPG, FileExtension.BMP }))
                     {
@@ -179,8 +212,7 @@ namespace JN.Web.Areas.AdminCenter.Controllers
                     }
                     catch
                     {
-                        ViewBag.ErrorMsg = "发布失败！";
-                        return View("Error");
+                        throw new Exception("封面上传失败");
                     }
                 }
                 entity.BookState = (int)BookState.Wait;
@@ -190,15 +222,18 @@ namespace JN.Web.Areas.AdminCenter.Controllers
                 entity.CreateSign();
                 BookInfoService.Add(entity);
                 SysDBTool.Commit();
-                ViewBag.SuccessMsg = "发布成功！";
-                return View("Success");
+               
+                result.Message = "发布成功";
+                result.Status = 200;
             }
             catch (Exception ex)
             {
                 logs.WriteErrorLog(HttpContext.Request.Url.ToString(), ex);
                 ViewBag.ErrorMsg = "发布失败！";
-                return View("Error");
+                result.Message = ex.Message;
+                result.Status = 500;
             }
+            return Json(result);
         }
 
         /// <summary>

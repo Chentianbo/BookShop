@@ -25,7 +25,7 @@
     <div class="innerLR">
         <div class="col-xs-12">
             <!-- PAGE CONTENT BEGINS -->
-            <form id="validation-form" class="form-horizontal" enctype="multipart/form-data" method="post" action="@Url.Action("AddBookInfo")">
+            <form id="validation-form" class="form-horizontal" enctype="multipart/form-data" method="post" action="@Url.Action("AddBookInfo")" onsubmit="return BeforePost()">
                 <div class="control-group">
                     <label class="control-label"></label>
                 </div>
@@ -258,9 +258,80 @@
 </div>
 @section scripts{
     <!-- page specific plugin styles -->
-    <script type="text/javascript" src="~/Plugin/xhEditor/xheditor.js"></script>
-    <script type="text/javascript" src="~/Plugin/xhEditor/xheditor_lang/zh-cn.js"></script>
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/js/jquery.form.js"></script>
     <script type="text/javascript">
+           $(document).ready(function() {
+           $("#validation-form").ajaxForm(function(data){
+               if(data.Status==200)
+               {
+                  alert(data.Message);
+                   window.location.reload();
+               }
+        else{
+          alert(data.Message);
+        }
+           });
+    });
+        function BeforePost()
+        {
+            var BookCategoty= $("select[name='BookCategotyId']").val();
+           if(BookCategoty==""){
+              alert("请选择分类");
+              $("select[name='BookCategotyId']").focus();
+              return false;
 
+          }
+
+           var name= $("input[name='BookName']").val();
+           if(name==""){
+              alert("图书名称不能为空");
+              $("input[name='BookName']").focus();
+              return false;
+
+          }
+         var Author= $("input[name='Author']").val();
+           if(Author==""){
+              alert("作者不能为空");
+              $("input[name='Author']").focus();
+             return false;
+          }
+        var ISBN= $("input[name='ISBN']").val();
+           if(ISBN==""){
+              alert("ISBN不能为空");
+             $("input[name='ISBN']").focus();
+             return false;
+
+          }
+         var PrintDate= $("input[name='PrintDate']").val();
+           if(PrintDate==""){
+              alert("印刷日期不能为空");
+              $("input[name='PrintDate']").focus();
+              return false;
+
+          }
+
+         var OlaPrice= $("input[name='OlaPrice']").val();
+           if(OlaPrice==""){
+              alert("请输入原价");
+               $("input[name='OlaPrice']").focus();
+              return false;
+          }
+
+         var CurrentPrice= $("input[name='CurrentPrice']").val();
+           if(CurrentPrice==""){
+              alert("请输入售价");
+               $("input[name='CurrentPrice']").focus();
+              return false;
+          }
+
+         var FreightPrice= $("input[name='FreightPrice']").val();
+           if(FreightPrice==""){
+              alert("请输入运费");
+               $("input[name='FreightPrice']").focus();
+              return false;
+          }
+        }
     </script>
 }
