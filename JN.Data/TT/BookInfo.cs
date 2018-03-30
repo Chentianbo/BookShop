@@ -100,7 +100,7 @@ namespace JN.Data
         /// </summary>  
 				[DisplayName("ProductCategoryId")]
 		        [MaxLength(50,ErrorMessage="最大长度为50")]
-		public string  ProductCategoryId { get; set; }
+		public string BookCategoryId { get; set; }
 		      
        
         
@@ -277,8 +277,13 @@ namespace JN.Data
 		
         public BookInfo()
         {
-             ID = Guid.NewGuid().ToString();
+            ID = Guid.NewGuid().ToString();
             CreateTime = DateTime.Now;
+        }
+        //生成加密串
+        public void CreateSign()
+        {
+            Sign = (BookName + Author + ISBN + BookCategoryId + CurrentPrice.ToString() + OlaPrice.ToString() + UId + BookState.ToString() + CreateTime + FreightPrice.ToString()).ToLower().ToMD5();
         }
       
     }

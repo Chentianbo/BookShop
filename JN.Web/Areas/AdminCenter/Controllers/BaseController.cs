@@ -124,7 +124,7 @@ namespace JN.Web.Areas.AdminCenter.Controllers
             foreach (var item in nameValues.AllKeys)
             {
                 if (item.Equals("datefiled"))
-                {
+                 {
                     if (!String.IsNullOrEmpty(nameValues["dateform"]) && !String.IsNullOrEmpty(nameValues["dateto"]))
                     {
                         DateTime startDate = nameValues["dateform"].ToDateTime().AddSeconds(-1);

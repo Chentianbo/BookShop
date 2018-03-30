@@ -1,8 +1,17 @@
-﻿@model JN.Data.ShopProduct
+﻿@model JN.Data.BookInfo
 @{
     string action = ViewContext.RouteData.Values["action"].ToString().ToLower();
     Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
 }
+<style>
+    form input, form select {
+        width: 370px;
+    }
+
+    form table {
+        border: 0;
+    }
+</style>
 <!-- Content -->
 <div id="content">
     <!-- Breadcrumb -->
@@ -16,44 +25,93 @@
     <div class="innerLR">
         <div class="col-xs-12">
             <!-- PAGE CONTENT BEGINS -->
-            <form id="validation-form" class="form-horizontal" enctype="multipart/form-data" method="post" action="@Url.Action("AddShop")">
+            <form id="validation-form" class="form-horizontal" enctype="multipart/form-data" method="post" action="@Url.Action("AddBookInfo")">
                 <div class="control-group">
                     <label class="control-label"></label>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="username">商品名称</label>
-
+                    <label class="control-label" for="BookCategotyId">所属分类</label>
                     <div class="controls">
                         <div class="clearfix">
-                            <input type="text" name="ProductName" value="" class="form-control" style="width:350px" />
+                            @Html.DropDownList("BookCategotyId", ViewData["BookCategory"] as SelectList, new { @class = "form-control" })
                         </div>
                     </div>
                 </div>
-
                 <div class="control-group">
-                    <label class="control-label" for="username">商品分类</label>
+                    <label class="control-label" for="BookName">图书名称</label>
 
                     <div class="controls">
                         <div class="clearfix">
-                            @*@Html.DropDownList("ProductCategotyId", new SelectList(@ViewBag.ProductCagetogy, "ID", "Name", Model.ProductCategotyId))*@
-                            @Html.DropDownList("ProductCategotyId", ViewData["ProductCagetogy"] as SelectList, new { @class = "form-control" })
+                            <input type="text" name="BookName" value="" class="form-control" />
                         </div>
                     </div>
                 </div>
-
                 <div class="control-group">
-                    <label class="control-label" for="realname">产品图片(JPG/PNG/GIF)</label>
+                    <label class="control-label" for="Author">作者</label>
 
                     <div class="controls">
                         <div class="clearfix">
-                            <img src="" id="productimg" height="80" />
-                            <input type="file" name="imgurl" class="form-control" />
+                            <input type="text" name="Author" value="" class="form-control" />
                         </div>
                     </div>
                 </div>
-
+                <div class="hr hr-dotted"></div>
                 <div class="control-group">
-                    <label class="control-label" for="phone">产品规格</label>
+                    <label class="control-label" for="AuthorIntroduction">作者简介</label>
+
+                    <div class="controls">
+                        <div class="clearfix">
+                            <textarea name="AuthorIntroduction" class=" span5" rows="4"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="realname">图书封面</label>
+                    <div class="controls">
+                        <div class="clearfix">
+                            <img src="" id="ImageUrl" height="80" />
+                            <input type="file" name="ImageUrl" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="ISBN">ISBN码</label>
+
+                    <div class="controls">
+                        <div class="clearfix">
+                            <input type="text" name="ISBN" value="" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="Publisher">出版社</label>
+
+                    <div class="controls">
+                        <div class="clearfix">
+                            <input type="text" name="Publisher" value="" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="Version">版本</label>
+
+                    <div class="controls">
+                        <div class="clearfix">
+                            <input type="text" name="Version" value="" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="PrintDate">印刷日期</label>
+
+                    <div class="controls">
+                        <div class="clearfix">
+                            <input type="date" name="PrintDate" value="" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="Spec">规格</label>
 
                     <div class="controls">
                         <div class="clearfix">
@@ -61,52 +119,125 @@
                         </div>
                     </div>
                 </div>
-
-
                 <div class="control-group">
-                    <label class="control-label" for="email">售价</label>
+                    <label class="control-label" for="PageCount">页数</label>
 
                     <div class="controls">
+                        <div class="clearfix">
+                            <input type="text" name="PageCount" value="" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="WordCount">字数</label>
+
+                    <div class="controls">
+                        <div class="clearfix">
+                            <input type="text" name="WordCount" value="" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="OlaPrice">原价</label>
+                    <div class="controls">
                         <div class="input-group">
-                            <input type="text" name="RealPrice" style="width:100px" value="" class="form-control" />
-                            元/<input type="text" name="Unit" maxlength="5" style="width:50px" class="form-control" value="" />（单位）
+                            <input type="text" name="OlaPrice" placeholder="每本的价格（单位元）" value="" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="CurrentPrice">售价</label>
+                    <div class="controls">
+                        <div class="input-group">
+                            <input type="text" name="CurrentPrice" value="" placeholder="每本的价格（单位元）" class="form-control" />
                         </div>
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <label class="control-label" for="email">运费</label>
+                    <label class="control-label" for="FreightPrice">运费</label>
 
                     <div class="controls">
                         <div class="input-group">
-                            <input type="text" name="FreightPrice" style="width:100px" value="" class="form-control" />
+                            <input type="text" name="FreightPrice" placeholder="单位元" style="width:250px" value="" class="form-control" />
                             <span style="line-height:30px; padding-left:10px"> *包邮请填“0”</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <label class="control-label" for="idcard">库存</label>
+                    <label class="control-label" for="BookCount">数量</label>
 
                     <div class="controls">
                         <div class="clearfix">
-                            <input type="text" name="Stock" value="" class="form-control" />
+                            <input type="text" name="BookCount" value="" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="hr hr-dotted"></div>
+                <div class="control-group">
+                    <label class="control-label" for="bankcard">图书简介</label>
+                    <div class="controls">
+                        <div class="clearfix">
+                            <textarea name="Introduction" class=" span5" rows="4"></textarea>
                         </div>
                     </div>
                 </div>
 
                 <div class="hr hr-dotted"></div>
-
                 <div class="control-group">
-                    <label class="control-label" for="bankcard">商品介绍</label>
+                    <label class="control-label" for="Catalog">目录</label>
 
                     <div class="controls">
                         <div class="clearfix">
-                            <textarea id="doccontent" name="content" class="wysihtml5 span9" rows="15"></textarea>
+                            <textarea name="Catalog" class=" span5" rows="4"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr hr-dotted"></div>
+                <div class="control-group">
+                    <label class="control-label" for="Preface">前言</label>
+
+                    <div class="controls">
+                        <div class="clearfix">
+                            <textarea name="Preface" class=" span5" rows="4"></textarea>
                         </div>
                     </div>
                 </div>
 
+                <!--译者 信息 start-->
+                <div class="control-group">
+                    <label class="control-label">是否译本</label>
+                    <div class="controls">
+                        <div>
+                            <input name="IsTranslate" value="true" type="radio" class="ace" />
+                            <span class="lbl"> 是</span>
+                            <input name="IsTranslate" value="false" checked="checked" type="radio" class="ace" />
+                            <span class="lbl"> 否</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="Translator">译者</label>
+                    <div class="controls">
+                        <div class="clearfix">
+                            <input type="text" name="Translator" value="" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="hr hr-dotted"></div>
+                <div class="control-group">
+                    <label class="control-label" for="TranslatorIntroduction">译者简介</label>
+
+                    <div class="controls">
+                        <div class="clearfix">
+                            <textarea name="TranslatorIntroduction" class="span5" rows="4"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <!--译者 end-->
                 <div class="hr hr-dotted"></div>
                 <div class="control-group">
                     <label class="control-label">&nbsp;</label>
@@ -121,7 +252,7 @@
                         </a>
                     </div>
                 </div>
-                </form>
+            </form>
         </div>
     </div>
 </div>

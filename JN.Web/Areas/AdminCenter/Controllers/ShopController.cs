@@ -128,13 +128,13 @@ namespace JN.Web.Areas.AdminCenter.Controllers
         }
 
         /// <summary>
-        /// 发布商品
+        /// 添加图书
         /// </summary>
         /// <returns></returns>
         public ActionResult Create()
         {
-            ViewData["ProductCagetogy"] = new SelectList(BookCategoryService.List().OrderBy(x => x.Sort).ToList(), "ID", "Name");
-            ActMessage = "发布产品";
+            ViewData["BookCategory"] = new SelectList(BookCategoryService.List().OrderBy(x => x.Sort).ToList(), "ID", "Name");
+            ActMessage = "添加图书";
             return View();
         }
 
@@ -154,14 +154,14 @@ namespace JN.Web.Areas.AdminCenter.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult AddShop(FormCollection fc)
+        public ActionResult AddBookInfo(FormCollection fc)
         {
             try
             {
               
                 var entity =new  JN.Data.BookInfo();
                 TryUpdateModel(entity, fc.AllKeys);
-                HttpPostedFileBase file = Request.Files["imgurl"];
+                HttpPostedFileBase file = Request.Files["ImageUrl"];
                 string imgurl = "";
                 if (!string.IsNullOrEmpty(file.FileName))
                 {
@@ -179,12 +179,15 @@ namespace JN.Web.Areas.AdminCenter.Controllers
                     }
                     catch
                     {
-                        //
+                        ViewBag.ErrorMsg = "发布失败！";
+                        return View("Error");
                     }
                 }
-                entity.CreateTime = DateTime.Now;
+                entity.BookState = (int)BookState.Wait;
                 entity.UId = Amodel.ID;
                 entity.ImageUrl = imgurl;
+                //加密
+                entity.CreateSign();
                 BookInfoService.Add(entity);
                 SysDBTool.Commit();
                 ViewBag.SuccessMsg = "发布成功！";
@@ -267,8 +270,12 @@ namespace JN.Web.Areas.AdminCenter.Controllers
         }
 
 
-
-        public ActionResult Delete(int id)
+        /// <summary>
+        /// 删除商品
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Delete(string id)
         {
             var model = BookInfoService.Single(id);
             if (model != null)
@@ -282,6 +289,13 @@ namespace JN.Web.Areas.AdminCenter.Controllers
             ViewBag.ErrorMsg = "记录不存在或已被删除！";
             return View("Error");
         }
+
+        /// <summary>
+        /// 订单
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
         public ActionResult Order(int? page, int? status)
         {
             ActMessage = "订单管理";
@@ -401,9 +415,14 @@ namespace JN.Web.Areas.AdminCenter.Controllers
         #region 书籍分类
 
         #region 书籍分类列表
+        /// <summary>
+        /// 书记分类列表
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns></returns>
         public ActionResult CategoryList(int? page)
         {
-            ActMessage = "商品分类管理";
+            ActMessage = "图书分类管理";
             var list = BookCategoryService.List().WhereDynamic(FormatQueryString(HttpUtility.ParseQueryString(Request.Url.Query))).OrderBy(x => x.Sort).ThenByDescending(x => x.CreateTime);
             if (Request["IsExport"] == "1")
             {
@@ -412,6 +431,46 @@ namespace JN.Web.Areas.AdminCenter.Controllers
                 return File(Server.MapPath("/upfile/" + FileName + ".xls"), "application/ms-excel", FileName + ".xls");
             }
             return View(list.ToPagedList(page ?? 1, 20));
+        }
+        #endregion
+
+        #region 删除图书分类
+        /// <summary>
+        /// 删除图书分类
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult DeleteCategory(string id)
+        {
+            ReturnResult result = new ReturnResult();
+            try
+            {
+                var model = BookCategoryService.Single(id);
+
+                var submodel = BookCategoryService.List(x => x.ParentId == id);
+                //改变下级分类 父id为0
+                foreach (var item in submodel)
+                {
+                    item.ParentId ="0";
+                    item.parentName = "";
+                    BookCategoryService.Update(item);
+                }
+                if (model == null)
+                {
+                    throw new Exception("该数据不存在");
+                }
+                ActPacket = model;
+                BookCategoryService.Delete(id);
+                SysDBTool.Commit();
+                result.Status = 200;
+                result.Message = "删除成功";
+            }
+            catch (Exception ex)
+            {
+                result.Status = 500;
+                result.Message = ex.Message;
+            }
+            return Json(result);
         }
         #endregion
 

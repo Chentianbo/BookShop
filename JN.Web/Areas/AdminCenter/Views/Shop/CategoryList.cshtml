@@ -149,11 +149,11 @@
 @section scripts{
 <script type="text/javascript">
             jQuery(function ($) {
-                $(".remove").on(ace.click_event, function () {
+                $(".remove").on("click", function () {
                     var id = $(this).attr("data-value");
-                    bootbox.confirm('您确定要删除该分类吗? 删除之后子级分类的父级将会改变！', function (result) {
+                    bootbox.confirm('您确定要删除该分类吗? 删除后该分类下一级分类将变成顶级分类！', function (result) {
                         if (result) {
-                              $.post('@(Url.Action("DeleteBookCategory"))', { id: id}, function (data) {
+                              $.post('@(Url.Action("DeleteCategory"))', { id: id}, function (data) {
                             if(data.Status == 200) {
                                 alert(data.Message);
                                 location.reload();

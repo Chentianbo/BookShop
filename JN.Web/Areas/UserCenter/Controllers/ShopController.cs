@@ -52,7 +52,7 @@ namespace JN.Web.Areas.UserCenter.Controllers
             }
             else
             {
-                list = BookInfoService.List(x => x.BookState == 0 && x.ProductCategoryId == c).WhereDynamic(FormatQueryString(HttpUtility.ParseQueryString(Request.Url.Query))).OrderByDescending(x => x.ID).ToList();
+                list = BookInfoService.List(x => x.BookState == 0 && x.BookCategoryId == c).WhereDynamic(FormatQueryString(HttpUtility.ParseQueryString(Request.Url.Query))).OrderByDescending(x => x.ID).ToList();
             }
 
             return View(list.ToPagedList(page ?? 1, 20));

@@ -1,7 +1,7 @@
 ﻿@{
     string action = ViewContext.RouteData.Values["action"].ToString().ToLower();
     Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
-    var list = MvcCore.Unity.Get<JN.Data.Service.IBookCategoryService>().List(x => x.ParentId == "" || x.ParentId == "0").ToList();//查找顶级
+    var list = MvcCore.Unity.Get<JN.Data.Service.IBookCategoryService>().List().ToList();//查找顶级
 }
 
 <div id="content">
@@ -35,14 +35,6 @@
                                             foreach (var cate in list)
                                             {
                                                 <option value="@cate.ID">@cate.Name</option>
-                                                var list2 = MvcCore.Unity.Get<JN.Data.Service.IBookCategoryService>().List(x => x.ParentId == cate.ID).ToList();//查找下一级
-                                                if (list2 != null)
-                                                {
-                                                    foreach (var cate2 in list2)
-                                                    {
-                                                        <option value="@cate2.ID">@cate2.Name</option>
-                                                    }
-                                                }
                                             }
                                         }
                                     }
