@@ -1,0 +1,124 @@
+﻿---------------------------------------------------
+类型：调试日志
+时间：2016/12/17 9:36:14
+内容：进入测试1
+---------------------------------------------------
+类型：调试日志
+时间：2016/12/17 9:36:15
+内容：进入测试2
+---------------------------------------------------
+类型：调试日志
+时间：2016/12/17 9:36:15
+内容：进入测试3
+---------------------------------------------------
+类型：调试日志
+时间：2016/12/17 9:36:19
+内容：进入测试4
+---------------------------------------------------
+类型：调试日志
+时间：2016/12/17 9:50:53
+内容：进入测试1
+---------------------------------------------------
+类型：调试日志
+时间：2016/12/17 9:50:53
+内容：进入测试2
+---------------------------------------------------
+类型：调试日志
+时间：2016/12/17 9:50:54
+内容：进入测试3
+---------------------------------------------------
+类型：调试日志
+时间：2016/12/17 9:50:56
+内容：进入测试4
+---------------------------------------------------
+类型：调试日志
+时间：2016/12/17 9:52:59
+内容：进入测试1
+---------------------------------------------------
+类型：调试日志
+时间：2016/12/17 9:52:59
+内容：进入测试2
+---------------------------------------------------
+类型：调试日志
+时间：2016/12/17 9:53:00
+内容：进入测试3
+---------------------------------------------------
+类型：调试日志
+时间：2016/12/17 9:53:02
+内容：进入测试4
+---------------------------------------------------
+来自页面：http://localhost:8280/AdminCenter/Finance/Delivery
+发生时间：2016/12/17 9:55:26
+异常对像：System.Data.Entity.Core.EntityClient.EntityConnection.Open
+错误追踪：   在 System.Data.Entity.Core.EntityClient.EntityConnection.Open()
+   在 System.Data.Entity.Core.Objects.ObjectContext.EnsureConnection(Boolean shouldMonitorTransactions)
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteInTransaction[T](Func`1 func, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction, Boolean releaseConnectionOnSuccess)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChangesToStore(SaveOptions options, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction)
+   在 System.Data.Entity.Core.Objects.ObjectContext.<>c__DisplayClass2a.<SaveChangesInternal>b__27()
+   在 System.Data.Entity.SqlServer.DefaultSqlExecutionStrategy.Execute[TResult](Func`1 operation)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChangesInternal(SaveOptions options, Boolean executeInExistingTransaction)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChanges(SaveOptions options)
+   在 System.Data.Entity.Internal.InternalContext.SaveChanges()
+   在 System.Data.Entity.Internal.LazyInternalContext.SaveChanges()
+   在 System.Data.Entity.DbContext.SaveChanges()
+   在 MvcCore.Service.DBTool.Commit()
+   在 JN.Services.Manager.Wallets.changeWallet(Int32 onUserID, Decimal changeMoney, Int32 coinid, String description) 位置 E:\工作\项目\十二月\wp16121501\HL16082801\JN.Services\Manager\Wallets.cs:行号 62
+   在 JN.Web.Areas.AdminCenter.Controllers.FinanceController.Delivery(FormCollection form) 位置 E:\工作\项目\十二月\wp16121501\HL16082801\JN.Web\Areas\AdminCenter\Controllers\FinanceController.cs:行号 75
+错误提示：基础提供程序在 Open 上失败。
+该事务管理器已经禁止了它对远程/网络事务的支持。 (异常来自 HRESULT:0x8004D024)
+---------------------------------------------------
+类型：调试日志
+时间：2016/12/17 9:55:55
+内容：进入测试1
+---------------------------------------------------
+类型：调试日志
+时间：2016/12/17 9:55:55
+内容：进入测试2
+---------------------------------------------------
+类型：调试日志
+时间：2016/12/17 9:55:55
+内容：进入测试3
+---------------------------------------------------
+类型：调试日志
+时间：2016/12/17 9:56:00
+内容：进入测试4
+---------------------------------------------------
+来自页面：http://localhost:8280/UserCenter/Home/AcceptHelp
+发生时间：2016/12/17 9:56:32
+异常对像：System.Data.Entity.Core.EntityClient.EntityConnection.Open
+错误追踪：   在 System.Data.Entity.Core.EntityClient.EntityConnection.Open()
+   在 System.Data.Entity.Core.Objects.ObjectContext.EnsureConnection(Boolean shouldMonitorTransactions)
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteInTransaction[T](Func`1 func, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction, Boolean releaseConnectionOnSuccess)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChangesToStore(SaveOptions options, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction)
+   在 System.Data.Entity.Core.Objects.ObjectContext.<>c__DisplayClass2a.<SaveChangesInternal>b__27()
+   在 System.Data.Entity.SqlServer.DefaultSqlExecutionStrategy.Execute[TResult](Func`1 operation)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChangesInternal(SaveOptions options, Boolean executeInExistingTransaction)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChanges(SaveOptions options)
+   在 System.Data.Entity.Internal.InternalContext.SaveChanges()
+   在 System.Data.Entity.Internal.LazyInternalContext.SaveChanges()
+   在 System.Data.Entity.DbContext.SaveChanges()
+   在 MvcCore.Service.DBTool.Commit()
+   在 JN.Services.Manager.Wallets.changeWallet(Int32 onUserID, Decimal changeMoney, Int32 coinid, String description) 位置 E:\工作\项目\十二月\wp16121501\HL16082801\JN.Services\Manager\Wallets.cs:行号 62
+   在 JN.Web.Areas.UserCenter.Controllers.HomeController.AcceptHelp(FormCollection fc) 位置 E:\工作\项目\十二月\wp16121501\HL16082801\JN.Web\Areas\UserCenter\Controllers\HomeController.cs:行号 466
+错误提示：基础提供程序在 Open 上失败。
+该事务管理器已经禁止了它对远程/网络事务的支持。 (异常来自 HRESULT:0x8004D024)
+---------------------------------------------------
+来自页面：http://localhost:8280/UserCenter/Home/AcceptHelp
+发生时间：2016/12/17 9:59:33
+异常对像：System.Data.Entity.Core.EntityClient.EntityConnection.Open
+错误追踪：   在 System.Data.Entity.Core.EntityClient.EntityConnection.Open()
+   在 System.Data.Entity.Core.Objects.ObjectContext.EnsureConnection(Boolean shouldMonitorTransactions)
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteInTransaction[T](Func`1 func, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction, Boolean releaseConnectionOnSuccess)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChangesToStore(SaveOptions options, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction)
+   在 System.Data.Entity.Core.Objects.ObjectContext.<>c__DisplayClass2a.<SaveChangesInternal>b__27()
+   在 System.Data.Entity.SqlServer.DefaultSqlExecutionStrategy.Execute[TResult](Func`1 operation)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChangesInternal(SaveOptions options, Boolean executeInExistingTransaction)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChanges(SaveOptions options)
+   在 System.Data.Entity.Internal.InternalContext.SaveChanges()
+   在 System.Data.Entity.Internal.LazyInternalContext.SaveChanges()
+   在 System.Data.Entity.DbContext.SaveChanges()
+   在 MvcCore.Service.DBTool.Commit()
+   在 JN.Services.Manager.Wallets.changeWallet(Int32 onUserID, Decimal changeMoney, Int32 coinid, String description) 位置 E:\工作\项目\十二月\wp16121501\HL16082801\JN.Services\Manager\Wallets.cs:行号 62
+   在 JN.Web.Areas.UserCenter.Controllers.HomeController.AcceptHelp(FormCollection fc) 位置 E:\工作\项目\十二月\wp16121501\HL16082801\JN.Web\Areas\UserCenter\Controllers\HomeController.cs:行号 466
+错误提示：基础提供程序在 Open 上失败。
+该事务管理器已经禁止了它对远程/网络事务的支持。 (异常来自 HRESULT:0x8004D024)

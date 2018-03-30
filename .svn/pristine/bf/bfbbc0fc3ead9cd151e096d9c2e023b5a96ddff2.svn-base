@@ -1,0 +1,70 @@
+﻿@{
+    var sysEntity = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 10000);
+    Layout = "~/Areas/UserCenter/Views/Shared/_Layout" + sysEntity.Theme + ".cshtml";
+}
+<link href="/Theme/metronic/css/portfolio.css" rel="stylesheet" type="text/css" />
+<link href="~/Theme/global/plugins/fancybox/source/jquery.fancybox.css" rel="stylesheet" />
+<!-- page specific plugin styles -->
+<link rel="stylesheet" href="/assets/css/jquery-ui-1.10.3.custom.min.css" />
+<link href="~/Theme/mmm/css/store_style.css" rel="stylesheet" />
+        <div class="widget" id="tab_2">
+            <!-- BEGIN FILTER -->
+            <div class="filter-v1 margin-top-10">
+                <div class="widget-head">
+                    <h4 class="heading">推荐商品</h4>
+                </div>
+
+                @*<div class="class_list">
+                    <ul class="item">
+                        <li class="filter" data-filter="all">
+                            <a href="">日用品</a>
+                        </li>
+                        <li class="filter" data-filter="all">
+                            <a href="">酒类</a>
+                        </li>
+                        <li class="filter" data-filter="all">
+                            <a href="">酒类</a>
+                        </li>
+                        <li class="filter" data-filter="all">
+                            <a href="">酒类</a>
+                        </li>
+                        <li class="filter" data-filter="all">
+                            <a href="">酒类</a>
+                        </li>
+                    </ul>
+                </div>*@
+               
+                <div class="row thumbnails">
+                    @{
+                        var pList = MvcCore.Unity.Get<JN.Data.Service.IShopProductService>().List(x => x.IsSales).OrderByDescending(x => x.IsTop).ThenBy(x => x.Hits).ToList();
+                        if (pList.Count > 0)
+                        {
+                            foreach (var product in pList)
+                            {
+                                <div class="col-md-3 col-sm-6 mix category_1">
+                                    <div class="mix-inner">
+                                        <a href="@(Url.Action("Detail", new {  ID = product.ID}))" class="img_box"><img class="img-responsive" src="@product.ImageUrl"></a>
+                                        <div class="mix-details">
+                                            <h5>@product.ProductName</h5>
+                                            <p>
+                                                售价：<span>@product.RealPrice.ToString("F2")</span>
+                                                <a href="@(Url.Action("Detail", new {  ID = product.ID}))" class="buy_btn" data-rel="tooltip" title="@T("编辑商品")">
+                                                    @T("立即购买")
+                                                </a>
+                                            </p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+
+            </div>
+            <!-- END FILTER -->
+        </div>
+        
+
+

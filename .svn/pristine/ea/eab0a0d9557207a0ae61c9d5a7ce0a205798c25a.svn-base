@@ -1,0 +1,112 @@
+﻿@model JN.Data.User
+@{
+    var sysEntity = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 10000);
+    Layout = "~/Areas/UserCenter/Views/Shared/_Layout" + sysEntity.Theme + ".cshtml";
+}
+<!-- page specific plugin styles -->
+<div class="mainarea" id="mainarea">
+    <div class="maintitle">
+        <div class="maintitleleft">
+            <b>@T("升级经理") </b>
+
+        </div>
+        <div class="maintitleright">
+            <a href="/usercenter/home">@T("首页")</a>
+            &nbsp;/&nbsp;
+            <a href="">@T("升级经理")  </a>
+        </div>
+    </div>
+    <div class="mainoprate">
+        <div class="row">
+            <div class="table-responsive">
+                <!-- PAGE CONTENT BEGINS -->
+                @using (Ajax.BeginForm("ApplyAgent", new { }, new AjaxOptions() { HttpMethod = "Post", OnSuccess = "afterPost" }, new { id = "saveForm", @class = "form-horizontal" }))
+                {
+                    <div class="form-group">
+                        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="phone">@T("您当前的级别"):</label>
+                        <div class="col-xs-12 col-sm-6">
+                            <span style="margin-top: 5px;float: left;">@(Model.AgentLevel == 1 ? "经理" : Model.AgentLevel == 2 ? "高级经理": "普通会员")</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="realname">@T("申请等级"):</label>
+                        <div class="col-xs-12 col-sm-6">
+                            <div class="clearfix">
+                                <select name="type" class="form-control">
+                                    
+                                    @if((Model.AgentLevel ?? 0) == 0)
+                    {
+                    <option value="1">@T("经理")</option>
+                    <option value="2">@T("高级经理")</option>
+                    }else if(Model.AgentLevel==1)
+                    {
+                     <option value="2">@T("高级经理")</option>
+                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*<div class="form-group">
+                            <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username">@T("申请会员编号"):</label>
+                            <div class="col-xs-12 col-sm-6">
+                                <div class="clearfix">
+                                    <input type="text" name="username" class="form-control" value="" />
+                                </div>
+                            </div>
+                        </div>*@
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="phone">@T("新经理编号"):</label>
+                        <div class="col-xs-12 col-sm-6">
+                            <input type="text" name="agentname" class="form-control" value="@ViewBag.CurrentUser" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="phone">@T("申请备注"):</label>
+                        <div class="col-xs-12 col-sm-5">
+                            <textarea name="agentremark" class="form-control"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="hr hr-dotted"></div>
+
+                    <div class="clearfix form-actions">
+                        <div class="col-md-offset-3 col-md-9">
+                            <button class="btn btn-info" type="submit">
+                                <i class="icon-ok bigger-110"></i>
+                                @T("申请升级")
+                            </button>
+
+                            &nbsp; &nbsp; &nbsp;
+                            <button class="btn" type="reset">
+                                <i class="icon-undo bigger-110"></i>
+                                @T("重置")
+                            </button>
+                        </div>
+                    </div>
+                }
+
+                <!-- PAGE CONTENT ENDS -->
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div>
+</div>
+        <!-- page specific plugin scripts -->
+        <!--[if lte IE 8]>
+          <script src="/assets/js/excanvas.min.js"></script>
+        <![endif]-->
+        <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+        <script type="text/javascript">
+            function afterPost(data) {
+                if (data.Status == 200) {
+                    alert("您已成功申请升级经理");
+                    location.href = "@(Url.Action("applyagent"))";
+                } else {
+                    alert("升级失败！错误信息：" + data.Message);
+                }
+            }
+        </script>

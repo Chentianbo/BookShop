@@ -1,0 +1,54 @@
+﻿---------------------------------------------------
+来自页面：http://localhost:41520/UserCenter/Home/Index?adminloginname=2
+发生时间：2016/9/5 10:57:11
+异常对像：System.Data.Entity.Core.EntityClient.EntityConnection.BeginDbTransaction
+错误追踪：   在 System.Data.Entity.Core.EntityClient.EntityConnection.BeginDbTransaction(IsolationLevel isolationLevel)
+   在 System.Data.Entity.Core.EntityClient.EntityConnection.BeginTransaction()
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteInTransaction[T](Func`1 func, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction, Boolean releaseConnectionOnSuccess)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChangesToStore(SaveOptions options, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction)
+   在 System.Data.Entity.Core.Objects.ObjectContext.<>c__DisplayClass2a.<SaveChangesInternal>b__27()
+   在 System.Data.Entity.SqlServer.DefaultSqlExecutionStrategy.Execute[TResult](Func`1 operation)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChangesInternal(SaveOptions options, Boolean executeInExistingTransaction)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChanges(SaveOptions options)
+   在 System.Data.Entity.Internal.InternalContext.SaveChanges()
+   在 System.Data.Entity.Internal.LazyInternalContext.SaveChanges()
+   在 System.Data.Entity.DbContext.SaveChanges()
+   在 MvcCore.Service.DBTool.Commit()
+   在 JN.Services.Manager.Wallets.changeWallet(Int32 onUserID, Decimal changeMoney, Int32 coinid, String description) 位置 d:\NET项目\HL16082801\HL16082801\JN.Services\Manager\Wallets.cs:行号 65
+   在 JN.Services.Manager.Bonus.ExpireBonus() 位置 d:\NET项目\HL16082801\HL16082801\JN.Services\Manager\Bonus.cs:行号 709
+   在 JN.Web.Areas.UserCenter.Controllers.BaseController.OnActionExecuting(ActionExecutingContext filterContext) 位置 d:\NET项目\HL16082801\HL16082801\JN.Web\Areas\UserCenter\Controllers\BaseController.cs:行号 32
+   在 System.Web.Mvc.Controller.System.Web.Mvc.IActionFilter.OnActionExecuting(ActionExecutingContext filterContext)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.AsyncInvocationWithFilters.InvokeActionMethodFilterAsynchronouslyRecursive(Int32 filterIndex)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass33.<BeginInvokeActionMethodWithFilters>b__31(AsyncCallback asyncCallback, Object asyncState)
+   在 System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResult`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   在 System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.BeginInvokeActionMethodWithFilters(ControllerContext controllerContext, IList`1 filters, ActionDescriptor actionDescriptor, IDictionary`2 parameters, AsyncCallback callback, Object state)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<BeginInvokeAction>b__19(AsyncCallback asyncCallback, Object asyncState)
+错误提示：在提供程序连接上启动事务时出错。有关详细信息，请参阅内部异常。
+---------------------------------------------------
+来自页面：http://localhost:41520/UserCenter/Home/Index?adminloginname=2
+发生时间：2016/9/5 10:58:08
+异常对像：System.Data.Entity.Core.EntityClient.EntityConnection.BeginDbTransaction
+错误追踪：   在 System.Data.Entity.Core.EntityClient.EntityConnection.BeginDbTransaction(IsolationLevel isolationLevel)
+   在 System.Data.Entity.Core.EntityClient.EntityConnection.BeginTransaction()
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteInTransaction[T](Func`1 func, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction, Boolean releaseConnectionOnSuccess)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChangesToStore(SaveOptions options, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction)
+   在 System.Data.Entity.Core.Objects.ObjectContext.<>c__DisplayClass2a.<SaveChangesInternal>b__27()
+   在 System.Data.Entity.SqlServer.DefaultSqlExecutionStrategy.Execute[TResult](Func`1 operation)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChangesInternal(SaveOptions options, Boolean executeInExistingTransaction)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChanges(SaveOptions options)
+   在 System.Data.Entity.Internal.InternalContext.SaveChanges()
+   在 System.Data.Entity.Internal.LazyInternalContext.SaveChanges()
+   在 System.Data.Entity.DbContext.SaveChanges()
+   在 MvcCore.Service.DBTool.Commit()
+   在 JN.Services.Manager.Wallets.changeWallet(Int32 onUserID, Decimal changeMoney, Int32 coinid, String description) 位置 d:\NET项目\HL16082801\HL16082801\JN.Services\Manager\Wallets.cs:行号 64
+   在 JN.Services.Manager.Bonus.ExpireBonus() 位置 d:\NET项目\HL16082801\HL16082801\JN.Services\Manager\Bonus.cs:行号 709
+   在 JN.Web.Areas.UserCenter.Controllers.BaseController.OnActionExecuting(ActionExecutingContext filterContext) 位置 d:\NET项目\HL16082801\HL16082801\JN.Web\Areas\UserCenter\Controllers\BaseController.cs:行号 32
+   在 System.Web.Mvc.Controller.System.Web.Mvc.IActionFilter.OnActionExecuting(ActionExecutingContext filterContext)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.AsyncInvocationWithFilters.InvokeActionMethodFilterAsynchronouslyRecursive(Int32 filterIndex)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass33.<BeginInvokeActionMethodWithFilters>b__31(AsyncCallback asyncCallback, Object asyncState)
+   在 System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResult`1.CallBeginDelegate(AsyncCallback callback, Object callbackState)
+   在 System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.Begin(AsyncCallback callback, Object state, Int32 timeout)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.BeginInvokeActionMethodWithFilters(ControllerContext controllerContext, IList`1 filters, ActionDescriptor actionDescriptor, IDictionary`2 parameters, AsyncCallback callback, Object state)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<BeginInvokeAction>b__19(AsyncCallback asyncCallback, Object asyncState)
+错误提示：在提供程序连接上启动事务时出错。有关详细信息，请参阅内部异常。

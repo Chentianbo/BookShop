@@ -1,0 +1,20 @@
+﻿---------------------------------------------------
+来自页面：http://localhost:41520/UserCenter/Home/FinshPay
+发生时间：2016/7/29 17:57:36
+异常对像：System.Data.Entity.Core.EntityClient.EntityConnection.Open
+错误追踪：   在 System.Data.Entity.Core.EntityClient.EntityConnection.Open()
+   在 System.Data.Entity.Core.Objects.ObjectContext.EnsureConnection(Boolean shouldMonitorTransactions)
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteInTransaction[T](Func`1 func, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction, Boolean releaseConnectionOnSuccess)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChangesToStore(SaveOptions options, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction)
+   在 System.Data.Entity.Core.Objects.ObjectContext.<>c__DisplayClass2a.<SaveChangesInternal>b__27()
+   在 System.Data.Entity.SqlServer.DefaultSqlExecutionStrategy.Execute[TResult](Func`1 operation)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChangesInternal(SaveOptions options, Boolean executeInExistingTransaction)
+   在 System.Data.Entity.Core.Objects.ObjectContext.SaveChanges(SaveOptions options)
+   在 System.Data.Entity.Internal.InternalContext.SaveChanges()
+   在 System.Data.Entity.Internal.LazyInternalContext.SaveChanges()
+   在 System.Data.Entity.DbContext.SaveChanges()
+   在 MvcCore.Service.DBTool.Commit()
+   在 JN.Services.Manager.Wallets.changeWallet(Int32 onUserID, Decimal changeMoney, Int32 coinid, String description) 位置 d:\work\小罗\072201\www\JN.Services\Manager\Wallets.cs:行号 62
+   在 JN.Services.Manager.Bonus.Settlement(Matching mModel) 位置 d:\work\小罗\072201\www\JN.Services\Manager\Bonus.cs:行号 570
+   在 JN.Web.Areas.UserCenter.Controllers.HomeController.FinshPay(FormCollection fc) 位置 d:\work\小罗\072201\www\JN.Web\Areas\UserCenter\Controllers\HomeController.cs:行号 843
+错误提示：基础提供程序在 Open 上失败。

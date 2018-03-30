@@ -1,0 +1,99 @@
+﻿@{
+    string action = ViewContext.RouteData.Values["action"].ToString().ToLower();
+    Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+    var list = MvcCore.Unity.Get<JN.Data.Service.IBookCategoryService>().List(x => x.ParentId == "" || x.ParentId == "0").ToList();//查找顶级
+}
+
+<div id="content">
+    <!-- Breadcrumb -->
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")" class="glyphicons home"><i></i> 首页</a></li>
+        <li class="divider"></li>
+        <li>@ViewBag.Title</li>
+    </ul>
+    <div class="separator bottom"></div>
+
+    <div class="innerLR">
+        <div class="col-xs-12">
+            @*@using (Ajax.BeginForm("AddProductClass", new { }, new AjaxOptions() { HttpMethod = "Post", OnSuccess = "AfterEdit" }, new { id = "frmSet" }))
+                {*@
+            <form id="validation-form" class="form-horizontal" enctype="multipart/form-data" method="post">
+                <table class="niunantab">
+                    <tr>
+                        <td><br /></td>
+                    </tr>
+                    <tr>
+                        <td>上级分类</td>
+                        <td>
+                            <select name="catePid">
+                                <option value="0">顶级分类</option>
+                                @{
+                                    if (list != null)
+                                    {
+                                        if (list != null)
+                                        {
+                                            foreach (var cate in list)
+                                            {
+                                                <option value="@cate.ID">@cate.Name</option>
+                                                var list2 = MvcCore.Unity.Get<JN.Data.Service.IBookCategoryService>().List(x => x.ParentId == cate.ID).ToList();//查找下一级
+                                                if (list2 != null)
+                                                {
+                                                    foreach (var cate2 in list2)
+                                                    {
+                                                        <option value="@cate2.ID">@cate2.Name</option>
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><br /></td>
+                    </tr>
+                    <tr>
+                        <td>分类名称</td>
+                        <td><input type="text" name="aName" /></td>
+                    </tr>
+                    <tr>
+                        <td><br /></td>
+                    </tr>
+                    <tr>
+                        <td>分类图片</td>
+                        <td>
+                            <input type="file" name="imgurl" class="form-control" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><br /></td>
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td><input name="Submit" type="submit" class="btn" value="提交" /></td>
+                    </tr>
+                </table>
+                @*}*@
+            </form>
+        </div>
+    </div>
+</div>
+@section scripts{
+    @*<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>*@
+    <script>
+
+        //提交新品后返回结果
+        function AfterEdit(data) {
+            if (data.result == "ok") {
+                alert("操作成功！");
+                window.location.reload();
+            }
+            else {
+                alert(data.result);
+            }
+        }
+    </script>
+
+}

@@ -1,0 +1,37 @@
+﻿---------------------------------------------------
+来自页面：http://localhost:41520/UserCenter/Home/SupplyHelp
+发生时间：2016/9/7 9:30:03
+异常对像：System.Data.Entity.Core.Common.Internal.Materialization.Shaper+ErrorHandlingValueReader`1[T].GetValue
+错误追踪：   在 System.Data.Entity.Core.Common.Internal.Materialization.Shaper.ErrorHandlingValueReader`1.GetValue(DbDataReader reader, Int32 ordinal)
+   在 lambda_method(Closure , Shaper )
+   在 System.Data.Entity.Core.Common.Internal.Materialization.Coordinator`1.ReadNextElement(Shaper shaper)
+   在 System.Data.Entity.Core.Common.Internal.Materialization.Shaper`1.SimpleEnumerator.MoveNext()
+   在 System.Data.Entity.Internal.LazyEnumerator`1.MoveNext()
+   在 System.Linq.Enumerable.Single[TSource](IEnumerable`1 source)
+   在 System.Data.Entity.Core.Objects.ELinq.ObjectQueryProvider.<GetElementFunction>b__3[TResult](IEnumerable`1 sequence)
+   在 System.Data.Entity.Core.Objects.ELinq.ObjectQueryProvider.ExecuteSingle[TResult](IEnumerable`1 query, Expression queryRoot)
+   在 System.Data.Entity.Core.Objects.ELinq.ObjectQueryProvider.System.Linq.IQueryProvider.Execute[TResult](Expression expression)
+   在 System.Data.Entity.Internal.Linq.DbQueryProvider.Execute[TResult](Expression expression)
+   在 System.Linq.Queryable.Max[TSource,TResult](IQueryable`1 source, Expression`1 selector)
+   在 JN.Services.Manager.Bonus.Bonus1103(Int32 supplyid) 位置 d:\NET项目\HL16082801\HL16082801\JN.Services\Manager\Bonus.cs:行号 184
+   在 JN.Web.Areas.UserCenter.Controllers.HomeController.SupplyHelp(FormCollection fc) 位置 d:\NET项目\HL16082801\HL16082801\JN.Web\Areas\UserCenter\Controllers\HomeController.cs:行号 273
+错误提示：到值类型“System.Int32”的强制转换失败，因为具体化值为 null。结果类型的泛型参数或查询必须使用可以为 null 的类型。
+---------------------------------------------------
+来自页面：http://localhost:41520/UserCenter/home/SupplyHelp
+发生时间：2016/9/7 9:34:51
+异常对像：System.Data.Entity.Core.Common.Internal.Materialization.Shaper+ErrorHandlingValueReader`1[T].GetValue
+错误追踪：   在 System.Data.Entity.Core.Common.Internal.Materialization.Shaper.ErrorHandlingValueReader`1.GetValue(DbDataReader reader, Int32 ordinal)
+   在 System.Data.Entity.Core.Common.Internal.Materialization.Shaper.GetColumnValueWithErrorHandling[TColumn](Int32 ordinal)
+   在 lambda_method(Closure , Shaper )
+   在 System.Data.Entity.Core.Common.Internal.Materialization.Coordinator`1.ReadNextElement(Shaper shaper)
+   在 System.Data.Entity.Core.Common.Internal.Materialization.Shaper`1.SimpleEnumerator.MoveNext()
+   在 System.Data.Entity.Internal.LazyEnumerator`1.MoveNext()
+   在 System.Linq.Enumerable.Single[TSource](IEnumerable`1 source)
+   在 System.Data.Entity.Core.Objects.ELinq.ObjectQueryProvider.<GetElementFunction>b__3[TResult](IEnumerable`1 sequence)
+   在 System.Data.Entity.Core.Objects.ELinq.ObjectQueryProvider.ExecuteSingle[TResult](IEnumerable`1 query, Expression queryRoot)
+   在 System.Data.Entity.Core.Objects.ELinq.ObjectQueryProvider.System.Linq.IQueryProvider.Execute[TResult](Expression expression)
+   在 System.Data.Entity.Internal.Linq.DbQueryProvider.Execute[TResult](Expression expression)
+   在 System.Linq.Queryable.Max[TSource,TResult](IQueryable`1 source, Expression`1 selector)
+   在 JN.Services.Manager.Bonus.Bonus1103(Int32 supplyid) 位置 d:\NET项目\HL16082801\HL16082801\JN.Services\Manager\Bonus.cs:行号 184
+   在 JN.Web.Areas.UserCenter.Controllers.HomeController.SupplyHelp(FormCollection fc) 位置 d:\NET项目\HL16082801\HL16082801\JN.Web\Areas\UserCenter\Controllers\HomeController.cs:行号 273
+错误提示：到值类型“System.Int32”的强制转换失败，因为具体化值为 null。结果类型的泛型参数或查询必须使用可以为 null 的类型。

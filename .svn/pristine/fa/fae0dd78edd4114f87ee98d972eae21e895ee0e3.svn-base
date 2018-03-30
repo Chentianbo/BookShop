@@ -1,0 +1,91 @@
+﻿@using Webdiyer.WebControls.Mvc
+@model Webdiyer.WebControls.Mvc.PagedList<JN.Data.User>
+@{
+    string action = ViewContext.RouteData.Values["action"].ToString().ToLower();
+    Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+@{Html.RegisterMvcPagerScriptResource();}
+<div id="content">
+    <!-- Breadcrumb -->
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")" class="glyphicons home"><i></i> 首页</a></li>
+        <li class="divider"></li>
+        <li>@ViewBag.Title</li>
+    </ul>
+    <div class="separator bottom"></div>
+    <!-- // Breadcrumb END -->
+    <div class="innerLR">
+        <div class="tabbable">
+            <div class="filter-bar margin-bottom-none">
+                @using (Ajax.BeginForm("IDCardCheck", new RouteValueDictionary { { "id", "" } }, new AjaxOptions { UpdateTargetId = "_IDCardCheck", InsertionMode = InsertionMode.Replace, HttpMethod = "get" }, new RouteValueDictionary { { "id", "_Form_IDCardCheck" } }))
+                {
+                    <div style="margin-left:10px">
+                        <select name="keyfiled" style="width: 80px;">
+                            <option value="UserName" @(Request["keyfiled"] == "UserName" ? "selected" : "")>用户名</option>
+                        </select>
+                    </div>
+                    <div>
+                        <div class="input-append">
+                            <input type="text" name="keyword" class="input-mini" style="width: 150px;" value="@Request["keyword"]" placeholder="请输入查询关键词" />
+                            <span style="margin: 0;" class="btn-action single glyphicons circle_question_mark" data-toggle="tooltip" data-placement="top" data-original-title="使用模糊查询可在关键字前后加上“%”"><i></i></span>
+                        </div>
+                    </div>
+
+                    <!-- // Filter END -->
+                    <!-- Filter -->
+                    <div>
+                        <input type="submit" value="查询" />
+                        <input type="button" onclick="location.href='@(Request.Url.PathAndQuery.Replace(ViewContext.RouteData.Values["action"].ToString(), ViewContext.RouteData.Values["action"].ToString() +"Export"))'" value="导出" />
+
+                    </div>
+                    <div class="clearfix"></div>
+                    <!-- // Filter END -->
+                }
+
+            </div>
+
+            <div id="_IDCardCheck">
+                @Html.Partial("_IDCardCheck", Model)
+            </div>
+
+
+        </div><!-- /span -->
+    </div><!-- /row -->
+</div><!-- /.page-content -->
+<!-- PAGE CONTENT ENDS -->
+<div id="modal-form" class="modal hide" tabindex="-1">
+    <form class="form-horizontal" id="validation-form" method="post">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width:700px;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="blue bigger">详细信息</h4>
+                </div>
+                <div class="modal-body overflow-visible">
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-primary" data-dismiss="modal">
+                        <i class="icon-remove"></i>
+                        取消
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        function IDCardDoPass(val) {
+            var id = val;
+            bootbox.confirm('确定审核通过此会员么？', function (result) {
+                if (result) {
+                    location = '@(Url.Action("IDCardDoPass"))?uid=' + id;
+                }
+            })
+        }
+
+    </script>
+}

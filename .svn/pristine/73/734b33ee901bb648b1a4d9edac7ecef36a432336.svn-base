@@ -1,0 +1,4 @@
+%SystemRoot%\Microsoft.NET\Framework\v4.0.30319\installutil.exe E:\wp17041101\web\JN.Web\TimingPlan\JN.WindowsService.exe
+Net Start wp17041101
+sc config wp17041101 start= auto
+pause

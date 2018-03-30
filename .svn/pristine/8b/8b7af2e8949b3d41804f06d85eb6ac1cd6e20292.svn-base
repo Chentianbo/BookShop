@@ -1,0 +1,106 @@
+﻿---------------------------------------------------
+类型：调试日志
+时间：2017/4/12 9:50:05
+内容：进入测试1
+---------------------------------------------------
+类型：调试日志
+时间：2017/4/12 9:50:05
+内容：进入测试2
+---------------------------------------------------
+类型：调试日志
+时间：2017/4/12 9:50:05
+内容：进入测试3
+---------------------------------------------------
+类型：调试日志
+时间：2017/4/12 9:50:05
+内容：进入测试4
+---------------------------------------------------
+类型：调试日志
+时间：2017/4/12 13:52:14
+内容：进入测试1
+---------------------------------------------------
+类型：调试日志
+时间：2017/4/12 13:52:14
+内容：进入测试2
+---------------------------------------------------
+类型：调试日志
+时间：2017/4/12 13:52:14
+内容：进入测试3
+---------------------------------------------------
+类型：调试日志
+时间：2017/4/12 13:52:14
+内容：进入测试4
+---------------------------------------------------
+类型：调试日志
+时间：2017/4/12 14:19:28
+内容：进入测试1
+---------------------------------------------------
+类型：调试日志
+时间：2017/4/12 14:19:29
+内容：进入测试2
+---------------------------------------------------
+类型：调试日志
+时间：2017/4/12 14:19:29
+内容：进入测试3
+---------------------------------------------------
+类型：调试日志
+时间：2017/4/12 14:19:29
+内容：进入测试4
+---------------------------------------------------
+来自页面：http://localhost:8280/AdminCenter/DBManage/DBClear?password=wp17041101
+发生时间：2017/4/12 16:47:08
+异常对像：System.Data.SqlClient.SqlConnection.OnError
+错误追踪：   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteNonQueryTds(String methodName, Boolean async, Int32 timeout, Boolean asyncWrite)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean asyncWrite)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.<NonQuery>b__0(DbCommand t, DbCommandInterceptionContext`1 c)
+   在 System.Data.Entity.Infrastructure.Interception.InternalDispatcher`1.Dispatch[TTarget,TInterceptionContext,TResult](TTarget target, Func`3 operation, TInterceptionContext interceptionContext, Action`3 executing, Action`3 executed)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.NonQuery(DbCommand command, DbCommandInterceptionContext interceptionContext)
+   在 System.Data.Entity.Internal.InterceptableDbCommand.ExecuteNonQuery()
+   在 System.Data.Entity.Core.Objects.ObjectContext.<>c__DisplayClass59.<ExecuteStoreCommand>b__58()
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteInTransaction[T](Func`1 func, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction, Boolean releaseConnectionOnSuccess)
+   在 System.Data.Entity.Core.Objects.ObjectContext.<>c__DisplayClass59.<ExecuteStoreCommand>b__57()
+   在 System.Data.Entity.SqlServer.DefaultSqlExecutionStrategy.Execute[TResult](Func`1 operation)
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteStoreCommand(TransactionalBehavior transactionalBehavior, String commandText, Object[] parameters)
+   在 System.Data.Entity.Internal.InternalContext.ExecuteSqlCommand(TransactionalBehavior transactionalBehavior, String sql, Object[] parameters)
+   在 System.Data.Entity.Database.ExecuteSqlCommand(TransactionalBehavior transactionalBehavior, String sql, Object[] parameters)
+   在 System.Data.Entity.Database.ExecuteSqlCommand(String sql, Object[] parameters)
+   在 MvcCore.Service.DBTool.ExecuteSQL(String sql, DbParameter[] param)
+   在 JN.Web.Areas.AdminCenter.Controllers.DBManageController.DBClear(String password) 位置 e:\wp17041101\web\JN.Web\Areas\AdminCenter\Controllers\DBManageController.cs:行号 148
+   在 lambda_method(Closure , ControllerBase , Object[] )
+   在 System.Web.Mvc.ActionMethodDispatcher.Execute(ControllerBase controller, Object[] parameters)
+   在 System.Web.Mvc.ReflectedActionDescriptor.Execute(ControllerContext controllerContext, IDictionary`2 parameters)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionMethod(ControllerContext controllerContext, ActionDescriptor actionDescriptor, IDictionary`2 parameters)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<BeginInvokeSynchronousActionMethod>b__39(IAsyncResult asyncResult, ActionInvocation innerInvokeState)
+   在 System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResult`2.CallEndDelegate(IAsyncResult asyncResult)
+   在 System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.EndInvokeActionMethod(IAsyncResult asyncResult)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.AsyncInvocationWithFilters.<InvokeActionMethodFilterAsynchronouslyRecursive>b__3d()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.AsyncInvocationWithFilters.<>c__DisplayClass46.<InvokeActionMethodFilterAsynchronouslyRecursive>b__3f()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass33.<BeginInvokeActionMethodWithFilters>b__32(IAsyncResult asyncResult)
+   在 System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResult`1.CallEndDelegate(IAsyncResult asyncResult)
+   在 System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.EndInvokeActionMethodWithFilters(IAsyncResult asyncResult)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<>c__DisplayClass2b.<BeginInvokeAction>b__1c()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<BeginInvokeAction>b__1e(IAsyncResult asyncResult)
+错误提示：找不到对象 "WalletLog"，因为它不存在或者您没有所需的权限。
+---------------------------------------------------
+类型：调试日志
+时间：2017/4/12 17:16:26
+内容：进入测试1
+---------------------------------------------------
+类型：调试日志
+时间：2017/4/12 17:16:26
+内容：进入测试2
+---------------------------------------------------
+类型：调试日志
+时间：2017/4/12 17:16:26
+内容：进入测试3
+---------------------------------------------------
+类型：调试日志
+时间：2017/4/12 17:16:26
+内容：进入测试4

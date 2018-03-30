@@ -1,0 +1,184 @@
+﻿@{
+    var sysEntity = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 10000);
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+}
+<!-- 提供帮助 -->
+    <form id="frmSupplyHelp" method="post">
+        <section id="supplyhelp_setp1">
+            <div class="panel-heading">
+                <h3 class="panel-title">提供帮助: 我要帮助他人</h3>
+            </div>
+            <div class="modal-body" style="text-align:center">
+                @*<p class="text-warning" style="text-align:left">@T("申请完成后，请等待系统15-30日随机分配受善需求")</p>*@
+                <label class="col-sm-12 control-label">@T("支付方式")</label>
+                <div class="radio" align="center">
+                    <label> <input type="checkbox" value="银行支付" class="ckbox" name="payway" checked="">@T("银行支付")</label>
+                    <label> <input type="checkbox" value="支付宝" class="ckbox" name="payway" checked="">@T("支付宝")</label><br>
+                    @*<label> <input type="checkbox" value="微信支付" class="ckbox" name="payway" checked="">@T("微信支付")</label><br>*@
+                </div>
+                <input type="hidden" id="daytype" name="daytype" value="1" class="form-control" style="width:130px" />
+                @*<div class="form-group">
+                    <label class="col-sm-12 control-label">@T("进场时间")</label>
+                    <div class="input-group">
+                        @Html.DropDownList("daytype", new SelectList(cacheSysParam.Where(x => x.PID == 2100 && x.IsUse == true).OrderBy(x => x.Sort), "ID", "Name", "200"), new { @class = "form-control m-b", @style = "width:130px" })
+                    </div>
+                    </div>*@
+                    <div class="form-group">
+                        <label class="col-sm-12 control-label">@T("提供帮助金额")</label>
+
+                        <div class="input-group">
+
+                            @*@Html.DropDownList("supplyamount", new SelectList(JN.BLL.sysparams.GetModelList("PID=1000 and IsUse=1 order by sort"), "Value", "Value", "1000"), new { @class = "form-control m-b" })*@
+                            @*@if (cacheSysParam.Where(x => x.PID == 2100 && x.IsUse == true).Count() > 0)
+                    {
+                        @Html.DropDownList("supplyamount", new SelectList(cacheSysParam.Where(x => x.PID == 2100 && x.IsUse == true).OrderBy(x => x.Sort), "ID", "Name", "200"), new { @class = "form-control m-b", @style = "width:130px" })
+                    }
+                    else
+                    {*@
+                            <input type="text" id="supplyamount" name="supplyamount" value="1000" class="form-control" style="width:130px" />
+
+                            @*}*@
+                            <select id="hl" name="hl" class="form-control" style="width: 100px">
+                                <option value="1">RMB</option>
+                                @*<option value="6">美元</option>*@
+                            </select>
+
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        @*<font id="lblamount">@cacheSysParam.Where(x => x.PID == 2100 && x.IsUse == true).OrderBy(x => x.Sort).FirstOrDefault().Value</font>×<span class="lblhl">@cacheSysParam.SingleAndInit(x => x.ID == 3801).Value</span>＝<font id="lblexchangemoney" color="#FF0000">0</font>*@
+                        <font id="lblamount">1000</font>×<span class="lblhl">@cacheSysParam.SingleAndInit(x => x.ID == 3801).Value</span>＝<font id="lblexchangemoney" color="#FF0000">0</font>
+                        @T("RMB")
+                    </div>
+                    <div class="form-group">
+                        <h4>
+                            <span>提供此单要消耗<strong style="font-weight:bold;color:red;"><font id="pdb" color="#FF0000">1</font></strong>个排单币</span>
+                        </h4>
+                    </div>
+
+                    <div class="icheckbox_square-green checked" style="position: relative;">
+                        <input type="checkbox" class="i-checks" name="i-checks" checked="" required="" style="position: absolute; opacity: 0;">
+                        <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);"></ins>
+                    </div>
+                    @*@T("警告，我已完全了解所有风险。我决定参与" + sysEntity.SysName + ",尊重" + sysEntity.SysName + "文化与传统。")*@
+                @T("警告，投资有风险，请使用非关键资金理性投资。")
+                </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">@T("取消")</button>
+                <button type="button" class="btn btn-default" id="btnSupplyHelp">@T("提供帮助")</button>
+            </div>
+
+        </section>
+        <section id="supplyhelp_setp2" style="display:none">
+            <div class="modal-body" style="height:300px;">
+                <p><strong><font color="#FF0000" id="amountpay"></font>@T(" RMB  : 人民币")</strong></p>
+                @*<p>@T("增长率为每日1% RMB，最高30%  RMB")</p>*@
+                @*<p>@T("注意：您的申请如果需要被取消，可以在配对单产生之前提交取消申请。一旦配对单产生了，该施善申请将无法被取消。")</p>*@
+                <p><strong><font color="#FF0000">@T("注意：请核实交易的资料，一旦完成申请，该交易是不能被取消或更改。")</font></strong></p>
+
+            </div>
+            <div class="modal-footer">
+                
+                <button type="button" class="btn btn-default guanbi" data-dismiss="modal">关闭</button>
+                
+                <button type="button" class="btnSubmitSupplyHelp btn btn-default" disabled>@T("确认")</button>
+            </div>
+        </section>
+      </form>
+
+<script>
+    $(document).ready(function () {//页面加载时触发
+        $("#lblexchangemoney").text(parseFloat($("#lblamount").text()) * parseFloat($(".lblhl").text()));
+    });
+
+    $("#supplyamount").on('keyup', function () {
+        $("#lblamount").text($("#supplyamount").val());
+        var aa = parseInt(@cacheSysParam.SingleAndInit(x => x.ID == 2003).Value2.ToInt());
+        //$("#lblamount").text($("#supplyamount option:selected").text());
+        $("#lblexchangemoney").text(parseFloat($("#lblamount").text()) * parseFloat($(".lblhl").text()));
+        //$("#pdb").text(parseFloat($("#lblamount").text())*parseFloat(@cacheSysParam.SingleAndInit(x => x.ID == 2003).Value2))
+        $("#pdb").text((parseInt($("#lblamount").text()) % aa == 0) ? (parseInt($("#lblamount").text()) / aa) : (parseInt(parseInt($("#lblamount").text()) / aa) + 1))
+    });
+
+    $("#hl").on('change', function () {
+        $(".lblhl").text($("#hl").val())
+        $("#lblamount").text($("#supplyamount").val());
+        $("#lblexchangemoney").text(parseFloat($("#lblamount").text()) * parseFloat($(".lblhl").text()));
+    });
+
+    $("#supplyamount").bind("change", function () {
+        $("#lblamount").text($("#supplyamount").val());//获取所有内容
+        //$("#lblamount").text($("#supplyamount option:selected").text());//获取SELECT选择项的文本内容
+        $("#lblexchangemoney").text(parseFloat($("#lblamount").text()) * parseFloat($(".lblhl").text()));
+        //$("#pdb").text(parseFloat(@cacheSysParam.SingleAndInit(x => x.ID == 2003).Value2))
+    });
+
+
+    $("#btnSupplyHelp").click(function () {
+        $("#supplyhelp_setp1").css("display", "none");
+        $("#supplyhelp_setp2").css("display", "block");
+        $("#agreement_window").show();
+        $("#amountpay").text($("#lblexchangemoney").text());
+    });
+    $(".guanbi").click(function () {
+        $("#supplyhelp_setp1").css("display", "block");
+        $("#supplyhelp_setp2").css("display", "none");
+        $("#agreement_window").hide();
+    });
+
+    function Read(obj) {
+        if (document.getElementById("isRead").checked) {
+            $("#subbthbtnOk").removeClass().addClass("Y");
+            $("#subbthbtnOk").attr("disabled", false);
+        }
+        else {
+            $("#subbthbtnOk").removeClass().addClass("YN");
+            $("#subbthbtnOk").attr("disabled", true);
+        }
+    }
+    function btnOk() {
+        if (document.getElementById("isRead").checked) {
+            $(".btnSubmitSupplyHelp").addClass("btn-info");
+            $(".btnSubmitSupplyHelp").attr("disabled", false);
+            $("#agreement_window").hide();
+        }
+        else {
+            $(".btnSubmitSupplyHelp").removeClass("btn-info");
+            $(".btnSubmitSupplyHelp").attr("disabled", true);
+            $("#agreement_window").show();
+        }
+    }
+
+    $(".btnSubmitSupplyHelp").click(function () {
+        if (document.getElementById("isRead").checked) {
+            //$("#saveForm").submit();
+            $("#frmSupplyHelp").ajaxSubmit({
+                url: "@Url.Action("SupplyHelp")",
+                type: "post",
+                success: function (data) {
+                    if (data.Status == 200) {
+                        alert("提交成功，即将为您跳转！");
+                        location.href = "@(Url.Action("Index", "Home"))";
+                    } else {
+                        alert("提交失败：" + data.Message);
+                    }
+                },
+                error: function (error) {
+                    alert(error);
+                }
+            });
+        }
+
+    });
+</script>

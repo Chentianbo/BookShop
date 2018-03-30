@@ -1,0 +1,784 @@
+﻿using JN.Services.Tool;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity.SqlServer;
+using System.Linq;
+
+namespace JN.Services.Manager
+{
+    /// <summary>
+    ///奖金结算（用到以下奖金）
+    ///直推奖Bonus1103  直推1人循环拿直推奖人投资金额的4%，每增加直推1人，直推奖增加1%，直推奖15%封顶
+    ///管理奖Bonus1104  管理奖 推荐1人拿1代，10代封顶，管理奖50%冻结半个月，另50%冻结1个月
+    /// </summary>
+    public partial class Bonus
+    {
+        List<Data.SysParam> cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().List(x => x.ID < 10000).ToList();
+
+
+        #region 写入奖金明细表并更新用户钱包
+        /// <summary>
+        /// 写入资金明细表并更新用户钱包（未结算只写入奖金表不进钱包及资金明细）
+        /// </summary>
+        /// <param name="bonusmoney">奖金金额</param>
+        /// <param name="period">期数（发放利息时）</param>
+        /// <param name="bonusid">奖金ID（对应参数表SysParam的ID）</param>
+        /// <param name="bonusname">奖金名称（对应参数表SysParam的Name）</param>
+        /// <param name="bonusdesc">获奖描述来源</param>
+        /// <param name="onUserID">会员ID</param>
+        /// <param name="addupfield">累计奖金字段（对应用户表User的Addup1101-1107/1802）</param>
+        /// <param name="isbalance">是否结算,Ture时写入钱包明细表WalletDetails及更新User表中用户钱包余额Wallet2001-2005，Falsh时只记入奖金明细表BonusDetails</param>
+        public static void UpdateUserWallet(decimal bonusmoney, string supplyno, int bonusid, string bonusname, string bonusdesc, int onUserID, int formUserID, string addupfield, bool isbalance, bool isEffective, DateTime effectiveTime)
+        {
+            List<Data.SysParam> cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().List(x => x.ID < 10000).ToList();
+
+            var onUser = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(onUserID);
+            var fromUser = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(formUserID);
+            if (bonusmoney > 0)
+            {
+                //是否马上结算
+                //if (isbalance)
+                //{
+                //    //5%冻结到加密数字资产钱包
+                //    //if (bonusid == 1103 || bonusid == 1104 || bonusid == 1106)
+                //    //{
+                //    //    decimal PARAM_SZQBBL = cacheSysParam.SingleAndInit(x => x.ID == 2005).Value2.ToDecimal();// 进入加密数字资产钱包比例
+                //    //    Wallets.changeWallet(onUser.ID, bonusmoney * PARAM_SZQBBL, 2005, bonusdesc);
+                //    //    Wallets.changeWallet(onUser.ID, bonusmoney * (1- PARAM_SZQBBL), 2003, bonusdesc);
+                //    //}
+                //    //else 
+                //    if (bonusid == 1108 || bonusid == 1103 || bonusid == 1104 || bonusid == 1106)
+                //        Wallets.changeWallet(onUser.ID, bonusmoney, 2002, bonusdesc);
+                //    else
+                //        Wallets.changeWallet(onUser.ID, bonusmoney, 2001, bonusdesc);
+                //}
+                //写入奖金表
+                MvcCore.Unity.Get<Data.Service.IBonusDetailService>().Add(new Data.BonusDetail
+                {
+                    Period = 0,
+                    BalanceTime = DateTime.Now,
+                    SupplyNo = supplyno,
+                    BonusMoney = bonusmoney,
+                    BonusID = bonusid,
+                    BonusName = bonusname,
+                    CreateTime = DateTime.Now,
+                    Description = bonusdesc,
+                    IsBalance = isbalance,
+                    UID = onUser.ID,
+                    IsEffective = isEffective,
+                    EffectiveTime = effectiveTime,
+                    UserName = onUser.UserName, 
+                    FromUID = fromUser.ID,
+                    FromUserName = fromUser.UserName
+                });
+                MvcCore.Unity.Get<Data.Service.ISysDBTool>().Commit();
+            }
+        }
+        #endregion
+
+
+        #region 自定义 写入奖金明细表并更新用户钱包
+        /// <summary>
+        /// 写入资金明细表并更新用户钱包（未结算只写入奖金表不进钱包及资金明细）
+        /// </summary>
+        /// <param name="bonusmoney">奖金金额</param>
+        /// <param name="period">期数（发放利息时）</param>
+        /// <param name="bonusid">奖金ID（对应参数表SysParam的ID）</param>
+        /// <param name="bonusname">奖金名称（对应参数表SysParam的Name）</param>
+        /// <param name="bonusdesc">获奖描述来源</param>
+        /// <param name="onUserID">会员ID</param>
+        /// <param name="addupfield">累计奖金字段（对应用户表User的Addup1101-1107/1802）</param>
+        /// <param name="isbalance">是否结算,Ture时写入钱包明细表WalletDetails及更新User表中用户钱包余额Wallet2001-2005，Falsh时只记入奖金明细表BonusDetails</param>
+        public static void TimeUpdateUserWallet(decimal bonusmoney, string supplyno, int bonusid, string bonusname, string bonusdesc, int onUserID, int formUserID, string addupfield, bool isbalance, bool isEffective, DateTime effectiveTime,DateTime DoTime)
+        {
+            List<Data.SysParam> cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().List(x => x.ID < 10000).ToList();
+
+            var onUser = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(onUserID);
+            var fromUser = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(formUserID);
+            if (bonusmoney > 0)
+            {
+                //是否马上结算
+                if (isbalance)
+                {
+                    //5%冻结到加密数字资产钱包
+                    //if (bonusid == 1103 || bonusid == 1104 || bonusid == 1106)
+                    //{
+                    //    decimal PARAM_SZQBBL = cacheSysParam.SingleAndInit(x => x.ID == 2005).Value2.ToDecimal();// 进入加密数字资产钱包比例
+                    //    Wallets.changeWallet(onUser.ID, bonusmoney * PARAM_SZQBBL, 2005, bonusdesc);
+                    //    Wallets.changeWallet(onUser.ID, bonusmoney * (1- PARAM_SZQBBL), 2003, bonusdesc);
+                    //}
+                    //else 
+                    if (bonusid == 1108 || bonusid == 1103 || bonusid == 1104 || bonusid == 1106)
+                        Wallets.TimechangeWallet(onUser.ID, bonusmoney, 2002, bonusdesc, DoTime);
+                    else
+                        Wallets.TimechangeWallet(onUser.ID, bonusmoney, 2001, bonusdesc, DoTime);
+                }
+                //写入奖金表
+                MvcCore.Unity.Get<Data.Service.IBonusDetailService>().Add(new Data.BonusDetail
+                {
+                    Period = 0,
+                    BalanceTime = DoTime,
+                    SupplyNo = supplyno,
+                    BonusMoney = bonusmoney,
+                    BonusID = bonusid,
+                    BonusName = bonusname,
+                    CreateTime = DoTime,
+                    Description = bonusdesc,
+                    IsBalance = isbalance,
+                    UID = onUser.ID,
+                    IsEffective = isEffective,
+                    EffectiveTime = effectiveTime,
+                    UserName = onUser.UserName,
+                    FromUID = fromUser.ID,
+                    FromUserName = fromUser.UserName
+                });
+                MvcCore.Unity.Get<Data.Service.ISysDBTool>().Commit();
+            }
+        }
+        #endregion
+
+        #region 动态奖 在wl16071701中
+        /// <summary>
+        ///动态奖
+        /// </summary>
+        /// <param name="supplyid"></param>
+        //public static void Bonus1103(int supplyid)
+        //{
+        //    List<Data.SysParam> cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().List(x => x.ID < 10000).ToList();
+
+        //    decimal PARAM_TJJBL = 0; //推荐奖比例
+        //    var sModel = MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().Single(supplyid);
+        //    var onUser = MvcCore.Unity.Get<Data.Service.IUserService>().Single(sModel.UID);
+        //    //查找本会员的一条线
+        //  var userlist=  MvcCore.Unity.Get<Data.Service.IUserService>().List(x=>x.RefereePath.Contains(","+onUser.ID+",") && x.IsActivation==true).OrderByDescending(x=>x.ID);
+
+        //    var refereeUser = MvcCore.Unity.Get<Data.Service.IUserService>().Single(onUser.RefereeID);//推荐人
+        //    if (refereeUser != null)
+        //    {
+        //        var param = cacheSysParam.SingleAndInit(x => x.ID == 1103);
+        //        //int tjrs = Users.GetAllRefereeChild(refereeUser, 1).Where(x => x.AddupSupplyAmount > 0 && x.IsLock == false).Count();
+
+        //        ////奖金没有冻结期
+        //        //bool iseffective = true;
+        //        //DateTime effectivetime = DateTime.Now;
+        //        //PARAM_TJJBL = Math.Min((param.Value.ToDecimal() + tjrs * param.Value2.ToDecimal()), param.Value3.ToDecimal());
+
+        //        #region 找出5代会员算动态奖
+        //        //找出5代会员算动态奖（多代管理奖或推荐奖）
+        //        var tjjlist = Users.GetAllRefereeParent(onUser, 5);//往上找
+        //        foreach (var item in tjjlist)
+        //        {
+        //            //推荐人数（完成订单才算）
+        //            //int tjrs = Users.GetAllRefereeChild(item, 1).Count();
+        //            bool iseffective = true;
+        //            DateTime effectivetime = DateTime.Now;
+        //            int PARAMID = 0;
+        //            //if (tjrs >= (onUser.RefereeDepth - item.RefereeDepth))//推荐几人拿几代
+        //            //{
+        //                switch (onUser.RefereeDepth - item.RefereeDepth) //几代推荐奖
+        //                {
+        //                    case 1:
+        //                        PARAMID = 1301;
+        //                        break;
+        //                    case 2:
+        //                        PARAMID = 1302;
+        //                        break;
+        //                    case 3:
+        //                        PARAMID = 1303;
+        //                        break;
+        //                    case 4:
+        //                        PARAMID = 1304;
+        //                        break;
+        //                    case 5:
+        //                        PARAMID = 1305;
+        //                        break;
+        //                    default: //3代以上直推奖
+        //                        PARAMID = 0;
+        //                        break;
+        //                }
+        //            //}
+        //        #endregion
+        //            if (PARAMID!=0)
+        //            { 
+        //                PARAM_TJJBL = cacheSysParam.SingleAndInit(x => x.ID == PARAMID).Value.ToDecimal();
+        //                //小单推大单限制
+        //                var latstsupply = MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().List(x => x.UID == item.ID && x.Status >= (int)Data.Enum.HelpStatus.AllDeal).OrderByDescending(x => x.ID).FirstOrDefault();
+        //                if (latstsupply != null) //不投资不拿动态奖
+        //                {
+        //                    decimal jsMoney = Math.Min((latstsupply.OrderMoney ?? 0), (sModel.OrderMoney ?? 0));
+        //                    decimal bonusMoney = jsMoney * PARAM_TJJBL;
+        //                    if (bonusMoney > 0)
+        //                    {
+        //                        string bonusDesc = "来自会员【" + sModel.UserName + "】提供帮助订单【" + sModel.SupplyNo + "】的" + param.Name + "(" + jsMoney + "×" + PARAM_TJJBL + ")";
+        //                        UpdateUserWallet(bonusMoney, sModel.SupplyNo, param.ID, param.Name, bonusDesc, item.ID, onUser.ID, "Addup1103", false, iseffective, effectivetime);
+        //                        Bonus.Bonus1104(bonusMoney, sModel.ID, item.ID);
+
+        //                    }
+        //                }
+        //            }
+
+
+        //        }
+        //    }
+        //}
+        #endregion
+
+        #region 代数奖 在wp17041101
+        /// <summary>
+        ///代数奖
+        /// </summary>
+        /// <param name="supplyid"></param>
+        public static void Bonus1103(int supplyid)
+        {
+            List<Data.SysParam> cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().List(x => x.ID < 10000).ToList();
+
+            var sModel = MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().Single(supplyid);
+            var onUser = MvcCore.Unity.Get<Data.Service.IUserService>().Single(sModel.UID);
+            var param = cacheSysParam.SingleAndInit(x => x.ID == 1103);
+            decimal PARAM_TJJBL = 0;//奖金比例
+            decimal bonusbase = 0;//奖金基数
+            var gljlist = Users.GetAllRefereeParent(onUser, 3).Where(x => x.IsActivation).ToList();//查找整条线上的人
+            foreach (var item in gljlist)
+            {
+                //var supmodel = MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().List(x => x.UID == refereeUser.ID).OrderByDescending(x => x.ID).SingleOrDefault();
+                var supmodel1 = MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().List(x => x.UID == item.ID && x.Status >= (int)JN.Data.Enum.HelpStatus.AllDeal).Count() > 0 ? MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().List(x => x.UID == item.ID && x.Status >= (int)JN.Data.Enum.HelpStatus.AllDeal).Max(x => x.ID) : 0;
+                if (supmodel1 != 0)
+                {
+                    //var supmodel = MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().List(x => x.ID == supmodel1).SingleOrDefault();
+                    bonusbase = sModel.SupplyAmount;
+                    var supmodel = MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().Single(x => x.ID == supmodel1);
+                    if (supmodel.SupplyAmount >= sModel.SupplyAmount)
+                    {
+                        bonusbase = sModel.SupplyAmount;
+                    }
+                    else if (supmodel.SupplyAmount >= (sModel.SupplyAmount * (decimal)0.5))
+                    {
+                        bonusbase = sModel.SupplyAmount * (decimal)0.5;
+                    }
+                    else
+                        bonusbase = 0;
+                    if (bonusbase == 0) continue;//结束本次循环
+                    #region 拿奖比例
+                    switch (onUser.RefereeDepth - item.RefereeDepth)
+                    {
+                        case 1:
+                            if (item.UserLevel == 3)
+                                PARAM_TJJBL = 1331;
+                            else if (item.UserLevel == 2)
+                                PARAM_TJJBL = 1321;
+                            else if (item.UserLevel == 1)
+                                PARAM_TJJBL = 1311;
+                            else
+                                PARAM_TJJBL = 1301;
+                            break;
+                        case 2:
+                            if (item.UserLevel == 3)
+                                PARAM_TJJBL = 1332;
+                            else if (item.UserLevel == 2)
+                                PARAM_TJJBL = 1322;
+                            else if (item.UserLevel == 1)
+                                PARAM_TJJBL = 1312;
+                            else
+                                PARAM_TJJBL = 1302;
+                            break;
+                        case 3:
+                            if (item.UserLevel == 3)
+                                PARAM_TJJBL = 1333;
+                            else if (item.UserLevel == 2)
+                                PARAM_TJJBL = 1323;
+                            else if (item.UserLevel == 1)
+                                PARAM_TJJBL = 1313;
+                            else
+                                PARAM_TJJBL = 1303;
+                            break;
+                        default:
+                            PARAM_TJJBL = 0;
+                            break;
+                    } 
+                    #endregion
+                    decimal bonusMoney = bonusbase * cacheSysParam.SingleAndInit(x => x.ID == PARAM_TJJBL).Value.ToDecimal();
+                    if (bonusMoney > 0)
+                    {
+                        string bonusDesc = "来自会员【" + sModel.UserName + "】提供帮助订单【" + sModel.SupplyNo + "】的" + param.Name + "(" + bonusbase + "×" + cacheSysParam.SingleAndInit(x => x.ID == PARAM_TJJBL).Value.ToDecimal() + ")";
+                        UpdateUserWallet(bonusMoney, sModel.SupplyNo, param.ID, param.Name, bonusDesc, item.ID, onUser.ID, "Addup1103", false, true, DateTime.Now);
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region 管理奖 
+        /// <summary>
+        /// 因为下属会员获得动态奖而获得管理奖
+        /// </summary>
+        /// <param name="supplyid">提供订单ID</param>
+        public static void Bonus1104(int supplyid)
+        {
+            List<Data.SysParam> cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().List(x => x.ID < 10000).ToList();
+            var param = cacheSysParam.SingleAndInit(x => x.ID == 1104);
+            var sModel = MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().SingleAndInit(supplyid);
+            var onUser = MvcCore.Unity.Get<Data.Service.IUserService>().Single(sModel.UID);
+
+            decimal PARAM_GLJBL = 0;
+            //找出2代会员算管理奖（多代管理
+            var tjjlist = Users.GetAllRefereeParent(onUser, 6);
+            foreach (var item in tjjlist)
+            {
+                //推荐人数（完成订单才算）
+                //int tjrs = Users.GetAllRefereeChild(item, 1).Where(x => (x.AddupSupplyAmount > 0 || x.ID == onUser.ID) && x.IsLock == false).Count();
+                int tjrs = Users.GetAllRefereeChild(item, 1).Where(x => x.IsLock == false).Count();
+                int PARAMID = 0;
+                switch (onUser.RefereeDepth - item.RefereeDepth)
+                {
+                    case 1:
+                        if (tjrs >= 1)
+                            PARAMID = 1401;
+                        break;
+                    case 2:
+                        if (tjrs >= 2)
+                            PARAMID = 1402;
+                        break;
+                    case 3:
+                        if (tjrs >= 3)
+                            PARAMID = 1403;
+                        break;
+                    case 4:
+                        if (tjrs >= 4)
+                            PARAMID = 1404;
+                        break;
+                    case 5:
+                        if (tjrs >= 5)
+                            PARAMID = 1405;
+                        break;
+                    case 6:
+                        if (tjrs >= 6)
+                            PARAMID = 1406;
+                        break;
+                    //case 7:
+                    //    if (tjrs >= 7)
+                    //        PARAMID = 1407;
+                    //    break;
+                    //case 8:
+                    //    if (tjrs >= 8)
+                    //        PARAMID = 1408;
+                    //    break;
+                    //case 9:
+                    //    if (tjrs >= 9)
+                    //        PARAMID = 1409;
+                    //    break;
+                    //case 10:
+                    //    if (tjrs >= 10)
+                    //        PARAMID = 1410;
+                    //    break;
+                }
+                if (PARAMID!=0)
+                {
+                    //var supmodel = MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().List(x => x.UID == item.ID).OrderByDescending(x => x.ID).SingleOrDefault();
+                    var supmodel1 = MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().List(x => x.UID == item.ID && x.Status >= (int)JN.Data.Enum.HelpStatus.AllDeal).Count() > 0 ? MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().List(x => x.UID == item.ID && x.Status >= (int)JN.Data.Enum.HelpStatus.AllDeal).Max(x => x.ID) : 0;
+                    if (supmodel1 != 0) 
+                    { 
+                        var supmodel = MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().List(x => x.ID == supmodel1).SingleOrDefault();
+                        //小推大，拿小的
+                        decimal bonusMoney = Math.Min((supmodel == null ? 0 : supmodel.SupplyAmount), sModel.SupplyAmount);
+                        PARAM_GLJBL = cacheSysParam.SingleAndInit(x => x.ID == PARAMID).Value.ToDecimal();
+                        decimal GLJMoney = bonusMoney * PARAM_GLJBL;
+                        if (GLJMoney>0)
+                        {
+                            string bonusDesc = "来自【" + onUser.UserName + "】的管理奖" + param.Name + "(" + bonusMoney + "×" + PARAM_GLJBL + ")";
+                            UpdateUserWallet(GLJMoney, sModel.SupplyNo, 1104, param.Name, bonusDesc, item.ID, onUser.ID, "Addup1105", false, false, DateTime.Now);
+                        }
+                    }
+                }
+
+            }
+        }
+        #endregion
+
+        #region 动态奖
+        /// <summary>
+        /// 动态奖：自己至少完成过一单提供帮助才可以提现动态奖，100倍数提现
+        ///推荐1人—享受第1代提供援助金额1%
+        ///推荐2人—享受第1、2代提供援助金额1%
+        ///推荐4人—享受第1、2、3代提供援助金额1%
+        ///推荐6人—享受第1、2、3、4代提供援助金额1%
+        ///推荐8人—享受第1、2、3、4、5代提供援助金额1%
+        ///推荐10人，团队达到100人—享受第1-5代1%，6-10代提供援助金额0.3%
+        ///推荐20人，团队达到300人—享受第1-5代1%，6-10代提供援助金额0.3%，第11-20代提供援助金额0.1%
+        ///推荐30人，团队达到500人—享受第1-5代1%，6-10代提供援助金额0.3%，第11-20代提供援助金额0.1%，第21-无限代提供援助金额0.01%
+        /// </summary>
+        /// <param name="supplyid">提供订单ID</param>
+        //public static void Bonus1104(int supplyid)
+        //{
+        //    List<Data.SysParam> cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().List(x => x.ID < 10000).ToList();
+
+        //    var sModel = MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().Single(supplyid);
+        //    var onUser = MvcCore.Unity.Get<Data.Service.IUserService>().Single(sModel.UID);
+        //    var param = cacheSysParam.SingleAndInit(x => x.ID == 1104);
+        //    int number = 1;
+        //    var gljlist = Users.GetAllRefereeParent(onUser, 0).Where(x => x.IsActivation).ToList();//查找整条线上的人
+        //    foreach (var item in gljlist)
+        //    {
+        //        //推荐人数（完成订单才算）
+        //        int tjrs = Users.GetAllRefereeChild(item, 1).Where(x => x.AddupSupplyAmount > 0 && x.IsLock == false).Count();
+        //        int tdrs = MvcCore.Unity.Get<Data.Service.IUserService>().List(x=>x.RefereePath.Contains(","+item.ID+",") && x.IsActivation==true && x.IsLock==false).Count();
+
+        //        decimal PARAM_JLJBL = 0; //管理奖比例
+        //        if (tjrs == 1)
+        //        {
+        //            if(number<=cacheSysParam.SingleAndInit(x => x.ID == 1401).Value2.ToInt())PARAM_JLJBL= cacheSysParam.SingleAndInit(x => x.ID == 1401).Value3.ToDecimal();
+        //        }
+        //        if (tjrs >= 2 && tjrs < 4) 
+        //            if(number<=cacheSysParam.SingleAndInit(x => x.ID == 1402).Value2.ToInt())PARAM_JLJBL= cacheSysParam.SingleAndInit(x => x.ID == 1402).Value3.ToDecimal();
+
+        //        if (tjrs >= 4 && tjrs < 6) 
+        //            if(number<=cacheSysParam.SingleAndInit(x => x.ID == 1403).Value2.ToInt())PARAM_JLJBL= cacheSysParam.SingleAndInit(x => x.ID == 1403).Value3.ToDecimal();
+
+        //        if (tjrs >= 6 && tjrs < 8) 
+        //            if(number<=cacheSysParam.SingleAndInit(x => x.ID == 1404).Value2.ToInt())PARAM_JLJBL= cacheSysParam.SingleAndInit(x => x.ID == 1404).Value3.ToDecimal();
+
+        //        if (tjrs >= 8 && tjrs < 10)
+        //            if(number<=cacheSysParam.SingleAndInit(x => x.ID == 1405).Value2.ToInt())PARAM_JLJBL= cacheSysParam.SingleAndInit(x => x.ID == 1405).Value3.ToDecimal();
+
+        //        if (tjrs >= 10 && tjrs < 20 && tdrs>cacheSysParam.SingleAndInit(x => x.ID == 1406).Value.Split('|')[1].ToInt())
+        //            if (number >= cacheSysParam.SingleAndInit(x => x.ID == 1406).Value.Split('|')[2].Split('-')[0].ToInt() && number <= cacheSysParam.SingleAndInit(x => x.ID == 1406).Value.Split('|')[2].Split('-')[1].ToInt()) PARAM_JLJBL = cacheSysParam.SingleAndInit(x => x.ID == 1406).Value2.ToDecimal();
+        //            else if (number >= cacheSysParam.SingleAndInit(x => x.ID == 1406).Value.Split('|')[3].Split('-')[0].ToInt() && number <= cacheSysParam.SingleAndInit(x => x.ID == 1406).Value.Split('|')[3].Split('-')[1].ToInt()) PARAM_JLJBL = cacheSysParam.SingleAndInit(x => x.ID == 1406).Value3.ToDecimal();
+                
+        //        if (tjrs >= 20 && tjrs < 30 && tdrs > cacheSysParam.SingleAndInit(x => x.ID == 1407).Value.Split('|')[1].ToInt())
+        //            if (number >= cacheSysParam.SingleAndInit(x => x.ID == 1407).Value.Split('|')[2].Split('-')[0].ToInt() && number <= cacheSysParam.SingleAndInit(x => x.ID == 1407).Value.Split('|')[2].Split('-')[1].ToInt()) PARAM_JLJBL = cacheSysParam.SingleAndInit(x => x.ID == 1407).Value2.Split('|')[0].ToDecimal();
+        //            else if (number >= cacheSysParam.SingleAndInit(x => x.ID == 1407).Value.Split('|')[3].Split('-')[0].ToInt() && number <= cacheSysParam.SingleAndInit(x => x.ID == 1407).Value.Split('|')[3].Split('-')[1].ToInt()) PARAM_JLJBL = cacheSysParam.SingleAndInit(x => x.ID == 1407).Value2.Split('|')[1].ToDecimal();
+        //            else if (number >= cacheSysParam.SingleAndInit(x => x.ID == 1407).Value.Split('|')[4].Split('-')[0].ToInt() && number <= cacheSysParam.SingleAndInit(x => x.ID == 1407).Value.Split('|')[4].Split('-')[1].ToInt()) PARAM_JLJBL = cacheSysParam.SingleAndInit(x => x.ID == 1407).Value3.ToDecimal();
+
+        //        if (tjrs >= 30  && tdrs > cacheSysParam.SingleAndInit(x => x.ID == 1408).Value.Split('|')[1].ToInt())
+        //            if (number >= cacheSysParam.SingleAndInit(x => x.ID == 1408).Value.Split('|')[2].Split('-')[0].ToInt() && number <= cacheSysParam.SingleAndInit(x => x.ID == 1408).Value.Split('|')[2].Split('-')[1].ToInt()) PARAM_JLJBL = cacheSysParam.SingleAndInit(x => x.ID == 1407).Value2.Split('|')[0].ToDecimal();
+        //            else if (number >= cacheSysParam.SingleAndInit(x => x.ID == 1408).Value.Split('|')[3].Split('-')[0].ToInt() && number <= cacheSysParam.SingleAndInit(x => x.ID == 1408).Value.Split('|')[3].Split('-')[1].ToInt()) PARAM_JLJBL = cacheSysParam.SingleAndInit(x => x.ID == 1407).Value2.Split('|')[1].ToDecimal();
+        //            else if (number >= cacheSysParam.SingleAndInit(x => x.ID == 1408).Value.Split('|')[4].Split('-')[0].ToInt() && number <= cacheSysParam.SingleAndInit(x => x.ID == 1408).Value.Split('|')[4].Split('-')[1].ToInt()) PARAM_JLJBL = cacheSysParam.SingleAndInit(x => x.ID == 1407).Value3.Split('|')[0].ToDecimal();
+        //            else if (number >= cacheSysParam.SingleAndInit(x => x.ID == 1408).Value.Split('|')[5].ToInt() ) PARAM_JLJBL = cacheSysParam.SingleAndInit(x => x.ID == 1408).Value3.Split('|')[1].ToDecimal();
+                
+
+
+        //        if (PARAM_JLJBL > 0)
+        //        {
+        //            ////小单推大单限制
+        //            //var latstsupply = MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().List(x => x.UID == item.ID && x.Status >= (int)Data.Enum.HelpStatus.AllDeal).OrderByDescending(x => x.ID).FirstOrDefault();
+        //            //if (latstsupply != null) //不投资不拿动态奖
+        //            //{
+        //              //  decimal jsMoney = Math.Min((latstsupply.OrderMoney ?? 0), (sModel.OrderMoney ?? 0));
+
+        //                bool iseffective = true;
+        //                DateTime effectivetime = DateTime.Now;// DateTime.Now.AddMinutes(cacheSysParam.SingleAndInit(x => x.ID == 1104).Value2.ToInt());
+        //                //decimal firstbonusMoney = jsMoney * PARAM_JLJBL * cacheSysParam.SingleAndInit(x => x.ID == 1104).Value.ToDecimal();
+        //              //  DateTime effectivetime2 = DateTime.Now.AddMinutes(cacheSysParam.SingleAndInit(x => x.ID == 1104).Value3.ToInt());
+        //                //decimal nextbonusMoney = jsMoney * PARAM_JLJBL - firstbonusMoney;
+
+        //                decimal changMoney = PARAM_JLJBL * sModel.SupplyAmount;
+
+        //                string bonusDesc = "来自【" + sModel.UserName + "】提供帮助订单【" + sModel.SupplyNo + "】的" + param.Name + "(" + sModel.SupplyAmount + "×" + PARAM_JLJBL + ")";
+        //                UpdateUserWallet(changMoney, sModel.SupplyNo, param.ID, param.Name, bonusDesc , item.ID, onUser.ID, "Addup1104", false, iseffective, effectivetime);
+        //              //  UpdateUserWallet(nextbonusMoney, sModel.SupplyNo, param.ID, param.Name, bonusDesc + "×" + (1 - cacheSysParam.SingleAndInit(x => x.ID == 1104).Value.ToDecimal()), item.ID, onUser.ID, "Addup1104", false, iseffective, effectivetime2);
+        //           // }
+
+        //        }
+        //        number++;
+        //    }
+        //}
+        #endregion
+
+        #region 限时付款奖励 在wp17041101中跟随利息
+        /// <summary>
+        /// 限时付款奖励
+        /// </summary>
+        /// <param name="supplyid">提供订单ID</param>
+        public static void Bonus1105(Data.Matching mModel)
+        {
+            List<Data.SysParam> cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().List(x => x.ID < 10000).ToList();
+
+            //if (MvcCore.Unity.Get<Data.Service.IBonusDetailService>().List(x => x.SupplyNo == mModel.SupplyNo && x.BonusID == 1105).Count() <= 0)
+            //{
+                var param = cacheSysParam.SingleAndInit(x => x.ID == 1105);
+                int sec = DateTimeDiff.DateDiff_Sec(mModel.CreateTime, DateTime.Now); //秒
+                var sModel = MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().Single(x => x.SupplyNo == mModel.SupplyNo && x.UID==mModel.SupplyUID);
+                decimal PARAM_JJBL = param.Value.ToDecimal();
+                int PARAM_PAYSEC = param.Value2.ToInt();
+                if (sec <= PARAM_PAYSEC * 60)
+                {
+                    decimal bonusMoney = mModel.MatchAmount * PARAM_JJBL;
+                    //decimal bonusMoney = sModel.SupplyAmount * PARAM_JJBL;
+                    string bonusDesc = "来自【" + sModel.UserName + "】匹配订单【" + mModel.MatchingNo + "】的" + param.Name + "(" + mModel.MatchAmount + "×" + PARAM_JJBL + ")";
+                    UpdateUserWallet(bonusMoney, sModel.SupplyNo, param.ID, param.Name, bonusDesc, mModel.SupplyUID, mModel.SupplyUID, "Addup1105", false, false, DateTime.Now);
+                }
+            //}
+
+        }
+        #endregion
+
+        #region 经理奖，在提供订单生成时计算管理奖(未用)
+        /// <summary>
+        /// 经理奖，在提供订单生成时计算管理奖
+        /// </summary>
+        /// <param name="supplyid">提供订单ID</param>
+        public static void Bonus1108(int supplyid)
+        {
+            //var sModel = MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().Single(supplyid);
+            //var onUser = MvcCore.Unity.Get<Data.Service.IUserService>().Single(sModel.UID);
+            //var param = cacheSysParam.SingleAndInit(x => x.ID == 1108);
+
+            //bool iseffective = false;
+            //DateTime effectivetime = DateTime.Now.AddMinutes(cacheSysParam.SingleAndInit(x => x.ID == 1803).Value2.ToInt());
+            //var gljlist = Users.GetAllRefereeParent(onUser).Where(x => (x.IsAgent ?? false)).ToList();
+            //foreach (var item in gljlist)
+            //{
+            //    decimal PARAM_JLJBL = 0; //经理奖比例
+            //    int PARAMID = 0;
+            //    switch (onUser.RefereeDepth - item.RefereeDepth) //几代经理奖
+            //    {
+            //        case 1: 
+            //            PARAMID = 1803;
+            //            break;
+            //        case 2: 
+            //            PARAMID = 1804;
+            //            break;
+            //        case 3:
+            //            PARAMID = 1805;
+            //            break;
+            //        case 4:
+            //            PARAMID = 1806;
+            //            break;
+            //        default:
+            //            PARAMID = 1807;
+            //            break;
+            //    }
+
+            //    PARAM_JLJBL = item.AgentLevel == 1 ? cacheSysParam.SingleAndInit(x => x.ID == PARAMID).Value.ToDecimal() : cacheSysParam.SingleAndInit(x => x.ID == PARAMID).Value2.ToDecimal();
+            //    iseffective = false;
+            //    effectivetime = DateTime.Now.AddMinutes(cacheSysParam.SingleAndInit(x => x.ID == PARAMID).Value3.ToInt());
+
+            //    decimal bonusMoney = sModel.ExchangeAmount * PARAM_JLJBL;
+            //    string bonusDesc = "来自提供帮助订单【" + sModel.SupplyNo + "】的" + param.Name + "(" + sModel.ExchangeAmount + "×" + PARAM_JLJBL + ")";
+            //    UpdateUserWallet(bonusMoney, sModel.SupplyNo, param.ID, param.Name, bonusDesc, item.ID, "Addup1108", false, iseffective, effectivetime);
+            //}
+        }
+        #endregion
+
+        #region 确认收款时结算利息及奖金
+        /// <summary>
+        /// 提供订单完成付款并被确认时进行利息及奖金结算
+        /// </summary>
+        /// <param name="mModel">匹配实体</param>
+        public static void Settlement(Data.Matching mModel)
+        {
+            List<Data.SysParam> cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().List(x => x.ID < 10000).ToList();
+
+            var sModel = MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().Single(x => x.SupplyNo == mModel.SupplyNo);
+           
+            var supplyMatchlist = MvcCore.Unity.Get<Data.Service.IMatchingService>().List(x => (x.SupplyNo == mModel.SupplyNo) && x.Status ==(int)Data.Enum.MatchingStatus.Verified);
+            decimal supplyYCJ = supplyMatchlist.Count() > 0 ? supplyMatchlist.Sum(x => x.MatchAmount) : 0;
+            //sModel.IsAccrualEffective = true;
+            if (supplyYCJ + mModel.MatchAmount >= sModel.ExchangeAmount) //全部成交
+            {
+                sModel.Status = (int)Data.Enum.HelpStatus.AllDeal;
+                sModel.IsAccrualEffective = true;
+                
+                //mrc 注释 17-04-22 解冻时间改为提供单付款的时间
+
+                sModel.ReserveDate1 = DateTime.Now.AddMinutes(cacheSysParam.SingleAndInit(x => x.ID == 3814).Value.ToInt());//解冻时间
+               
+                ////////
+                
+                
+                //var param3809 = cacheSysParam.SingleAndInit(x => x.ID == 3809);
+                //int sec = DateTimeDiff.DateDiff_Sec(sModel.CreateTime, DateTime.Now); //秒
+                //int PARAM_PAYSEC = param3809.Value.ToInt();
+                //if (sec <= PARAM_PAYSEC * 60)
+                //    sModel.ReserveDate2 = DateTime.Now.AddMinutes(cacheSysParam.SingleAndInit(x => x.ID == 3809).Value2.Split('|')[0].ToInt());//在hl16170401中作为解冻本金和利息的时间
+                //else
+                //    sModel.ReserveDate2 = DateTime.Now.AddMinutes(cacheSysParam.SingleAndInit(x => x.ID == 3809).Value2.Split('|')[1].ToInt());
+
+                //sModel.ReserveStr2 = (sModel.ReserveStr2 ?? "") + "订单已成交，第一次等待" + cacheSysParam.SingleAndInit(x => x.ID == 3809).Value.Split('|')[0].ToInt() + "分钟解冻" + cacheSysParam.SingleAndInit(x => x.ID == 3809).Value.Split('|')[1].ToDecimal() + "";
+                //sModel.ReserveDate2 = DateTime.Now.AddMinutes(cacheSysParam.SingleAndInit(x => x.ID == 3809).Value.Split('|')[0].ToInt());
+                //sModel.ReserveInt2 = 1;
+            }
+            else
+                sModel.Status = (int)Data.Enum.HelpStatus.PartOfDeal;
+            if (sModel.AdvanceMoney == sModel.AdvanceHaveMoney)
+                sModel.IsAdvance = true;
+            MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().Update(sModel);
+            MvcCore.Unity.Get<Data.Service.ISysDBTool>().Commit();
+
+            //更新接受单状态
+            var aModel = MvcCore.Unity.Get<Data.Service.IAcceptHelpService>().Single(x => x.AcceptNo == mModel.AcceptNo);
+            var acceptMatchlist = MvcCore.Unity.Get<Data.Service.IMatchingService>().List(x => x.AcceptNo == mModel.AcceptNo && x.Status == (int)Data.Enum.MatchingStatus.Verified);
+            decimal acceptYCJ = acceptMatchlist.Count() > 0 ? acceptMatchlist.Sum(x => x.MatchAmount) : 0;
+            if (acceptYCJ + mModel.MatchAmount >= aModel.ExchangeAmount)//全部成交
+            {
+                aModel.AllDealTime = DateTime.Now;
+                aModel.Status = (int)Data.Enum.HelpStatus.AllTransactions;
+            }
+            else
+            {
+                aModel.Status = (int)Data.Enum.HelpStatus.PartOfDeal;
+            }
+            MvcCore.Unity.Get<Data.Service.IAcceptHelpService>().Update(aModel);
+            MvcCore.Unity.Get<Data.Service.ISysDBTool>().Commit();
+            //计算限时奖励
+            //var param_1105 = cacheSysParam.SingleAndInit(x => x.ID == 1105);
+            //if ((DateTimeDiff.DateDiff_Sec(mModel.CreateTime, DateTime.Now) / 60) <= param_1105.Value2.ToInt())
+            //{
+            //    Bonus1105(mModel);
+            //}
+            //end计算限时奖励
+            if (sModel.Status == (int)Data.Enum.HelpStatus.AllDeal) //在整个提供订单都完成交易时才结算（主单）
+            {
+                var bonuslist = MvcCore.Unity.Get<Data.Service.IBonusDetailService>().List(x => x.SupplyNo == mModel.SupplyNo && x.IsBalance == false).ToList();
+               // //提供单会员钱包进帐
+               //Wallets.changeWallet(sModel.UID, (sModel.OrderMoney ?? 0), 2001, "本金收入,来自订单：" + sModel.SupplyNo);
+               // UpdateUserWallet((sModel.OrderMoney ?? 0), sModel.SupplyNo, 2001, "本金结算(冻结)", "来自提供订单【" + sModel.SupplyNo + "】的结算（冻结）", sModel.UID, sModel.UID, "", false, false, DateTime.Now);
+
+
+                //更新用户累计提供
+                var updateUser = MvcCore.Unity.Get<Data.Service.IUserService>().Single(mModel.SupplyUID);
+                updateUser.AddupSupplyAmount = (updateUser.AddupSupplyAmount ?? 0) + (sModel.OrderMoney ?? 0);
+                MvcCore.Unity.Get<Data.Service.IUserService>().Update(updateUser);
+                MvcCore.Unity.Get<Data.Service.ISysDBTool>().Commit();
+
+                //结算提供订单产生的直推奖
+                var tjjlist = bonuslist.Where(x => x.BonusID == 1103);
+                decimal yxb = 0;
+                if (cacheSysParam.SingleAndInit(x => x.ID == 3817).Value == "1")
+                    yxb = cacheSysParam.SingleAndInit(x => x.ID == 3817).Value2.ToDecimal();
+                foreach (var item in tjjlist)
+                {
+                    Wallets.changeWallet(item.UID, item.BonusMoney * (1 - yxb), 2002, "来自提供单“" + item.SupplyNo + "”的动态奖结算");
+                    if (yxb>0)
+                      Wallets.changeWallet(item.UID, item.BonusMoney * yxb, 2005, "来自提供单“" + item.SupplyNo + "”的动态奖的" + (yxb * 100).ToString() + "%进入消费钱包结算");
+                }
+                //结算完成，更新奖金表（冻结）
+                int jdsj_3814 = cacheSysParam.SingleAndInit(x => x.ID == 3814).Value2.ToInt();
+                MvcCore.Unity.Get<Data.Service.IBonusDetailService>().Update(new Data.BonusDetail(), new Dictionary<string, string>() { { "IsBalance", "1" }, { "BalanceTime", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") }, { "IsEffective", "1" }, { "EffectiveTime", DateTime.Now.AddMinutes(jdsj_3814).ToString("yyyy-MM-dd HH:mm:ss") } }, "SupplyNo='" + mModel.SupplyNo + "' and BonusID=1103 and IsBalance=0");
+                MvcCore.Unity.Get<Data.Service.IBonusDetailService>().Update(new Data.BonusDetail(), new Dictionary<string, string>() { { "IsBalance", "1" }, { "BalanceTime", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") }, { "IsEffective", "0" }, { "EffectiveTime", DateTime.Now.AddMinutes(jdsj_3814).ToString("yyyy-MM-dd HH:mm:ss") } }, "SupplyNo='" + mModel.SupplyNo + "' and (BonusID=1102 or BonusID=1105) and IsBalance=0");
+                MvcCore.Unity.Get<Data.Service.ISysDBTool>().Commit();
+
+
+
+                ////结算利息
+                // //= cacheSysParam.SingleAndInit(x => x.ID == 1105).Value.ToInt();
+                //var param = cacheSysParam.Single(x=>x.ID==1102);
+                ////var paramtime = cacheSysParam.Single(x => x.ID == 1105);
+                //decimal lixi = param.Value2.ToDecimal();
+                //string bonusDesc = mModel.SupplyNo;
+                //UpdateUserWallet(lixi, sModel.SupplyNo, param.ID, param.Name, bonusDesc + "第一天解冻资金", mModel.SupplyUID, mModel.SupplyUID, "Addup1102", true, false, DateTime.Now.AddMinutes(param.Value.ToInt()));
+                //UpdateUserWallet(lixi, sModel.SupplyNo, param.ID, param.Name, bonusDesc + "第二天解冻资金", mModel.SupplyUID, mModel.SupplyUID, "Addup1102", true, false, DateTime.Now.AddMinutes(param.Value3.ToInt()+ param.Value.ToInt()));
+                //UpdateUserWallet(lixi, sModel.SupplyNo, param.ID, param.Name, bonusDesc + "第三天解冻资金", mModel.SupplyUID, mModel.SupplyUID, "Addup1102", true, false, DateTime.Now.AddMinutes(param.Value3.ToInt()*2 + param.Value.ToInt()));
+                //UpdateUserWallet(lixi, sModel.SupplyNo, param.ID, param.Name, bonusDesc + "第四天解冻资金", mModel.SupplyUID, mModel.SupplyUID, "Addup1102", true, false, DateTime.Now.AddMinutes(param.Value3.ToInt()*3 + param.Value.ToInt()));
+
+
+
+
+
+                ////结算完成，更新奖金表（管理奖奖金部分）（冻结）
+                //int jdsj_1104 = cacheSysParam.SingleAndInit(x => x.ID == 1104).Value.ToInt();
+                //MvcCore.Unity.Get<Data.Service.IBonusDetailService>().Update(new Data.BonusDetail(), new Dictionary<string, string>() { { "IsBalance", "1" }, { "BalanceTime", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") }, { "IsEffective", "0" }, { "EffectiveTime", DateTime.Now.AddMinutes(jdsj_1104).ToString("yyyy-MM-dd HH:mm:ss") } }, "SupplyNo='" + mModel.SupplyNo + "' and BonusID=1104 and IsBalance=0");
+                //MvcCore.Unity.Get<Data.Service.ISysDBTool>().Commit();
+
+                ////诚信奖 (参数1105 value2)
+                //if (MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().List(x => x.Status == (int)Data.Enum.HelpStatus.AllDeal && x.UID == mModel.SupplyUID).Count() == 2)
+                //{
+                //    decimal bonusMoney = sModel.ExchangeAmount * cacheSysParam.SingleAndInit(x => x.ID == 1005).Value2.ToDecimal();
+                //    Bonus.UpdateUserWallet(bonusMoney, mModel.SupplyNo, 1105, cacheSysParam.SingleAndInit(x => x.ID == 1005).Name, "诚信打款奖励，来自提供单：“" + mModel.SupplyNo + "”", mModel.SupplyUID, "addup1105", true, true, DateTime.Now);
+                //}
+
+                ////结算提供订单产生的管理奖
+                //var gljlist = bonuslist.Where(x => x.BonusID == 1104);
+                //foreach (var item in gljlist)
+                //{
+                //    Wallets.changeWallet(item.UID, item.BonusMoney, 2002, "来自提供单“" + item.SupplyNo + "”的管理奖结算");
+                //}
+                ////结算完成，更新奖金表（奖金部分）
+                //MvcCore.Unity.Get<Data.Service.IBonusDetailService>().Update(new Data.BonusDetail(), new Dictionary<string, string>() { { "IsBalance", "1" }, { "BalanceTime", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") } },"SupplyNo='" + mModel.SupplyNo + "' and BonusID=1104 and IsBalance=0");
+                //MvcCore.Unity.Get<Data.Service.ISysDBTool>().Commit();
+
+                ////结算提供订单产生的诚信奖
+                //var xsjlist = bonuslist.Where(x => x.BonusID == 1105);
+                //foreach (var item in xsjlist)
+                //{
+                //    Wallets.changeWallet(item.UID, item.BonusMoney, 2001, "来自提供单“" + item.SupplyNo + "”的诚信奖结算");
+                //}
+                ////结算完成，更新奖金表（奖金部分）
+                //MvcCore.Unity.Get<Data.Service.IBonusDetailService>().Update(new Data.BonusDetail(), new Dictionary<string, string>() { { "IsBalance", "1" }, { "BalanceTime", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") } },
+                //    "SupplyNo='" + mModel.SupplyNo + "' and BonusID=1105 and IsBalance=0");
+                //MvcCore.Unity.Get<Data.Service.ISysDBTool>().Commit();
+
+                //            var jljlist = bonuslist.Where(x => x.BonusID == 1108);
+                //            //结算提供订单产生的经理奖
+                //            foreach (var item in jljlist)
+                //                Wallets.changeWallet(item.UID, item.BonusMoney, 2002, "来自提供单“" + item.SupplyNo + "”的经理奖结算");
+                //            //结算完成，更新奖金表（奖金部分）
+                //            MvcCore.Unity.Get<Data.Service.IBonusDetailService>().Update(new Data.BonusDetail(), new Dictionary<string, string>() { { "IsBalance", "1" }, { "BalanceTime", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") } },
+                //"SupplyNo='" + mModel.SupplyNo + "' and BonusID=1108 and IsBalance=0");
+                //            MvcCore.Unity.Get<Data.Service.ISysDBTool>().Commit();
+            }
+            //else if (sModel.Status == (int)Data.Enum.HelpStatus.AllDeal && sModel.OrderType == 0) //在整个提供订单都完成交易时才结算（预付单）
+            //{
+            //    //结算提供订单产生的诚信奖
+            //    var xsjlist = bonuslist.Where(x => x.BonusID == 1105);
+            //    foreach (var item in xsjlist)
+            //    {
+            //        Wallets.changeWallet(item.UID, item.BonusMoney, 2001, "来自提供单“" + item.SupplyNo + "”的诚信奖结算");
+            //    }
+            //    //结算完成，更新奖金表（奖金部分）
+            //    MvcCore.Unity.Get<Data.Service.IBonusDetailService>().Update(new Data.BonusDetail(), new Dictionary<string, string>() { { "IsBalance", "1" }, { "BalanceTime", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") } },
+            //        "SupplyNo='" + mModel.SupplyNo + "' and BonusID=1105 and IsBalance=0");
+            //    MvcCore.Unity.Get<Data.Service.ISysDBTool>().Commit();
+            //}
+
+                //更新匹配单最后成交时间
+                var updateMatch = MvcCore.Unity.Get<Data.Service.IMatchingService>().Single(mModel.ID);
+            updateMatch.AllDealTime = DateTime.Now;
+            MvcCore.Unity.Get<Data.Service.IMatchingService>().Update(updateMatch);
+            MvcCore.Unity.Get<Data.Service.ISysDBTool>().Commit();
+        }
+        #endregion
+
+        #region 解冻本金和利息
+        /// <summary>
+        /// 解冻本金和利息
+        /// </summary>
+        public static void JIEDONGBENJILIXI(Data.User onUser)
+        {
+
+            //找出所有到时间的提供单（状态为成交未解冻并且解冻时间到期的）
+            var SupplyModelList = MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().List(x => x.Status == (int)Data.Enum.HelpStatus.AllDeal && x.ReserveDate1 < DateTime.Now && x.UID == onUser.ID).ToList();
+            foreach (var item in SupplyModelList)
+            {
+                var items = MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().Single(item.ID);
+                Wallets.changeWallet(items.UID, items.SupplyAmount, 2001, "来自提供单【" + items.SupplyNo + "】本金解冻");//解冻本金
+
+                //查找全部利息
+                decimal CountMoney = MvcCore.Unity.Get<Data.Service.IBonusDetailService>().List(x => (x.BonusID == 1102 || x.BonusID == 1105) && x.IsEffective == false && x.SupplyNo == items.SupplyNo).Count() > 0 ? MvcCore.Unity.Get<Data.Service.IBonusDetailService>().List(x => (x.BonusID == 1102 || x.BonusID == 1105) && x.IsEffective == false && x.SupplyNo == items.SupplyNo).Sum(x => x.BonusMoney) : 0;
+                //解冻
+                if (CountMoney > 0)
+                {
+                    decimal yxb = 0;
+                    if ( MvcCore.Unity.Get<Data.Service.ISysParamService>().SingleAndInit(x => x.ID == 3817).Value == "1")
+                        yxb = MvcCore.Unity.Get<Data.Service.ISysParamService>().SingleAndInit(x => x.ID == 3817).Value2.ToDecimal();
+                    Wallets.changeWallet(items.UID, CountMoney * (1 - yxb), 2001, "来自提供单【" + items.SupplyNo + "】利息解冻");
+                    if (yxb > 0)
+                        Wallets.changeWallet(item.UID, CountMoney * yxb, 2005, "来自提供单“" + item.SupplyNo + "”的利息的" + (yxb * 100).ToString() + "%进入消费钱包结算");
+                    
+                }
+                //改变记录的状态
+                MvcCore.Unity.Get<Data.Service.IBonusDetailService>().Update(new Data.BonusDetail(), new Dictionary<string, string>() { { "IsEffective", "1" }, { "EffectiveTime", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") } }, "SupplyNo='" + items.SupplyNo + "' and (BonusID=1102 or BonusID=1105) and IsEffective=0");
+
+
+                items.Status = (int)Data.Enum.HelpStatus.AllTransactions;//全部成交
+                items.ReserveDate2 = DateTime.Now;//完全成交时间
+                items.IsAccruaCount = false;//停止利息发放
+                //items.IsAccrualEffective = true;//利息生效
+                MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().Update(items);
+                MvcCore.Unity.Get<Data.Service.ISysDBTool>().Commit();//提交到数据库
+            }
+        } 
+        #endregion
+
+    }
+}

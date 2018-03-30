@@ -1,0 +1,58 @@
+﻿@model Webdiyer.WebControls.Mvc.PagedList<JN.Data.BonusDetail>
+<table class="table table-bordered table-striped">
+    <tr>
+        <th></th>
+        <th>@T("编号")</th>
+        <th>@T("+收入/-支出")</th>
+        <th>@T("类型")</th>
+        <th>@T("备注")</th>
+        <th>@T("日期")</th>
+    </tr>
+    @{ int i = 0;}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@(Model.StartItemIndex + i++)</td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BonusMoney)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BonusName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateTime)
+            </td>
+        </tr>
+    }
+</table>
+<link href="~/Plugin/countdown/jquery.countdown.css" rel="stylesheet" />
+<script src="~/Plugin/countdown/jquery.countdown.js"></script>
+<!--E 翻页页码  -->
+<script type="text/javascript">
+    $('.time_countdown').each(function () {
+        var $this = $(this);
+        var datez = new Date($this.attr('data') + '').getTime();
+        var date = new Date(datez);
+        Y = date.getFullYear() + '/';
+        M = (date.getMonth() + 1) + '/';
+        D = date.getDate() + ' ';
+        h = date.getHours() + ':';
+        m = date.getMinutes() + ':';
+        s = date.getSeconds();
+
+        dates = Y + M + D + h + m + s;
+        console.log(Y + M + D + h + m + s + '.......');
+        $this.countdown(dates, function (event) {
+            $(this).text(
+                    event.strftime('%-D 天 %-H 小时 %M 分钟 %S 秒')
+            );
+        });
+        datez = null;
+    });
+</script>

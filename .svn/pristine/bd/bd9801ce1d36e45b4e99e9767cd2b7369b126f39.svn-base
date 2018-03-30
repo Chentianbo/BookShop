@@ -1,0 +1,177 @@
+﻿@using Webdiyer.WebControls.Mvc
+@model Webdiyer.WebControls.Mvc.PagedList<JN.Data.Matching>
+@{
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 10000);
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+
+    ViewBag.Title = "首页";
+    Layout = "~/Areas/UserCenter/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+}
+<script src="~/js/jquery.form.js"></script>
+<script src="~/theme/mmm/js/box.js"></script>
+@{Html.RegisterMvcPagerScriptResource();}
+
+<div class="innerContent">
+    <div id="donationWrap">
+
+        <div class="col-sm-6 padding0">
+            <a class="btn btn-block pdBtn area area-x" id="pdBtn">
+                <i><img src="~/Theme/mmm/images/coin.png" /></i>
+                @T("申请提供帮助")
+            </a>
+        </div>
+        <div class="col-sm-6 padding0">
+            <a class="btn btn-block area area-z" id="gdBtn">
+                <i><img src="~/Theme/mmm/images/coin.png" /></i>
+                @T("申请接受帮助")
+            </a>
+        </div>
+
+        <div class="">
+            <div class="confirm_window" id="agreement_window" disabled>
+                <div class="agreement_book">
+                    <p>@T("风险警示")</p>
+                    <div class="content_book">
+                        <p>参与者在接受本平台服务之前，请务必仔细阅读本条款并同意本声明。凡参与者均视为具有完全民事行为能力人，都将被视作是对本声明全部内容的无异议的认可;视同意签署以下文件： 此文件为有关责任的豁免、权利的放弃、风险的承担和赔偿的协议。我已经完全获知和理解以下的条款和内容。我放弃了某些的法律权力， 包括系统、领导人、和其他会员提起诉讼的权利。我已经仔细阅读了此合约。我清楚的知道天地人属非盈利项目，具有一定的金融风险。</p>
+                        <p>一、风险的承担：我自愿参加天地人。我理解、并同意和签署此有关责任豁免、权利放弃和风险承担的协议。我清楚系统是民间自发性金融社区。我知道系统风险性。</p>
+                        <p>二、关于豁免责任，放弃权利和赔偿的协议：</p>
+                        <p>1.我自愿参加天地人，在此我同意，如果因为未按系统规则非法操作导致本金受损，我放弃追究和要求赔偿的权利，同时免除领导人及推荐人的法律责任。</p>
+                        <p>2.我清楚获知天地人暂停机制与重启机制具体说明。系统只作监督和搭建平台桥梁并不承担法律责任。任何项目投资具有一定的投资风险。投资者的本金可能会因市场变动而蒙受损失，请投资者充分认识投资风险。</p>
+                        <p>3.在此我宣布自己身体健康，拥有清醒的头脑，并已满十八岁具有完全民事行为能力的人</p>
+                        <p>4.我同意，一旦签署，此责任豁免协议将生效。我保证：我已经阅读和理解以上声明和其条文；我理解的金融风险；承担由于选择了天地人的全部责任。</p>
+                        <p>5.为确保各会员的合法权益，本平台有权采取各种必要手段对会员进行身份验证。身份认证要素是本公司识别会员的依据，会员必须妥善保管，不得将身份认证要素提供给任何第三方或交与任何第三方使用。使用上述身份要素所发出的一切指令均视为会员本人所为，会员应对此产生的后果负责，对非本平台原因造成的账户、密码等信息被冒用，盗用，或非法使用，由此产生的一切风险，责任，损失，费用等由会员自行承担。</p>
+                        <p>6.系统因下列状况无法正常运作，使您无法使用或无法正常使用各项服务时， 本平台不承担损害赔偿责任，该状况包括但不限于：</p>
+                        <p>（1）在本网站（平台）公告之系统停机维护期间的。</p>
+                        <p>（2）电信设备出现故障不能正常进行数据运转的。</p>
+                        <p>（3）因台风，地震，海啸，洪水，停电，战争，恐怖袭击等不可抗力因素，造成本公司系统障碍不能正常执行业务的。</p>
+                        <p>（4）由于黑客攻击，电信部门技术调整或故障，网站升级，银行限制，各国政策调整对系统造成的问题等原因而导致的服务中断或延迟的。我愿意接受系统规则，自己承担所有金融风险。</p>
+                        <p>三：在接受天地人风险提示函之前，请您仔细阅读本风险提示函的全部内容。如果您不同意本函的任意内容，或者无法准确理解平台对风险提示函的解释，请不要进行后续操作。</p>
+                        <p>四：该免责声明点击对勾生效，特此声明！</p>
+                        <p style="color:#ff0000;font-size:12px;"> <input id="isRead" name="isRead" type="checkbox" onclick="Read(this)" value="1">我已经认真阅读以上风险提示，并已同意本网站服务的所有条款。</p>
+                    </div>
+                    <div class="btn_agr">
+                        <button id="subbthbtnOk" class="YN" type="button" onclick="btnOk()" disabled>@T("继续")</button>
+                        <button class="N" type="reset" id="close_btn">@T("取消")</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12" id="pdWrap" style="">
+                <div class="widget widget-body-white">
+                    @Html.Partial("_PartialSubmitSupplyHelp")
+                </div>
+            </div>
+        </div>
+        <div class="">
+            <div class="col-md-12" id="gdWrap" style="">
+                <div class="widget widget-body-white">
+                    @Html.Partial("_PartialSubmitAcceptHelp")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mt10" id="context">
+    <div class="col-md-9 padding0 pr10" id="ListContent">
+        @Html.Partial("_PartialMatchList", Model)
+    </div>
+    <div class="col-md-3 padding0">
+        @{
+            int takenum = 10;
+            int takesupplynum = takenum / 2;
+            int takeacceptnum = takenum / 2;
+            var cellorders = new List<JN.Data.Extensions.CellOrders>();
+            var listsupplys_0 = MvcCore.Unity.Get<JN.Data.Service.ISupplyHelpService>().List(x => x.UID == Umodel.ID).OrderByDescending(x => x.CreateTime);
+            var listint_0 = MvcCore.Unity.Get<JN.Data.Service.IAcceptHelpService>().List(x => x.UID == Umodel.ID).OrderByDescending(x => x.CreateTime);
+            var listsupplys = listsupplys_0.Take(takesupplynum).ToList();
+            foreach (var item in listsupplys)
+            {
+                cellorders.Add(new JN.Data.Extensions.CellOrders { CreateTime = item.CreateTime, OrderNo = item.SupplyNo, OrderTable = "SupplyHelp" });
+            }
+            var listint = listint_0.Take(takeacceptnum).ToList();
+            foreach (var item in listint)
+            {
+                cellorders.Add(new JN.Data.Extensions.CellOrders { CreateTime = item.CreateTime, OrderNo = item.AcceptNo, OrderTable = "AcceptHelp" });
+            }
+
+            foreach (var item in cellorders.OrderByDescending(x => x.CreateTime))
+            {
+                if (item.OrderTable == "SupplyHelp")
+                {
+                    var sModel = MvcCore.Unity.Get<JN.Data.Service.ISupplyHelpService>().Single(x => x.SupplyNo == item.OrderNo);
+                    if (sModel != null)
+                    {
+                        <div class="widget donate-sidebar pdContainer-pending ">
+                            <div class="widget-body area-x">
+                                <div class="donateHead clearfix">
+                                    <span class="fa fa-arrow-right glyphicon-circle glyphicon glyphicon-arrow-right glyphicon-left">
+                                    </span>
+                                    <div class="title">
+                                        申请提供的帮助:
+                                        <span>@sModel.SupplyNo</span>
+                                    </div>
+                                </div>
+                                <b>参加者</b>:@sModel.UserName<br>
+                                <b>金额</b>:@(sModel.OrderMoney)RMB<br>
+                                <b>剩余</b>:@(sModel.ExchangeAmount - sModel.HaveMatchingAmount) RMB<br>
+                                <b>进场时间</b>:@cacheSysParam.SingleAndInit(x => x.ID == sModel.ReserveInt1).Name<br>
+                                <b>时间</b>:@sModel.CreateTime<br>
+                                <b>状况:<span class="pending">@typeof(JN.Data.Enum.HelpStatus).GetEnumDesc(sModel.Status)</span></b>
+                                <br>
+                                @if (sModel.Status == (int)JN.Data.Enum.HelpStatus.NoMatching)
+                                {
+
+                                    <b>
+                                        <div>
+                                            @*<form method="post" id="wait" action="/tu/cancel_provide_request">
+                                                    <a href="javascript:if(confirm(' 确定要取消此定单吗?'))location='/UserCenter/Home/CancelSupplyQueuing/@sModel.ID'" class="btn btn-danger btn-xs">取消</a>
+
+                                                </form>*@
+                                        </div>
+                                    </b>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    var aModel = MvcCore.Unity.Get<JN.Data.Service.IAcceptHelpService>().Single(x => x.AcceptNo == item.OrderNo);
+                    if (aModel != null)
+                    {
+                        <div class="widget donate-sidebar pdContainer-pending">
+                            <div class="widget-body area-z">
+                                <div class="donateHead clearfix">
+                                    <span class="fa fa-arrow-left glyphicon-circle glyphicon glyphicon-arrow-left glyphicon-left">
+                                    </span>
+                                    <div class="title">
+                                        申请接受的帮助:<span>@aModel.AcceptNo</span>
+                                    </div>
+                                </div>
+                                <b>参加者</b>:@aModel.UserName<br>
+                                <b>数额</b>:@(aModel.ExchangeAmount) RMB<br>
+                                <b>剩余</b>:@(aModel.ExchangeAmount - aModel.HaveMatchingAmount) RMB<br>
+                                <b>日期</b>:@aModel.CreateTime<br>
+                                <b>状况:<span class="pending">@typeof(JN.Data.Enum.HelpStatus).GetEnumDesc(aModel.Status)</span></b>
+                                <br>
+
+                            </div>
+                        </div>
+                    }
+                }
+            }
+        }
+    </div>
+</div>
+<script>
+    $("#agreement_window").hide();
+</script>
+

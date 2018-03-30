@@ -1,0 +1,406 @@
+﻿---------------------------------------------------
+来自页面：http://localhost:8280/AdminCenter/User/IDCardCheck
+发生时间：2017/4/24 11:21:50
+异常对像：System.Web.Mvc.HtmlHelper.FindPartialView
+错误追踪：   在 System.Web.Mvc.HtmlHelper.FindPartialView(ViewContext viewContext, String partialViewName, ViewEngineCollection viewEngineCollection)
+   在 System.Web.Mvc.HtmlHelper.RenderPartialInternal(String partialViewName, ViewDataDictionary viewData, Object model, TextWriter writer, ViewEngineCollection viewEngineCollection)
+   在 System.Web.Mvc.Html.PartialExtensions.Partial(HtmlHelper htmlHelper, String partialViewName, Object model, ViewDataDictionary viewData)
+   在 System.Web.Mvc.Html.PartialExtensions.Partial(HtmlHelper htmlHelper, String partialViewName, Object model)
+   在 ASP._Page_Areas_AdminCenter_Views_User_IDCardCheck_cshtml.Execute() 位置 g:\项目目录\强哥的项目\JN.Web\Areas\AdminCenter\Views\User\IDCardCheck.cshtml:行号 57
+   在 System.Web.WebPages.WebPageBase.ExecutePageHierarchy()
+   在 System.Web.Mvc.WebViewPage.ExecutePageHierarchy()
+   在 System.Web.WebPages.WebPageBase.ExecutePageHierarchy(WebPageContext pageContext, TextWriter writer, WebPageRenderingBase startPage)
+   在 System.Web.Mvc.RazorView.RenderView(ViewContext viewContext, TextWriter writer, Object instance)
+   在 System.Web.Mvc.BuildManagerCompiledView.Render(ViewContext viewContext, TextWriter writer)
+   在 System.Web.Mvc.ViewResultBase.ExecuteResult(ControllerContext context)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResult(ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultWithFilters(ControllerContext controllerContext, IList`1 filters, ActionResult actionResult)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<>c__DisplayClass2b.<BeginInvokeAction>b__1c()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<BeginInvokeAction>b__1e(IAsyncResult asyncResult)
+错误提示：未找到分部视图“_MatchdList”或没有视图引擎支持搜索的位置。搜索了以下位置: 
+~/Areas/AdminCenter/Views/User/_MatchdList.aspx
+~/Areas/AdminCenter/Views/User/_MatchdList.ascx
+~/Areas/AdminCenter/Views/Shared/_MatchdList.aspx
+~/Areas/AdminCenter/Views/Shared/_MatchdList.ascx
+~/Views/User/_MatchdList.aspx
+~/Views/User/_MatchdList.ascx
+~/Views/Shared/_MatchdList.aspx
+~/Views/Shared/_MatchdList.ascx
+~/Areas/AdminCenter/Views/User/_MatchdList.cshtml
+~/Areas/AdminCenter/Views/User/_MatchdList.vbhtml
+~/Areas/AdminCenter/Views/Shared/_MatchdList.cshtml
+~/Areas/AdminCenter/Views/Shared/_MatchdList.vbhtml
+~/Views/User/_MatchdList.cshtml
+~/Views/User/_MatchdList.vbhtml
+~/Views/Shared/_MatchdList.cshtml
+~/Views/Shared/_MatchdList.vbhtml
+---------------------------------------------------
+来自页面：http://localhost:8280/AdminCenter/User/IDCardCheck
+发生时间：2017/4/24 11:29:03
+异常对像：System.Web.Mvc.HtmlHelper.FindPartialView
+错误追踪：   在 System.Web.Mvc.HtmlHelper.FindPartialView(ViewContext viewContext, String partialViewName, ViewEngineCollection viewEngineCollection)
+   在 System.Web.Mvc.HtmlHelper.RenderPartialInternal(String partialViewName, ViewDataDictionary viewData, Object model, TextWriter writer, ViewEngineCollection viewEngineCollection)
+   在 System.Web.Mvc.Html.PartialExtensions.Partial(HtmlHelper htmlHelper, String partialViewName, Object model, ViewDataDictionary viewData)
+   在 System.Web.Mvc.Html.PartialExtensions.Partial(HtmlHelper htmlHelper, String partialViewName, Object model)
+   在 ASP._Page_Areas_AdminCenter_Views_User_IDCardCheck_cshtml.Execute() 位置 g:\项目目录\强哥的项目\JN.Web\Areas\AdminCenter\Views\User\IDCardCheck.cshtml:行号 56
+   在 System.Web.WebPages.WebPageBase.ExecutePageHierarchy()
+   在 System.Web.Mvc.WebViewPage.ExecutePageHierarchy()
+   在 System.Web.WebPages.WebPageBase.ExecutePageHierarchy(WebPageContext pageContext, TextWriter writer, WebPageRenderingBase startPage)
+   在 System.Web.Mvc.RazorView.RenderView(ViewContext viewContext, TextWriter writer, Object instance)
+   在 System.Web.Mvc.BuildManagerCompiledView.Render(ViewContext viewContext, TextWriter writer)
+   在 System.Web.Mvc.ViewResultBase.ExecuteResult(ControllerContext context)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResult(ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultWithFilters(ControllerContext controllerContext, IList`1 filters, ActionResult actionResult)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<>c__DisplayClass2b.<BeginInvokeAction>b__1c()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<BeginInvokeAction>b__1e(IAsyncResult asyncResult)
+错误提示：未找到分部视图“_MatchdList”或没有视图引擎支持搜索的位置。搜索了以下位置: 
+~/Areas/AdminCenter/Views/User/_MatchdList.aspx
+~/Areas/AdminCenter/Views/User/_MatchdList.ascx
+~/Areas/AdminCenter/Views/Shared/_MatchdList.aspx
+~/Areas/AdminCenter/Views/Shared/_MatchdList.ascx
+~/Views/User/_MatchdList.aspx
+~/Views/User/_MatchdList.ascx
+~/Views/Shared/_MatchdList.aspx
+~/Views/Shared/_MatchdList.ascx
+~/Areas/AdminCenter/Views/User/_MatchdList.cshtml
+~/Areas/AdminCenter/Views/User/_MatchdList.vbhtml
+~/Areas/AdminCenter/Views/Shared/_MatchdList.cshtml
+~/Areas/AdminCenter/Views/Shared/_MatchdList.vbhtml
+~/Views/User/_MatchdList.cshtml
+~/Views/User/_MatchdList.vbhtml
+~/Views/Shared/_MatchdList.cshtml
+~/Views/Shared/_MatchdList.vbhtml
+---------------------------------------------------
+来自页面：http://localhost:8280/AdminCenter/User/IDCardCheck
+发生时间：2017/4/24 11:46:15
+异常对像：ASP._Page_Areas_AdminCenter_Views_User__IDCardCheck_cshtml.Execute
+错误追踪：   在 ASP._Page_Areas_AdminCenter_Views_User__IDCardCheck_cshtml.Execute() 位置 g:\项目目录\强哥的项目\JN.Web\Areas\AdminCenter\Views\User\_IDCardCheck.cshtml:行号 18
+   在 System.Web.WebPages.WebPageBase.ExecutePageHierarchy()
+   在 System.Web.Mvc.WebViewPage.ExecutePageHierarchy()
+   在 System.Web.WebPages.WebPageBase.ExecutePageHierarchy(WebPageContext pageContext, TextWriter writer, WebPageRenderingBase startPage)
+   在 System.Web.Mvc.RazorView.RenderView(ViewContext viewContext, TextWriter writer, Object instance)
+   在 System.Web.Mvc.BuildManagerCompiledView.Render(ViewContext viewContext, TextWriter writer)
+   在 System.Web.Mvc.HtmlHelper.RenderPartialInternal(String partialViewName, ViewDataDictionary viewData, Object model, TextWriter writer, ViewEngineCollection viewEngineCollection)
+   在 System.Web.Mvc.Html.PartialExtensions.Partial(HtmlHelper htmlHelper, String partialViewName, Object model, ViewDataDictionary viewData)
+   在 System.Web.Mvc.Html.PartialExtensions.Partial(HtmlHelper htmlHelper, String partialViewName, Object model)
+   在 ASP._Page_Areas_AdminCenter_Views_User_IDCardCheck_cshtml.Execute() 位置 g:\项目目录\强哥的项目\JN.Web\Areas\AdminCenter\Views\User\IDCardCheck.cshtml:行号 55
+   在 System.Web.WebPages.WebPageBase.ExecutePageHierarchy()
+   在 System.Web.Mvc.WebViewPage.ExecutePageHierarchy()
+   在 System.Web.WebPages.WebPageBase.ExecutePageHierarchy(WebPageContext pageContext, TextWriter writer, WebPageRenderingBase startPage)
+   在 System.Web.Mvc.RazorView.RenderView(ViewContext viewContext, TextWriter writer, Object instance)
+   在 System.Web.Mvc.BuildManagerCompiledView.Render(ViewContext viewContext, TextWriter writer)
+   在 System.Web.Mvc.ViewResultBase.ExecuteResult(ControllerContext context)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResult(ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultWithFilters(ControllerContext controllerContext, IList`1 filters, ActionResult actionResult)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<>c__DisplayClass2b.<BeginInvokeAction>b__1c()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<BeginInvokeAction>b__1e(IAsyncResult asyncResult)
+错误提示：未将对象引用设置到对象的实例。
+---------------------------------------------------
+来自页面：http://localhost:8280/AdminCenter/User/IDCardCheck
+发生时间：2017/4/24 11:47:29
+异常对像：System.Web.Mvc.ViewDataDictionary`1[TModel].SetModel
+错误追踪：   在 System.Web.Mvc.ViewDataDictionary`1.SetModel(Object value)
+   在 System.Web.Mvc.ViewDataDictionary.set_Model(Object value)
+   在 System.Web.Mvc.ViewDataDictionary..ctor(ViewDataDictionary dictionary)
+   在 System.Web.Mvc.ViewDataDictionary`1..ctor(ViewDataDictionary viewDataDictionary)
+   在 System.Web.Mvc.WebViewPage`1.SetViewData(ViewDataDictionary viewData)
+   在 System.Web.Mvc.WebViewPage.set_ViewData(ViewDataDictionary value)
+   在 System.Web.Mvc.RazorView.RenderView(ViewContext viewContext, TextWriter writer, Object instance)
+   在 System.Web.Mvc.BuildManagerCompiledView.Render(ViewContext viewContext, TextWriter writer)
+   在 System.Web.Mvc.ViewResultBase.ExecuteResult(ControllerContext context)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResult(ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultWithFilters(ControllerContext controllerContext, IList`1 filters, ActionResult actionResult)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<>c__DisplayClass2b.<BeginInvokeAction>b__1c()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<BeginInvokeAction>b__1e(IAsyncResult asyncResult)
+错误提示：传入字典的模型项的类型为“PagedList.PagedList`1[JN.Data.User]”，但此字典需要类型“Webdiyer.WebControls.Mvc.PagedList`1[JN.Data.User]”的模型项。
+---------------------------------------------------
+来自页面：http://localhost:8280/AdminCenter/User/IDCardCheck
+发生时间：2017/4/24 11:47:38
+异常对像：System.Web.Mvc.ViewDataDictionary`1[TModel].SetModel
+错误追踪：   在 System.Web.Mvc.ViewDataDictionary`1.SetModel(Object value)
+   在 System.Web.Mvc.ViewDataDictionary.set_Model(Object value)
+   在 System.Web.Mvc.ViewDataDictionary..ctor(ViewDataDictionary dictionary)
+   在 System.Web.Mvc.ViewDataDictionary`1..ctor(ViewDataDictionary viewDataDictionary)
+   在 System.Web.Mvc.WebViewPage`1.SetViewData(ViewDataDictionary viewData)
+   在 System.Web.Mvc.WebViewPage.set_ViewData(ViewDataDictionary value)
+   在 System.Web.Mvc.RazorView.RenderView(ViewContext viewContext, TextWriter writer, Object instance)
+   在 System.Web.Mvc.BuildManagerCompiledView.Render(ViewContext viewContext, TextWriter writer)
+   在 System.Web.Mvc.ViewResultBase.ExecuteResult(ControllerContext context)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResult(ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultWithFilters(ControllerContext controllerContext, IList`1 filters, ActionResult actionResult)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<>c__DisplayClass2b.<BeginInvokeAction>b__1c()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<BeginInvokeAction>b__1e(IAsyncResult asyncResult)
+错误提示：传入字典的模型项的类型为“PagedList.PagedList`1[JN.Data.User]”，但此字典需要类型“Webdiyer.WebControls.Mvc.PagedList`1[JN.Data.User]”的模型项。
+---------------------------------------------------
+来自页面：http://localhost:8280/AdminCenter/User/IDCardCheck
+发生时间：2017/4/24 11:48:29
+异常对像：System.Web.Mvc.ViewDataDictionary`1[TModel].SetModel
+错误追踪：   在 System.Web.Mvc.ViewDataDictionary`1.SetModel(Object value)
+   在 System.Web.Mvc.ViewDataDictionary.set_Model(Object value)
+   在 System.Web.Mvc.ViewDataDictionary..ctor(ViewDataDictionary dictionary)
+   在 System.Web.Mvc.ViewDataDictionary`1..ctor(ViewDataDictionary viewDataDictionary)
+   在 System.Web.Mvc.WebViewPage`1.SetViewData(ViewDataDictionary viewData)
+   在 System.Web.Mvc.WebViewPage.set_ViewData(ViewDataDictionary value)
+   在 System.Web.Mvc.RazorView.RenderView(ViewContext viewContext, TextWriter writer, Object instance)
+   在 System.Web.Mvc.BuildManagerCompiledView.Render(ViewContext viewContext, TextWriter writer)
+   在 System.Web.Mvc.ViewResultBase.ExecuteResult(ControllerContext context)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResult(ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultWithFilters(ControllerContext controllerContext, IList`1 filters, ActionResult actionResult)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<>c__DisplayClass2b.<BeginInvokeAction>b__1c()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<BeginInvokeAction>b__1e(IAsyncResult asyncResult)
+错误提示：传入字典的模型项的类型为“PagedList.PagedList`1[JN.Data.User]”，但此字典需要类型“Webdiyer.WebControls.Mvc.PagedList`1[JN.Data.User]”的模型项。
+---------------------------------------------------
+来自页面：http://localhost:8280/AdminCenter/market/IDCardCheck
+发生时间：2017/4/24 11:52:45
+异常对像：System.Web.Mvc.ViewResult.FindView
+错误追踪：   在 System.Web.Mvc.ViewResult.FindView(ControllerContext context)
+   在 System.Web.Mvc.ViewResultBase.ExecuteResult(ControllerContext context)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResult(ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultWithFilters(ControllerContext controllerContext, IList`1 filters, ActionResult actionResult)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<>c__DisplayClass2b.<BeginInvokeAction>b__1c()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<BeginInvokeAction>b__1e(IAsyncResult asyncResult)
+错误提示：未找到视图“IDCardCheck”或其母版视图，或没有视图引擎支持搜索的位置。搜索了以下位置: 
+~/Areas/AdminCenter/Views/market/IDCardCheck.aspx
+~/Areas/AdminCenter/Views/market/IDCardCheck.ascx
+~/Areas/AdminCenter/Views/Shared/IDCardCheck.aspx
+~/Areas/AdminCenter/Views/Shared/IDCardCheck.ascx
+~/Views/market/IDCardCheck.aspx
+~/Views/market/IDCardCheck.ascx
+~/Views/Shared/IDCardCheck.aspx
+~/Views/Shared/IDCardCheck.ascx
+~/Areas/AdminCenter/Views/market/IDCardCheck.cshtml
+~/Areas/AdminCenter/Views/market/IDCardCheck.vbhtml
+~/Areas/AdminCenter/Views/Shared/IDCardCheck.cshtml
+~/Areas/AdminCenter/Views/Shared/IDCardCheck.vbhtml
+~/Views/market/IDCardCheck.cshtml
+~/Views/market/IDCardCheck.vbhtml
+~/Views/Shared/IDCardCheck.cshtml
+~/Views/Shared/IDCardCheck.vbhtml
+---------------------------------------------------
+来自页面：http://localhost:8280/AdminCenter/market/IDCardCheck
+发生时间：2017/4/24 11:53:34
+异常对像：System.Web.Mvc.ViewResult.FindView
+错误追踪：   在 System.Web.Mvc.ViewResult.FindView(ControllerContext context)
+   在 System.Web.Mvc.ViewResultBase.ExecuteResult(ControllerContext context)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResult(ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultWithFilters(ControllerContext controllerContext, IList`1 filters, ActionResult actionResult)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<>c__DisplayClass2b.<BeginInvokeAction>b__1c()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<BeginInvokeAction>b__1e(IAsyncResult asyncResult)
+错误提示：未找到视图“IDCardCheck”或其母版视图，或没有视图引擎支持搜索的位置。搜索了以下位置: 
+~/Areas/AdminCenter/Views/market/IDCardCheck.aspx
+~/Areas/AdminCenter/Views/market/IDCardCheck.ascx
+~/Areas/AdminCenter/Views/Shared/IDCardCheck.aspx
+~/Areas/AdminCenter/Views/Shared/IDCardCheck.ascx
+~/Views/market/IDCardCheck.aspx
+~/Views/market/IDCardCheck.ascx
+~/Views/Shared/IDCardCheck.aspx
+~/Views/Shared/IDCardCheck.ascx
+~/Areas/AdminCenter/Views/market/IDCardCheck.cshtml
+~/Areas/AdminCenter/Views/market/IDCardCheck.vbhtml
+~/Areas/AdminCenter/Views/Shared/IDCardCheck.cshtml
+~/Areas/AdminCenter/Views/Shared/IDCardCheck.vbhtml
+~/Views/market/IDCardCheck.cshtml
+~/Views/market/IDCardCheck.vbhtml
+~/Views/Shared/IDCardCheck.cshtml
+~/Views/Shared/IDCardCheck.vbhtml
+---------------------------------------------------
+来自页面：http://localhost:8280/AdminCenter/market/IDCardCheck
+发生时间：2017/4/24 11:54:36
+异常对像：System.Web.Mvc.ViewResult.FindView
+错误追踪：   在 System.Web.Mvc.ViewResult.FindView(ControllerContext context)
+   在 System.Web.Mvc.ViewResultBase.ExecuteResult(ControllerContext context)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResult(ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultWithFilters(ControllerContext controllerContext, IList`1 filters, ActionResult actionResult)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<>c__DisplayClass2b.<BeginInvokeAction>b__1c()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<BeginInvokeAction>b__1e(IAsyncResult asyncResult)
+错误提示：未找到视图“IDCardCheck”或其母版视图，或没有视图引擎支持搜索的位置。搜索了以下位置: 
+~/Areas/AdminCenter/Views/market/IDCardCheck.aspx
+~/Areas/AdminCenter/Views/market/IDCardCheck.ascx
+~/Areas/AdminCenter/Views/Shared/IDCardCheck.aspx
+~/Areas/AdminCenter/Views/Shared/IDCardCheck.ascx
+~/Views/market/IDCardCheck.aspx
+~/Views/market/IDCardCheck.ascx
+~/Views/Shared/IDCardCheck.aspx
+~/Views/Shared/IDCardCheck.ascx
+~/Areas/AdminCenter/Views/market/IDCardCheck.cshtml
+~/Areas/AdminCenter/Views/market/IDCardCheck.vbhtml
+~/Areas/AdminCenter/Views/Shared/IDCardCheck.cshtml
+~/Areas/AdminCenter/Views/Shared/IDCardCheck.vbhtml
+~/Views/market/IDCardCheck.cshtml
+~/Views/market/IDCardCheck.vbhtml
+~/Views/Shared/IDCardCheck.cshtml
+~/Views/Shared/IDCardCheck.vbhtml
+---------------------------------------------------
+来自页面：http://localhost:8280/AdminCenter/market/IDCardCheck
+发生时间：2017/4/24 14:07:28
+异常对像：System.Web.Compilation.AssemblyBuilder.Compile
+错误追踪：   在 System.Web.Compilation.AssemblyBuilder.Compile()
+   在 System.Web.Compilation.BuildProvidersCompiler.PerformBuild()
+   在 System.Web.Compilation.BuildManager.CompileWebFile(VirtualPath virtualPath)
+   在 System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   在 System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   在 System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   在 System.Web.Compilation.BuildManager.GetCompiledType(VirtualPath virtualPath)
+   在 System.Web.Compilation.BuildManager.GetCompiledType(String virtualPath)
+   在 System.Web.Mvc.BuildManagerWrapper.System.Web.Mvc.IBuildManager.GetCompiledType(String virtualPath)
+   在 System.Web.Mvc.BuildManagerCompiledView.Render(ViewContext viewContext, TextWriter writer)
+   在 System.Web.Mvc.HtmlHelper.RenderPartialInternal(String partialViewName, ViewDataDictionary viewData, Object model, TextWriter writer, ViewEngineCollection viewEngineCollection)
+   在 System.Web.Mvc.Html.PartialExtensions.Partial(HtmlHelper htmlHelper, String partialViewName, Object model, ViewDataDictionary viewData)
+   在 System.Web.Mvc.Html.PartialExtensions.Partial(HtmlHelper htmlHelper, String partialViewName, Object model)
+   在 ASP._Page_Areas_AdminCenter_Views_market_IDCardCheck_cshtml.Execute() 位置 g:\项目目录\强哥的项目\JN.Web\Areas\AdminCenter\Views\Market\IDCardCheck.cshtml:行号 46
+   在 System.Web.WebPages.WebPageBase.ExecutePageHierarchy()
+   在 System.Web.Mvc.WebViewPage.ExecutePageHierarchy()
+   在 System.Web.WebPages.WebPageBase.ExecutePageHierarchy(WebPageContext pageContext, TextWriter writer, WebPageRenderingBase startPage)
+   在 System.Web.Mvc.RazorView.RenderView(ViewContext viewContext, TextWriter writer, Object instance)
+   在 System.Web.Mvc.BuildManagerCompiledView.Render(ViewContext viewContext, TextWriter writer)
+   在 System.Web.Mvc.ViewResultBase.ExecuteResult(ControllerContext context)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResult(ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultWithFilters(ControllerContext controllerContext, IList`1 filters, ActionResult actionResult)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<>c__DisplayClass2b.<BeginInvokeAction>b__1c()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<BeginInvokeAction>b__1e(IAsyncResult asyncResult)
+错误提示：g:\项目目录\强哥的项目\JN.Web\Areas\AdminCenter\Views\Market\_IDCardCheck.cshtml(47): error CS0103: 当前上下文中不存在名称“T”
+---------------------------------------------------
+来自页面：http://localhost:8280/UserCenter/user/Add
+发生时间：2017/4/24 14:30:53
+异常对像：System.Data.Entity.Internal.InternalContext.SaveChanges
+错误追踪：   在 System.Data.Entity.Internal.InternalContext.SaveChanges()
+   在 System.Data.Entity.Internal.LazyInternalContext.SaveChanges()
+   在 System.Data.Entity.DbContext.SaveChanges()
+   在 MvcCore.Service.DBTool.Commit()
+   在 JN.Web.Areas.UserCenter.Controllers.UserController.Add(FormCollection fc) 位置 g:\项目目录\强哥的项目\JN.Web\Areas\UserCenter\Controllers\UserController.cs:行号 429
+错误提示：对一个或多个实体的验证失败。有关详细信息，请参阅“EntityValidationErrors”属性。
+---------------------------------------------------
+来自页面：http://localhost:8280/UserCenter/user/Add
+发生时间：2017/4/24 14:32:46
+异常对像：MvcCore.Service.DBTool.Commit
+错误追踪：   在 MvcCore.Service.DBTool.Commit()
+   在 JN.Web.Areas.UserCenter.Controllers.UserController.Add(FormCollection fc) 位置 g:\项目目录\强哥的项目\JN.Web\Areas\UserCenter\Controllers\UserController.cs:行号 429
+错误提示：更新条目时出错。有关详细信息，请参阅内部异常。
+将截断字符串或二进制数据。
+语句已终止。
+---------------------------------------------------
+来自页面：http://localhost:8280/UserCenter/user/Add
+发生时间：2017/4/24 14:35:01
+异常对像：MvcCore.Service.DBTool.Commit
+错误追踪：   在 MvcCore.Service.DBTool.Commit()
+   在 JN.Web.Areas.UserCenter.Controllers.UserController.Add(FormCollection fc) 位置 g:\项目目录\强哥的项目\JN.Web\Areas\UserCenter\Controllers\UserController.cs:行号 429
+错误提示：更新条目时出错。有关详细信息，请参阅内部异常。
+将截断字符串或二进制数据。
+语句已终止。
+---------------------------------------------------
+来自页面：http://localhost:8280/usercenter/user/IDCardCheckForUser
+发生时间：2017/4/24 15:12:39
+异常对像：ASP._Page_Areas_AdminCenter_Views_Shared__Layout_cshtml.Execute
+错误追踪：   在 ASP._Page_Areas_AdminCenter_Views_Shared__Layout_cshtml.Execute() 位置 g:\项目目录\强哥的项目\JN.Web\Areas\AdminCenter\Views\Shared\_Layout.cshtml:行号 104
+   在 System.Web.WebPages.WebPageBase.ExecutePageHierarchy()
+   在 System.Web.Mvc.WebViewPage.ExecutePageHierarchy()
+   在 System.Web.WebPages.WebPageBase.ExecutePageHierarchy(WebPageContext pageContext, TextWriter writer, WebPageRenderingBase startPage)
+   在 System.Web.WebPages.WebPageBase.ExecutePageHierarchy(WebPageContext pageContext, TextWriter writer)
+   在 System.Web.WebPages.WebPageBase.<>c__DisplayClass3.<RenderPageCore>b__2(TextWriter writer)
+   在 System.Web.WebPages.HelperResult.WriteTo(TextWriter writer)
+   在 System.Web.WebPages.WebPageExecutingBase.WriteTo(TextWriter writer, HelperResult content)
+   在 System.Web.WebPages.WebPageBase.Write(HelperResult result)
+   在 System.Web.WebPages.WebPageBase.RenderSurrounding(String partialViewName, Action`1 body)
+   在 System.Web.WebPages.WebPageBase.PopContext()
+   在 System.Web.WebPages.WebPageBase.ExecutePageHierarchy(WebPageContext pageContext, TextWriter writer, WebPageRenderingBase startPage)
+   在 System.Web.Mvc.RazorView.RenderView(ViewContext viewContext, TextWriter writer, Object instance)
+   在 System.Web.Mvc.BuildManagerCompiledView.Render(ViewContext viewContext, TextWriter writer)
+   在 System.Web.Mvc.ViewResultBase.ExecuteResult(ControllerContext context)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResult(ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultWithFilters(ControllerContext controllerContext, IList`1 filters, ActionResult actionResult)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<>c__DisplayClass2b.<BeginInvokeAction>b__1c()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<BeginInvokeAction>b__1e(IAsyncResult asyncResult)
+错误提示：未将对象引用设置到对象的实例。
+---------------------------------------------------
+来自页面：http://localhost:8280/usercenter/user/IDCardCheckForUser
+发生时间：2017/4/24 15:14:02
+异常对像：System.Web.WebPages.WebPageBase.RenderSection
+错误追踪：   在 System.Web.WebPages.WebPageBase.RenderSection(String name, Boolean required)
+   在 System.Web.WebPages.WebPageBase.RenderSection(String name)
+   在 ASP._Page_Areas_AdminCenter_Views_Shared__Layout_cshtml.Execute() 位置 g:\项目目录\强哥的项目\JN.Web\Areas\AdminCenter\Views\Shared\_Layout.cshtml:行号 707
+   在 System.Web.WebPages.WebPageBase.ExecutePageHierarchy()
+   在 System.Web.Mvc.WebViewPage.ExecutePageHierarchy()
+   在 System.Web.WebPages.WebPageBase.ExecutePageHierarchy(WebPageContext pageContext, TextWriter writer, WebPageRenderingBase startPage)
+   在 System.Web.WebPages.WebPageBase.ExecutePageHierarchy(WebPageContext pageContext, TextWriter writer)
+   在 System.Web.WebPages.WebPageBase.<>c__DisplayClass3.<RenderPageCore>b__2(TextWriter writer)
+   在 System.Web.WebPages.HelperResult.WriteTo(TextWriter writer)
+   在 System.Web.WebPages.WebPageExecutingBase.WriteTo(TextWriter writer, HelperResult content)
+   在 System.Web.WebPages.WebPageBase.Write(HelperResult result)
+   在 System.Web.WebPages.WebPageBase.RenderSurrounding(String partialViewName, Action`1 body)
+   在 System.Web.WebPages.WebPageBase.PopContext()
+   在 System.Web.WebPages.WebPageBase.ExecutePageHierarchy(WebPageContext pageContext, TextWriter writer, WebPageRenderingBase startPage)
+   在 System.Web.Mvc.RazorView.RenderView(ViewContext viewContext, TextWriter writer, Object instance)
+   在 System.Web.Mvc.BuildManagerCompiledView.Render(ViewContext viewContext, TextWriter writer)
+   在 System.Web.Mvc.ViewResultBase.ExecuteResult(ControllerContext context)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResult(ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultWithFilters(ControllerContext controllerContext, IList`1 filters, ActionResult actionResult)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<>c__DisplayClass2b.<BeginInvokeAction>b__1c()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<BeginInvokeAction>b__1e(IAsyncResult asyncResult)
+错误提示：节未定义:“scripts”。
+---------------------------------------------------
+来自页面：http://localhost:8280/usercenter/user/IDCardCheckForUser
+发生时间：2017/4/24 15:15:53
+异常对像：System.Web.WebPages.WebPageBase.EnsurePageCanBeRequestedDirectly
+错误追踪：   在 System.Web.WebPages.WebPageBase.EnsurePageCanBeRequestedDirectly(String methodName)
+   在 System.Web.WebPages.WebPageBase.RenderSection(String name, Boolean required)
+   在 System.Web.WebPages.WebPageBase.RenderSection(String name)
+   在 ASP._Page_Areas_UserCenter_Views_user_IDCardCheckForUser_cshtml.Execute() 位置 g:\项目目录\强哥的项目\JN.Web\Areas\UserCenter\Views\User\IDCardCheckForUser.cshtml:行号 61
+   在 System.Web.WebPages.WebPageBase.ExecutePageHierarchy()
+   在 System.Web.Mvc.WebViewPage.ExecutePageHierarchy()
+   在 System.Web.WebPages.WebPageBase.ExecutePageHierarchy(WebPageContext pageContext, TextWriter writer, WebPageRenderingBase startPage)
+   在 System.Web.Mvc.RazorView.RenderView(ViewContext viewContext, TextWriter writer, Object instance)
+   在 System.Web.Mvc.BuildManagerCompiledView.Render(ViewContext viewContext, TextWriter writer)
+   在 System.Web.Mvc.ViewResultBase.ExecuteResult(ControllerContext context)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResult(ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultWithFilters(ControllerContext controllerContext, IList`1 filters, ActionResult actionResult)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<>c__DisplayClass2b.<BeginInvokeAction>b__1c()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<BeginInvokeAction>b__1e(IAsyncResult asyncResult)
+错误提示：无法直接请求文件“~/Areas/UserCenter/Views/user/IDCardCheckForUser.cshtml”，因为它调用了“RenderSection”方法。
+---------------------------------------------------
+来自页面：http://localhost:8280/usercenter/user/IDCardCheckForUser
+发生时间：2017/4/24 15:51:54
+异常对像：System.Web.Compilation.AssemblyBuilder.Compile
+错误追踪：   在 System.Web.Compilation.AssemblyBuilder.Compile()
+   在 System.Web.Compilation.BuildProvidersCompiler.PerformBuild()
+   在 System.Web.Compilation.BuildManager.CompileWebFile(VirtualPath virtualPath)
+   在 System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   在 System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   在 System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   在 System.Web.Compilation.BuildManager.GetCompiledType(VirtualPath virtualPath)
+   在 System.Web.Compilation.BuildManager.GetCompiledType(String virtualPath)
+   在 System.Web.Mvc.BuildManagerWrapper.System.Web.Mvc.IBuildManager.GetCompiledType(String virtualPath)
+   在 System.Web.Mvc.BuildManagerCompiledView.Render(ViewContext viewContext, TextWriter writer)
+   在 System.Web.Mvc.ViewResultBase.ExecuteResult(ControllerContext context)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResult(ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultFilterRecursive(IList`1 filters, Int32 filterIndex, ResultExecutingContext preContext, ControllerContext controllerContext, ActionResult actionResult)
+   在 System.Web.Mvc.ControllerActionInvoker.InvokeActionResultWithFilters(ControllerContext controllerContext, IList`1 filters, ActionResult actionResult)
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<>c__DisplayClass2b.<BeginInvokeAction>b__1c()
+   在 System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass21.<BeginInvokeAction>b__1e(IAsyncResult asyncResult)
+错误提示：g:\项目目录\强哥的项目\JN.Web\Areas\UserCenter\Views\User\IDCardCheckForUser.cshtml(42): error CS0103: 当前上下文中不存在名称“i”

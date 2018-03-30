@@ -1,0 +1,26 @@
+﻿---------------------------------------------------
+来自页面：http://localhost:41520/UserCenter/Home/SupplyHelp
+发生时间：2016/7/21 10:37:23
+异常对像：System.Data.Entity.Internal.Linq.InternalSet`1[TEntity].FindInStore
+错误追踪：   在 System.Data.Entity.Internal.Linq.InternalSet`1.FindInStore(WrappedEntityKey key, String keyValuesParamName)
+   在 System.Data.Entity.Internal.Linq.InternalSet`1.Find(Object[] keyValues)
+   在 System.Data.Entity.DbSet`1.Find(Object[] keyValues)
+   在 MvcCore.Infrastructure.ServiceBase`1.Single(Object[] id)
+   在 JN.Services.Manager.Bonus.Bonus1104(Decimal bonusMoney, String supplyNo, Int32 id) 位置 g:\公司项目\wl16071701\www\JN.Services\Manager\Bonus.cs:行号 174
+   在 JN.Services.Manager.Bonus.Bonus1103(Int32 supplyid) 位置 g:\公司项目\wl16071701\www\JN.Services\Manager\Bonus.cs:行号 153
+   在 JN.Web.Areas.UserCenter.Controllers.HomeController.SupplyHelp(FormCollection fc) 位置 g:\公司项目\wl16071701\www\JN.Web\Areas\UserCenter\Controllers\HomeController.cs:行号 255
+错误提示：某个主键值的类型与实体中定义的类型不匹配。有关详细信息，请参阅内部异常。
+参数名: keyValues
+---------------------------------------------------
+来自页面：http://localhost:41520/UserCenter/Home/SupplyHelp
+发生时间：2016/7/21 10:38:00
+异常对像：System.Data.Entity.Internal.Linq.InternalSet`1[TEntity].FindInStore
+错误追踪：   在 System.Data.Entity.Internal.Linq.InternalSet`1.FindInStore(WrappedEntityKey key, String keyValuesParamName)
+   在 System.Data.Entity.Internal.Linq.InternalSet`1.Find(Object[] keyValues)
+   在 System.Data.Entity.DbSet`1.Find(Object[] keyValues)
+   在 MvcCore.Infrastructure.ServiceBase`1.Single(Object[] id)
+   在 JN.Services.Manager.Bonus.Bonus1104(Decimal bonusMoney, String supplyNo, Int32 id) 位置 g:\公司项目\wl16071701\www\JN.Services\Manager\Bonus.cs:行号 174
+   在 JN.Services.Manager.Bonus.Bonus1103(Int32 supplyid) 位置 g:\公司项目\wl16071701\www\JN.Services\Manager\Bonus.cs:行号 153
+   在 JN.Web.Areas.UserCenter.Controllers.HomeController.SupplyHelp(FormCollection fc) 位置 g:\公司项目\wl16071701\www\JN.Web\Areas\UserCenter\Controllers\HomeController.cs:行号 255
+错误提示：某个主键值的类型与实体中定义的类型不匹配。有关详细信息，请参阅内部异常。
+参数名: keyValues

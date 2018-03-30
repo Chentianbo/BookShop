@@ -1,0 +1,145 @@
+﻿@charset "utf-8";
+/* CSS Document */
+
+*{padding:0px; margin:0px; -webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
+li{list-style:none;}
+img{border:none;}
+input{outline:none;}
+
+
+html{
+	height:100%;
+	width:100%;
+	}
+
+body{
+	width:100%;
+	height:100%;
+	background:#2c231c;
+	}
+
+.gold_line {
+    width:100%;
+    height:244px;
+    background:url(/Theme/052401/login/images/login_line.png) repeat-x;
+    position: relative;
+    top: 30%;
+    }
+
+.login_bgbox {
+    width:1016px;
+    height:600px;
+    background:url(/Theme/052401/login/images/light.png) no-repeat right bottom;
+    float: right;
+    margin-right:13%;
+    position: relative;
+    top: -100px;
+    }
+
+.login_box {
+    height:484px;
+    background:url(/Theme/052401/login/images/login_box.png) no-repeat top center;
+    position:relative;
+    }
+
+.login-body {
+    width: 465px;
+    float: right;
+    margin-right: 60px;
+    padding-top: 100px;
+    }
+
+  .login-body .input_group {
+        width:394px;
+        height:55px;
+        margin-bottom:20px;
+        position:relative;
+    }
+
+ .login-body .input_group input{
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: url(/Theme/052401/login/images/login_input.png) no-repeat top center;
+    border: none;
+    outline: none;
+    padding: 0px 10px;
+    float: left;
+    font-size: 20px;
+    color: #8a3c00;
+    }
+
+ input:-moz-placeholder { color: #8a3c00; }
+input:-ms-input-placeholder { color: #8a3c00; }
+input::-webkit-input-placeholder { color: #8a3c00; }
+
+.login-body .input_group a {
+    display: block;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    right: 8px;
+    top: 11px;
+}
+
+
+ .login-body .input_group.btng input{
+     width:250px;
+     background:url(/Theme/052401/login/images/login_input_s.png) no-repeat top center;
+    }
+
+.login-body #imgCode {
+    display: block;
+    float: right;
+    width: 120px;
+    height: 50px;
+    cursor: pointer;
+    margin-top: 2px;
+    }
+
+.login-body .input_group.btng a {
+    position: absolute;
+    right:150px
+    }
+
+.login-body .buttondiv {
+    overflow: hidden;
+    margin: 40px 0px 0px;
+    }
+
+.login-body #btnlogin {
+    display:block;
+    width:234px;
+    height:58px;
+    background:url(/Theme/052401/login/images/login_btn.png) no-repeat center center;
+    float:right;
+    border: none;
+    outline: none;
+}
+
+
+.login-body .forgot {
+    display: block;
+    float: right;
+    color: #543c16;
+    text-decoration: underline;
+    font-size: 16px;
+    margin-right: 20px;
+}
+
+   .login-body .forgot:hover {
+    color:#8c5327;
+    }
+
+
+.logo_box {
+    text-align: center;
+    width: 468px;
+    height: 62px;
+    position: absolute;
+    top: -100px;
+    right: 180px;
+}
+
+
+

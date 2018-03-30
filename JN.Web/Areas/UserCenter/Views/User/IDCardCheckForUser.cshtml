@@ -1,0 +1,87 @@
+﻿@model JN.Data.User
+@{   
+    ViewBag.Title = "实名认证";
+    Layout = "~/Areas/UserCenter/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+}
+<link href="~/Content/pagerstyles.css" rel="stylesheet" />
+<div style="margin-top:30px"></div>
+
+    <div class="matchtable">
+
+
+        <table class="table table-striped table-bordered maintable border">
+            <thead>
+                <tr>
+                    <th>@T("会员名称")</th>
+                    <th>@T("审核状态")</th>
+                    <th>@T("身份证照片")</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        @Model.UserName
+                    </td>
+                    <td>
+                        @if (Model.ReserveBoolean1 == null || Model.ReserveBoolean1 == false)
+                        {
+                            @("未认证")
+                        }
+                        else
+                        {
+                            @("已认证");
+                        }
+                    </td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(Model.CardIdUrl))
+                        {
+                            <a href="@Model.CardIdUrl" target="_blank"><i class="fa pe-7s-file-picture" style="font-size: 20px;"></i></a>
+                        }
+                    </td>
+                    <td>
+                        @if (Model.ReserveBoolean1 == null || Model.ReserveBoolean1 == false)
+                        {
+                          <form class="form-horizontal margin-none" id="frmAdd" method="post">                       
+                                  <label class="col-md-2 control-label" for="firstname">重新上传身份证照片</label>
+                                  <div class="col-md-8">
+                                      <div class="controls">
+                                          <input type="file" name="imgurl" class="form-control" />
+                                      </div>
+                                  </div>
+                              <button type="button" class="btn btn-primary" id="btnAdd">@T("上传")</button>                        
+                           </form>
+                        }
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+   
+<script src="~/js/jquery.form.js"></script>
+<script type="text/javascript">
+            $("#btnAdd").click(function () {
+                $("#frmAdd").ajaxSubmit({
+                    url: "@Url.Action("upfilefromUser")",
+                    type: "post",
+                    success: function (data) {
+                        $('#btnAdd').attr('disabled', "true");
+                        if (data.Status == 200) {
+                            alert("上传成功，即将为您返回当前页！");
+                            location.href = "@(Url.Action("IDCardCheckForUser"))";
+                        } else {
+                            alert("上传失败：" + data.Message);
+                            $('#btnAdd').removeAttr("disabled");
+                        }
+                    },
+                    error: function (error) {
+                        alert(error);
+                    }
+                });
+            });
+</script>
+
+
+
+

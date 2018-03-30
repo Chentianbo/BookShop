@@ -1,0 +1,82 @@
+﻿using System;
+using System.Linq;
+using System.Threading;
+namespace JN.Services.Manager
+{
+    public partial class SupplyHelps
+    {
+        private static readonly object Locker = new object();
+        private static int _sn = 0;
+        #region 生成真实订单号
+        /// <summary>
+        /// 生成订单编号,唯一不重复 支持并发
+        /// </summary>
+        /// <param name="startString">订单开头字符</param>
+        /// <returns></returns>
+        public static string GetNo(string startString)
+        {
+            lock (Locker)  //lock 关键字可确保当一个线程位于代码的临界区时，另一个线程不会进入该临界区。
+            {
+                if (_sn == int.MaxValue)
+                {
+                    _sn = 0;
+                }
+                else
+                {
+                    _sn++;
+                }
+                Thread.Sleep(100);
+
+                string strRand = Tool.StringHelp.GettRandomCode((10 - _sn.ToString().Length));
+                return startString + DateTime.Now.ToString("MMssyyyyddmmHH") + _sn.ToString() + strRand;//int类型最大10位 2147483647
+            }
+        }
+        public static string GetSupplyNo()
+        {
+            string result = "S" + JN.Services.Tool.StringHelp.GettRandomCode(12);
+            if (IsHaveSupplyNo(result))
+            {
+                return GetSupplyNo();
+            }
+            return result;
+        }
+        public static string GetSupplyNo1()
+        {
+            DateTime dateTime = DateTime.Now;
+            string result = "S";
+
+            int maxid = MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().List().Count() > 0 ? MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().List().Max(x => x.SupplyNo.Substring(x.SupplyNo.Length - 7)).ToInt() : 0;
+            // TypeConverter.ObjectToInt(supplyhelps.GetFieldValue("ISNULL(MAX(RIGHT(SupplyNo,7)),0)", "1=1"));
+            if (maxid < 10000) maxid = 10000;
+            result += (maxid + 1).ToString().PadLeft(7, '0');
+            if (IsHaveSupplyNo(result))
+            {
+                return GetSupplyNo();
+            }
+            return result;
+        }
+
+        public static string GetSupplyNo2()
+        {
+            DateTime dateTime = DateTime.Now;
+            string result = "Y";
+
+            int maxid = MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().List().Count() > 0 ? MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().List().Max(x => x.SupplyNo.Substring(x.SupplyNo.Length - 7)).ToInt() : 0;
+            if (maxid < 10000) maxid = 10000;
+            result += (maxid + 1).ToString().PadLeft(7, '0');
+            if (IsHaveSupplyNo(result))
+            {
+                return GetSupplyNo2();
+            }
+            return result;
+        }
+
+        //检查订单号是否重复
+        private static bool IsHaveSupplyNo(string number)
+        {
+            return MvcCore.Unity.Get<Data.Service.ISupplyHelpService>().List(x => x.SupplyNo == number).Count() > 0;
+        }
+        #endregion
+
+    }
+}

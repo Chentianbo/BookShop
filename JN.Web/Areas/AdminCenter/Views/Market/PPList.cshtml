@@ -1,0 +1,263 @@
+﻿@{
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 10000);
+    string action = ViewContext.RouteData.Values["action"].ToString().ToLower();
+    Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+    List<int> userIDList = MvcCore.Unity.Get<JN.Data.Service.IUserService>().List(x => x.IsLock).Select(d => d.ID).Distinct().ToList();
+}
+
+<!-- PAGE CONTENT BEGINS -->
+<style>
+    tbody th, table.dataTable tbody td {
+        padding: 8px 6px;
+    }
+</style>
+<div id="content">
+    <!-- Breadcrumb -->
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")" class="glyphicons home"><i></i> 首页</a></li>
+        <li class="divider"></li>
+        <li>@ViewBag.Title</li>
+    </ul>
+    <div class="separator bottom"></div>
+    <!-- // Breadcrumb END -->
+    <div class="innerLR">
+        <div class="tabbable">
+            <ul class="nav nav-tabs" id="myTab" style="margin-bottom:10px">
+                <li class="@(action == "pplist" ? "active" : "")">
+                    <a href="@(Url.Action("PPList"))">
+                        预付单匹配
+                    </a>
+                </li>
+                <li class="@(action == "pplist2" ? "active" : "")">
+                    <a href="@(Url.Action("PPList2"))">
+                        全额匹配
+                    </a>
+                </li>
+            </ul>
+            <div class="widget finances_summary">
+                <!-- Widget heading -->
+                <div class="widget-head">
+                    <h4 class="heading glyphicons retweet"><i></i> 匹配控制台</h4>
+                </div>
+                <!-- // Widget heading END -->
+
+                <div class="widget-body">
+                    <!-- Row -->
+                    <div class="row-fluid">
+
+                        <!-- Column -->
+                        <div class="well span4">
+                            待匹配提供方金额						<strong id="totalsupplyamount">$0</strong>
+                        </div>
+                        <div class="separator bottom center span4">
+                            <span class="glyphicons flash standard"><i></i></span><br /><br />
+                            @if ((MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1).MatchingMode ?? 0) == 0)
+                            {
+                                <button type="button" class="btn btn-purple btn-xl blue" id="btnMatching">点击手动匹配</button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-purple btn-xl" disabled> 《自动模式》</button>
+                            }
+                        </div>
+                        <div class="well span4">
+                            待匹配接受方金额						<strong id="totalacceptamount">$0</strong>
+                        </div>
+                        <!-- // Column END -->
+
+
+                    </div>
+                    <!-- // Row END -->
+                </div><!-- /span -->
+                <div class="row-fluid">
+                    <div class="span6">
+                        <table id="supplylist" class="table table-striped table-bordered table-hover datalist" width="100%">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:center">
+                                        <label>
+                                            <input type="checkbox" class="ace" />
+                                            <span class="lbl"></span>
+                                        </label>
+                                    </th>
+                                    <th>
+                                        编号
+                                    </th>
+                                    <th>参与者</th>
+                                    <th>金额</th>
+                                    <th>排队</th>
+                                    <th>余额</th>
+                                    <th style="width: 80px">
+                                        申请时间
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                   
+                                    int dt = cacheSysParam.SingleAndInit(a => a.ID == 3101).Value.ToInt();
+                                    var supplylist = MvcCore.Unity.Get<JN.Data.Service.ISupplyHelpService>().List(x => x.IsAdvance == false && !userIDList.Contains(x.UID) && x.Status > 0 && x.AdvanceHaveMoney < x.AdvanceMoney && x.Status < (int)JN.Data.Enum.HelpStatus.AllDeal)
+                                                                        .OrderByDescending(x => x.IsTop).ThenByDescending(x => x.AdvanceHaveMoney).ThenBy(x => x.CreateTime).Take(300).ToList();
+                                    foreach (var item in supplylist)
+                                    {
+                                        <tr>
+                                            <td style="text-align:center">
+                                                <label>
+                                                    <input type="checkbox" class="ace" name="cksid" data-value="@(item.AdvanceMoney - item.AdvanceHaveMoney)" value="@item.ID" />
+                                                    <span class="lbl"></span>
+                                                </label>
+                                            </td>
+                                            <td>@item.SupplyNo @MvcHtmlString.Create(item.IsTop ? "<span style='border:1px solid #f00; border-radius:4px; padding:1px 1px; color:#f00'>顶</span>" : "")&nbsp;@MvcHtmlString.Create(item.IsRepeatQueuing ? "<span style='border:1px solid #09f; border-radius:4px; padding:1px 1px; color:#09f'>重</span>" : "")</td>
+                                            <td>@item.UserName</td>
+                                            <td>@item.AdvanceMoney</td>
+                                            <td>@(JN.Services.Tool.DateTimeDiff.DateDiff(item.CreateTime, DateTime.Now, "d") + 1)天</td>
+                                            <td>@(item.AdvanceMoney - item.AdvanceHaveMoney)</td>
+                                            <td>
+                                                @item.CreateTime.ToString("MM-dd HH:mm")
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="span6">
+                        <table id="acceptlist" class="table table-striped table-bordered table-hover datalist" width="100%">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:center">
+                                        <label>
+                                            <input type="checkbox" class="ace" />
+                                            <span class="lbl"></span>
+                                        </label>
+                                    </th>
+                                    <th>
+                                        编号
+                                    </th>
+                                    <th>参与者</th>
+                                    <th>金额</th>
+                                    <th>排队</th>
+                                    <th>余额</th>
+                                    <th style="width:80px">
+                                        申请时间
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    int dt2 = cacheSysParam.SingleAndInit(a => a.ID == 3102).Value.ToInt();
+                                    var acceptlist = MvcCore.Unity.Get<JN.Data.Service.IAcceptHelpService>().List(x => x.Status > 0 && !userIDList.Contains(x.UID) && x.HaveMatchingAmount < x.ExchangeAmount && x.Status < (int)JN.Data.Enum.HelpStatus.AllDeal).OrderByDescending(x => x.IsTop).ThenByDescending(x => x.HaveMatchingAmount).ThenBy(x => x.CreateTime).Take(300).ToList();
+                                    foreach (var item in acceptlist)
+                                    {
+                                        <tr>
+                                            <td style="text-align:center">
+                                                <label>
+                                                    <input type="checkbox" class="ace" name="ckaid" data-value="@(item.ExchangeAmount - item.HaveMatchingAmount)" value="@item.ID" />
+                                                    <span class="lbl"></span>
+                                                </label>
+                                            </td>
+                                            <td>@item.AcceptNo @(item.IsTop ? "顶" : "")&nbsp;@(item.IsRepeatQueuing ? "重" : "")</td>
+                                            <td>@item.UserName</td>
+                                            <td>@item.ExchangeAmount</td>
+                                            <td>@(JN.Services.Tool.DateTimeDiff.DateDiff(item.CreateTime, DateTime.Now, "d") + 1)天</td>
+                                            <td>@(item.ExchangeAmount - item.HaveMatchingAmount)</td>
+                                            <td>
+                                                @item.CreateTime.ToString("MM-dd HH:mm")
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+        @section scripts{
+<link rel="stylesheet" href="/css/jquery.dataTables.min.css">
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#supplylist').DataTable({
+                        "bSort": false, "language": { "url": "/datatable.txt" }
+                    });
+                    $('#acceptlist').DataTable({
+                        "bSort": false, "language": { "url": "/datatable.txt" }
+                    });
+
+                    $('#supplylist th input:checkbox').on('click', function () {
+                        var that = this;
+                        var samount = 0;
+                        $(this).closest('table').find('tr > td:first-child input:checkbox')
+                        .each(function () {
+                            this.checked = that.checked;
+                            if (this.checked) samount += parseFloat(this.getAttribute("data-value"));
+                            $(this).closest('tr').toggleClass('selected');
+                        });
+                        $("#totalsupplyamount").html("$" + samount);
+                    });
+
+                    $('#supplylist td input:checkbox').on('click', function () {
+                        var samount = 0;
+                        $(this).closest('table').find('tr > td:first-child input:checkbox')
+                        .each(function () {
+                            if (this.checked) samount += parseFloat(this.getAttribute("data-value"));
+                            $(this).closest('tr').toggleClass('selected');
+                        });
+                        $("#totalsupplyamount").html("$" + samount);
+                    });
+
+                    $('#acceptlist th input:checkbox').on('click', function () {
+                        var that = this;
+                        var aamount = 0;
+                        $(this).closest('table').find('tr > td:first-child input:checkbox')
+                        .each(function () {
+                            this.checked = that.checked;
+                            if (this.checked) aamount += parseFloat(this.getAttribute("data-value"));
+                            $(this).closest('tr').toggleClass('selected');
+                        });
+                        $("#totalacceptamount").html("$" + aamount);
+                    });
+
+                    $('#acceptlist td input:checkbox').on('click', function () {
+                        var aamount = 0;
+                        $(this).closest('table').find('tr > td:first-child input:checkbox')
+                        .each(function () {
+                            if (this.checked) aamount += parseFloat(this.getAttribute("data-value"));
+                            $(this).closest('tr').toggleClass('selected');
+                        });
+                        $("#totalacceptamount").html("$" + aamount);
+                    });
+
+
+                    //select all
+                    $('#btnMatching').on('click', function (e) {
+                        var ids = "";
+                        $("input[name='cksid']").each(function () {
+                            if (this.checked == true) {
+                                ids += "," + $(this).val();
+                            }
+                        });
+
+                        var ida = "";
+                        $("input[name='ckaid']").each(function () {
+                            if (this.checked == true) {
+                                ida += "," + $(this).val();
+                            }
+                        });
+
+                        $.post("@(Url.Action("doMatching"))", { ids: ids, ida: ida }, function (data) {
+                            if (data.result == "ok") {
+                                alert(data.refMsg);
+                                location.href = "@(Url.Action("PPList"))";
+                            }
+                        });
+                    });
+
+
+                })
+            </script>
+        }

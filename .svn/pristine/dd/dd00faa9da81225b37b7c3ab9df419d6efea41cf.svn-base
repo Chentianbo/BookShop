@@ -1,0 +1,447 @@
+﻿@{
+    string controller = ViewContext.RouteData.Values["controller"].ToString().ToLower();
+    string action = ViewContext.RouteData.Values["action"].ToString().ToLower();
+    var sysEntity = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 10000);
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Page title -->
+    <title>@T(sysEntity.SysName) | @T(ViewBag.Title)</title>
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- Vendor styles -->
+    <link rel="stylesheet" href="/theme/mmm/css/font-awesome.css">
+    <link rel="stylesheet" href="/theme/mmm/css/metisMenu.css">
+    <link rel="stylesheet" href="/theme/mmm/css/animate.css">
+    <link rel="stylesheet" href="/theme/mmm/css/bootstrap.css">
+    <link rel="stylesheet" href="/theme/mmm/css/toastr.min.css">
+    <link rel="stylesheet" href="/theme/mmm/css/default.css">
+    <!-- App styles -->
+    <script src="/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="/theme/mmm/js/jquery-ui.min.js"></script>
+    <script src="/theme/mmm/js/jquery.slimscroll.min.js"></script>
+    <script src="/theme/mmm/js/bootstrap.min.js"></script>
+    <script src="/theme/mmm/js/curvedLines.js"></script>
+    <script src="/theme/mmm/js/index.js"></script>
+    <script src="/theme/mmm/js/metisMenu.min.js"></script>
+    <script src="/theme/mmm/js/icheck.min.js"></script>
+    <script src="/theme/mmm/js/jquery.peity.min.js"></script>
+    <script src="/theme/mmm/js/toastr.min.js"></script>
+    <!-- App scripts -->
+    <script src="/theme/mmm/js/homer.js"></script>
+    <link rel="stylesheet" href="/theme/052401/nmmcss/main.css" type="text/css">
+    <link rel="stylesheet" href="~/Theme/052401/nmmcss/main.v001.css" />
+    <link rel="stylesheet" href="/theme/052401/nmmcss/zh-CN.css" type="text/css">
+    <link href="~/Theme/mmm/css/datatime.css" rel="stylesheet" />
+    <link href="~/Theme/mmm/css/gold_style.css" rel="stylesheet" />
+    <script type="text/javascript">
+jQuery(document).ready(function($){
+	var gdBtn = $('#gdBtn');
+	var pdBtn = $('.pdBtn');
+
+	pdBtn.click(function(){
+		$(this).toggleClass('active');
+		gdBtn.removeClass('active');
+		$('#pdWrap').stop(true, false).slideToggle('fast');
+		$('#gdWrap').stop(true, false).slideUp('fast').removeClass('open');
+		return false;
+	});
+	// if user status is freeze or just unblock and not yet do the maintain
+	gdBtn.click(function(){
+		$(this).toggleClass('active');
+		pdBtn.removeClass('active');
+		$('#gdWrap').stop(true, false).slideToggle('fast');
+		$('#pdWrap').stop(true, false).slideUp('fast').removeClass('open');
+		return false;
+	});
+
+	// Tooltips
+	$('.tip').tooltip({placement: 'top'});
+	$('.tipr').tooltip({placement: 'right'});
+	$('.tipb').tooltip({placement: 'bottom'});
+	$('.tipl').tooltip({placement: 'left'});
+
+	$("a[href='#top']").click(function() {
+		$("html, body").animate({ scrollTop: 0 }, "slow");
+		return false;
+	});
+
+	
+});
+    </script>
+
+
+    <script language="javascript">
+        $(window).bind('beforeunload',function(){
+            var divObj=document.createElement("div");
+            divObj.setAttribute('class','loading');
+            divObj.innerHTML='@T("正在拼命处理中,请稍候...")';
+            $('body').append(divObj);
+        });
+    </script>
+
+    <script type="text/javascript" language="javascript">
+        function menu(index) {
+            $(".nav li").removeClass("seleli");
+            $(".nav li").eq(index).addClass("seleli");
+            $("#sidebar ul").hide();
+            $("#menu" + index).show();
+        }
+    </script>
+
+    <style>
+        .mainarea {
+            position:relative;
+        }
+        
+        
+            /*.clearfix:after, .dl-horizontal dd:before, .dl-horizontal dd:after, .container:before, .container:after, .container-fluid:before, .container-fluid:after, .row:before, .row:after, .form-horizontal .form-group:before, .form-horizontal .form-group:after, .btn-toolbar:before, .btn-toolbar:after, .btn-group-vertical > .btn-group:before, .btn-group-vertical > .btn-group:after, .nav:before, .nav:after, .navbar:before, .navbar:after, .navbar-header:before, .navbar-header:after, .navbar-collapse:before, .navbar-collapse:after, .pager:before, .pager:after, .panel-body:before, .panel-body:after, .modal-footer:before, .modal-footer:after {
+                display:table-row
+            }*/
+    </style>
+</head>
+<body  id="body" onload="init()">
+    
+        <div class="top_link ">
+            <div class="container">
+                <ul>
+                    
+                    <li class="link_address"><p>推广链接：</p><a href="@Request.Url.GetLeftPart(UriPartial.Authority)/usercenter/reg?r=@Umodel.UserName">@Request.Url.GetLeftPart(UriPartial.Authority)/usercenter/reg?r=@Umodel.UserName</a></li>
+                </ul>
+            </div>
+    </div>
+    <header class="navbar navbar-static-top" id="top" role="header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-2">
+                    <div class="navbar-header">
+                        <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        @*<div class="logo">
+                <img src="~/Theme/mmm/images/logo.png">
+                </div>*@
+                        
+                    </div>
+                </div>
+                <nav class="collapse navbar-collapse" role="main-navigation">
+                    <ul class="nav navbar-nav">
+                        <li class="">
+                            <a href="/usercenter/home" class="glyphicons home"><i></i>@T("首页")</a>
+                        </li>
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">@T("帐户管理") <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li class="@((Request.Url.ToString().ToLower().Contains(("/usercenter/user/add").ToLower())) ? "rig_seleli" : "")"><a href="/usercenter/user/add">@T("会员注册")</a></li>
+                                <li class="@((Request.Url.ToString().ToLower().Contains(("/usercenter/user/unactivation").ToLower())) ? "rig_seleli" : "")"><a href="/usercenter/user/unactivation">@T("待激活的会员")</a></li>
+                                <li class="@((Request.Url.ToString().ToLower().Contains(("/usercenter/user/activation").ToLower())) ? "rig_seleli" : "")"><a href="/usercenter/user/activation">@T("已激活会员列表")</a></li>
+                                <li class="@((Request.Url.ToString().ToLower().Contains(("/usercenter/user/treeview").ToLower())) ? "rig_seleli" : "")"><a href="/usercenter/user/treeview">@T("推荐图谱")</a></li>
+                                <li class="@((Request.Url.ToString().ToLower().Contains(("/usercenter/user/modify").ToLower())) ? "rig_seleli" : "")"><a href="/usercenter/user/modify">@T("个人资料")</a></li>
+                            </ul>
+                        </li>
+                        <!--<li class="active">-->
+                        @if (JN.Services.Tool.ConfigHelper.GetConfigBool("HaveAgent"))
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">@T("升级经理") <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li class="@((Request.Url.ToString().ToLower().Contains(("/usercenter/agent/applyagent").ToLower())) ? "rig_seleli" : "")"><a href="/usercenter/agent/applyagent">@T("升级经理")</a></li>
+                                    @*<li class="@((Request.Url.ToString().ToLower().Contains(("/usercenter/agent/index").ToLower())) ? "rig_seleli" : "")"><a href="/usercenter/agent/index">@T("我的会员")</a></li>*@
+                                </ul>
+                            </li>
+                        }
+                         <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">@T("财务管理") <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li class="@((Request.Url.ToString().ToLower().Contains(("/usercenter/finance/wallet").ToLower())) ? "rig_seleli" : "")"><a href="/usercenter/finance/wallet">@T("资金明细")</a></li>
+                                <li class="@((Request.Url.ToString().ToLower().Contains(("/usercenter/finance/BonusDetail").ToLower())) ? "rig_seleli" : "")"><a href="/usercenter/finance/BonusDetail">@T("奖金流动明细")</a></li>
+                               <li class="@((Request.Url.ToString().ToLower().Contains(("/usercenter/finance/MenPiaoTransfer").ToLower())) ? "rig_seleli" : "")"><a href="/usercenter/finance/MenPiaoTransfer">@T("会员转账")</a></li>
+                                @*<li class="@((Request.Url.ToString().ToLower().Contains(("/usercenter/finance/DongtaiChange").ToLower())) ? "rig_seleli" : "")"><a href="/usercenter/finance/DongtaiChange">@T("动态奖金转排单币")</a></li>
+                                <li class="@((Request.Url.ToString().ToLower().Contains(("/usercenter/finance/JihuoTransfer").ToLower())) ? "rig_seleli" : "")"><a href="/usercenter/finance/JihuoTransfer">@T("动态奖金转激活币")</a></li>*@
+                            @*<li class="@((Request.Url.ToString().ToLower().Contains(("/usercenter/finance/pincode").ToLower())) ? "rig_seleli" : "")"><a href="/usercenter/finance/pincode">@T("我的PIN码")</a></li>*@
+                            </ul>
+                        </li>
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">@T("商城") <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li class="@((Request.Url.ToString().ToLower().Contains(("/usercenter/shop/Index").ToLower())) ? "rig_seleli" : "")"><a href="/usercenter/shop/Index">@T("推荐商品")</a></li>
+                                <li class="@((Request.Url.ToString().ToLower().Contains(("/usercenter/shop/Order").ToLower())) ? "rig_seleli" : "")"><a href="/usercenter/shop/Order">@T("订单管理")</a></li>
+                                <li class="@((Request.Url.ToString().ToLower().Contains(("/usercenter/shop/Product").ToLower())) ? "rig_seleli" : "")"><a href="/usercenter/shop/Product">@T("购买商品")</a></li>
+                            </ul>
+                        </li>
+                        
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">@T("订单管理") <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li class="@((Request.Url.ToString().ToLower().Contains(("/usercenter/finance/supplylist").ToLower())) ? "rig_seleli" : "")"><a href="/usercenter/finance/supplylist">@T("打款订单")</a></li>
+                                <li class="@((Request.Url.ToString().ToLower().Contains(("/usercenter/finance/acceptlist").ToLower())) ? "rig_seleli" : "")"><a href="/usercenter/finance/acceptlist">@T("收款订单")</a></li>
+                            </ul>
+                        </li>
+                        @*<li class=""><a href="/usercenter/Finance/LuckDraw">@T("幸运抽奖")</a></li>*@
+    @*<li class=""><a href="/usercenter/Finance/GrabSingle">@T("抢单区")</a></li>*@
+                        <li class=""><a href="/usercenter/user/IDCardCheckForUser" class="glyphicons user"><i></i>@T("实名认证")</a></li>
+
+                        <li class="">
+                            <a href="/usercenter/notice" class="glyphicons home"><i></i>@T("最新公告")</a>
+                        </li>
+                        @*<li class="">
+                            <a href="http://www.mbscoco.top/" target="_blank" class="glyphicons home"><i></i>@T("豪车计划")</a>
+                        </li>*@
+                        <li class="" id="switch">
+                            <a href="###" onclick="tc()" class="glyphicons home"><i></i>@T("")</a>
+                        </li>
+                        @*<li class=""><a href="#modal-form" data-toggle="modal" class="glyphicons sharlink"><i></i>@T("推广链接")</a></li>*@
+                    </ul>
+                </nav>
+
+                @*<div id="modal-form" class="modal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="blue bigger">我的推广链接</h4>
+                            </div>
+                            <div class="modal-body overflow-visible">
+                                @{
+                                    string url = Request.Url.GetLeftPart(UriPartial.Authority) + "/userCenter/reg?r=" + Umodel.UserName;
+                                }
+                                <img width="120" height="120" style="border:2px solid #fff" src="@MvcCore.Extensions.QRCodeExtensions.ToQRCode(url, 5, 5).GetImgBase64String(System.Drawing.Imaging.ImageFormat.Png)" />
+                                <br />
+                                <a href="@Request.Url.GetLeftPart(UriPartial.Authority)/usercenter/reg?r=@Umodel.UserName" target="_blank">@Request.Url.GetLeftPart(UriPartial.Authority)/usercenter/reg?r=@Umodel.UserName</a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+
+
+            </div>
+        </div>
+    </header>
+    <div class="banner_box">
+        <img src="~/Theme/mmm/images/banner.jpg" />
+        <div class="cur-loc">
+            <div class="cur-loc-in">
+                <a class="title_new">公告NEW</a>
+                <h3 class="scrolling-text">
+                    <marquee scrollamount=2 scrolldelay=1 width=100%>
+                        @T("投资有风险，请每一位参与的会员用自己的闲钱投资，切勿贷款借钱参与平台")
+                    </marquee>
+                </h3>
+                <div class="clockWrap">
+
+                    <div class="rightdiv">
+                        <div class="clearfix">
+                            <div class="clock-location">
+                                <strong class="mr5"><i class="glyphicon glyphicon-user" ></i> 会员名称:</strong>
+                                <span id="server_time_text">
+                                    @Umodel.UserName
+
+                                </span>
+                            </div>
+
+                            <div class="clock-location">
+                                <strong class="mr5"><i class="glyphicon glyphicon-th"></i> 团队:</strong>
+                                <span id="server_time_text">
+                                    @(JN.Services.Manager.Users.GetAllRefereeChild(Umodel).Count())人
+                                </span>
+                            </div>
+                            <div class="clock-location">
+                                <strong class="mr5"><i class="glyphicon glyphicon-time"></i> 北京时间:</strong>
+
+                                <span id="nihao"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @{
+//var blist2001 = MvcCore.Unity.Get<JN.Data.Service.IBonusDetailService>().List(x => x.UID == Umodel.ID && x.IsBalance == false && (x.BonusID == 1102 || x.BonusID == 2001 || x.BonusID == 1103));
+//decimal unusable2001 = blist2001.Count() > 0 ? blist2001.Sum(x => x.BonusMoney) : 0;
+
+////不可用本金（未成交的）
+//var supplylist = MvcCore.Unity.Get<JN.Data.Service.ISupplyHelpService>().List(x => x.UID == Umodel.ID && x.Status > 0 && x.Status < (int)JN.Data.Enum.HelpStatus.AllDeal && x.OrderType == 1);
+//unusable2001 += supplylist.Count() > 0 ? supplylist.Sum(x => (x.OrderMoney ?? 0)) : 0;
+//var matList = MvcCore.Unity.Get<JN.Data.Service.IMatchingService>().List(x => x.SupplyUID == Umodel.ID && x.Status == (int)JN.Data.Enum.MatchingStatus.Verified && (x.ReserveBoolean2 ?? false) == false).ToList(); ;
+//decimal unusable2001 = matList.Count()>0?matList.Sum(x=>x.MatchAmount):0;
+                }
+            </div>
+        </div>
+
+    </div>
+   
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12" style="text-align:center;">
+                    <ul class="walletNav clearfix">
+                        @{
+                            var blist2001 = MvcCore.Unity.Get<JN.Data.Service.IBonusDetailService>().List(x => x.UID == Umodel.ID && (x.IsBalance == false || (x.IsBalance == true && (x.IsEffective ?? false) == false)) && (x.BonusID == 1102 || x.BonusID == 1105));
+                            decimal unusable2001 = blist2001.Count() > 0 ? blist2001.Sum(x => x.BonusMoney) : 0;
+                            var suplist = MvcCore.Unity.Get<JN.Data.Service.ISupplyHelpService>().List(x => x.UID == Umodel.ID && x.Status <= (int)JN.Data.Enum.HelpStatus.AllDeal && x.Status > 0);
+                            decimal supmon = suplist.Count() > 0 ? suplist.Sum(x => x.SupplyAmount) : 0;
+                        }
+                        <li class="clearfix  area area-a">
+                            <span class="wallet">
+                                @T(cacheSysParam.SingleAndInit(x => x.ID == 2001).Value)<br>
+                                <strong class="wallet-color">可用:@(Umodel.Wallet2001)RMB</strong><br />
+                                @*<strong class="wallet-color" >待提现:@(unusable2001)RMB</strong>*@
+                                <strong class="wallet-color">冻结:@(unusable2001 + supmon)RMB</strong>
+                            </span>
+                        </li>
+
+                        @{
+                            var blist2002 = MvcCore.Unity.Get<JN.Data.Service.IBonusDetailService>().List(x => x.UID == Umodel.ID && x.IsBalance == false && (x.BonusID == 1103));
+                            decimal unusable2002 = blist2002.Count() > 0 ? blist2002.Sum(x => x.BonusMoney) : 0;
+                        }
+                        <li class="clearfix area area-b">
+                           
+                            <span class="wallet">
+                                @T(cacheSysParam.SingleAndInit(x => x.ID == 2002).Value)<br>
+                                <strong class="wallet-color">可用:@(Umodel.Wallet2002)RMB</strong><br/>
+                                <strong class="wallet-color" >不可用:@(unusable2002)RMB</strong>
+                            </span>
+                        </li>
+
+                        <li class="clearfix area area-c">
+                            <span class="wallet">
+                                @T(cacheSysParam.SingleAndInit(x => x.ID == 2003).Value)<br>
+                                <strong class="wallet-color">@((Umodel.Wallet2003.ToString("0")))个</strong>
+                            </span>
+                        </li>
+                        <li class="clearfix area area-c">
+
+                            <span class="wallet">
+                                @T(cacheSysParam.SingleAndInit(x => x.ID == 2004).Value)<br>
+                                <strong class="wallet-color">@((Umodel.Wallet2004 ?? 0).ToString("0"))个</strong>
+                            </span>
+                        </li>
+                        <li class="clearfix area area-c">
+
+                            <span class="wallet">
+                                @T(cacheSysParam.SingleAndInit(x => x.ID == 2005).Value)<br>
+                                <strong class="wallet-color">@(Umodel.Wallet2005 ?? 0)</strong>
+                            </span>
+                        </li>
+                        @*<li class="clearfix area area-c">
+
+                            <span class="wallet">
+                                激活码钱包<br>
+                                <strong class="wallet-color">
+                                    可用:@(MvcCore.Unity.Get<JN.Data.Service.IPINCodeService>().List(x => ((x.OriginUID == Umodel.ID && x.UID == Umodel.ID) || x.UID == Umodel.ID) && x.IsUsed == false).Count())
+                                </strong><br />
+                                    <strong class="wallet-color">不可用:@(MvcCore.Unity.Get<JN.Data.Service.IPINCodeService>().List(x => (x.OriginUID == Umodel.ID || x.UID == Umodel.ID) && x.IsUsed == true).Count())</strong>
+</span>
+                        </li>*@
+
+                       
+                    </ul>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                @RenderBody()
+                    </div>
+            </div>
+        </div>
+    <!-- Vendor scripts -->
+    <div class="modal container fade" id="childwindow" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                @*<div class="color-line"></div>*@
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="childwindowtitle"></h4>
+
+                </div>
+                <section id="childwindowiframe">
+                    <div class="modal-body" style="text-align:center">
+                        <p style="text-align:center">@T("载入中，请稍候...")</p>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script src="~/Theme/mmm/js/bootstrap-datepicker.js" charset="GBK"></script>
+<script src="~/Theme/mmm/js/daterangepicker/moment.js" charset="GBK"></script>
+<script src="~/Theme/mmm/js/daterangepicker/daterangepicker.js" charset="GBK"></script>
+<script src="~/Theme/mmm/js/bootstrap-timepicker.min.js" charset="GBK"></script>
+<script src="~/Scripts/jn.js" charset="GBK"></script>
+    <!--gethelp modal end-->
+    <script src="~/Plugin/layer/layer.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(function () { $('[data-toggle="popover"]').popover() });
+            //$('#childwindow').on('hidden.bs.modal', function (e) { window.location.reload(); });
+        });
+        function winopen(title, url, width) {
+            if (width != "") $('.modal-dialog').width(width);
+            $('#childwindowiframe').load(url);
+            $("#childwindowtitle").html(title);
+            $("#childwindow").modal();
+        }
+        function winclose() {
+            $("#childwindow").modal('hide');
+        }
+
+        function tc() {
+            if (confirm("@T("您确定要退出么?")")) {
+                location = '/usercenter/home/logout';
+
+            }
+        }
+    </script>
+
+
+
+<script language="javascript">
+    function settime() {
+        var myyear, mymonth, myweek, myday, mytime, mymin, myhour, mysec;
+        function initArray() {
+            this.length = initArray.arguments.length;
+            for (var i = 0; i < this.length; i++) {
+                this[i + 1] = initArray.arguments[i];
+            }
+        }
+        var d = new initArray(" 星期日", " 星期一", " 星期二", " 星期三", " 星期四", " 星期五", " 星期六");
+        var mydate = new Date();
+        myyear = mydate.getFullYear();
+        mymonth = mydate.getMonth() + 1;
+        myday = mydate.getDate();
+        myhour = mydate.getHours();
+        mymin = mydate.getMinutes();
+        mysec = mydate.getSeconds();
+        mytime = d[mydate.getDay() + 1] + " " + myyear + "-" + mymonth + "-" + myday + " " + myhour + ":" + mymin + ":" + mysec;
+        if (mytime.length < 25) {
+            for (var i = mytime.length; i <= 25; i++) {
+                mytime += "&nbsp;";
+            }
+        }
+        document.getElementById("nihao").innerHTML = mytime;
+        setTimeout('settime()', 1000);
+    }
+    settime();
+</script>
+

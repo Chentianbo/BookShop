@@ -1,0 +1,35 @@
+﻿@{
+    string action = ViewContext.RouteData.Values["action"].ToString().ToLower();
+}
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="@(action == "supplyhelp" ? "active" : "")">
+                    <a href="@Url.Action("SupplyHelp")">
+                        提供帮助
+                    </a>
+                </li>
+                <li class="@(action == "accepthelp" ? "active" : "")">
+                    <a href="@Url.Action("AcceptHelp")">
+                        接受帮助
+                    </a>
+                </li>
+                <li class="@((Request.Url.ToString().ToLower().Contains(("/market/matchdlist?ac=all").ToLower())) ? "active" : "")">
+                    <a href="@Url.Action("MatchdList")?ac=all">
+                        已匹配数据
+                    </a>
+                </li>
+                <li class="@((Request.Url.ToString().ToLower().Contains(("/market/matchdlist?ac=overduepaymen").ToLower())) ? "active" : "")">
+                    <a href="@Url.Action("MatchdList")?ac=overduepayment">
+                        超期未付款订单
+                    </a>
+                </li>
+                <li class="@((Request.Url.ToString().ToLower().Contains(("/market/matchdlist?ac=overdueverified").ToLower())) ? "active" : "")">
+                    <a href="@Url.Action("MatchdList")?ac=overdueverified">
+                        超期未验证付款单
+                    </a>
+                </li>
+                @*<li class="@((Request.Url.ToString().ToLower().Contains(("/market/matchdlist?st=-2").ToLower())) ? "active" : "")">
+                    <a href="@Url.Action("MatchdList")?st=-2">
+                        虚假订单
+                    </a>
+                </li>*@
+            </ul>
