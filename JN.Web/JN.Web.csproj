@@ -2617,7 +2617,7 @@
     <Content Include="Areas\AdminCenter\Views\Shop\ModifyShop.cshtml" />
     <Content Include="Areas\AdminCenter\Views\Shop\NewShop.cshtml" />
     <Content Include="Areas\AdminCenter\Views\Shop\Order.cshtml" />
-    <Content Include="Areas\AdminCenter\Views\Shop\Product.cshtml" />
+    <Content Include="Areas\AdminCenter\Views\Shop\BookList.cshtml" />
     <Content Include="Areas\AdminCenter\Views\Shop\Release.cshtml" />
     <Content Include="Areas\AdminCenter\Views\Shop\ShopList.cshtml" />
     <Content Include="Areas\AdminCenter\Views\Shop\ShopStatistics.cshtml" />

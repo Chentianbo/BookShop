@@ -30,10 +30,10 @@
                     <label class="control-label"></label>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="BookCategotyId">所属分类</label>
+                    <label class="control-label" for="BookCategoryId">所属分类</label>
                     <div class="controls">
                         <div class="clearfix">
-                            @Html.DropDownList("BookCategotyId", ViewData["BookCategory"] as SelectList, new { @class = "form-control" })
+                            @Html.DropDownList("BookCategoryId", ViewData["BookCategory"] as SelectList, new { @class = "form-control" })
                         </div>
                     </div>
                 </div>
@@ -226,8 +226,7 @@
                     </div>
                 </div>
 
-
-                <div class="hr hr-dotted"></div>
+                <div class="hr hr-dotted "></div>
                 <div class="control-group">
                     <label class="control-label" for="TranslatorIntroduction">译者简介</label>
 
@@ -271,15 +270,16 @@
                }
         else{
           alert(data.Message);
-        }
+            }
            });
     });
         function BeforePost()
         {
-            var BookCategoty= $("select[name='BookCategotyId']").val();
+            var BookCategoty= $("select[name='BookCategoryId']").val();
            if(BookCategoty==""){
               alert("请选择分类");
               $("select[name='BookCategotyId']").focus();
+
               return false;
 
           }

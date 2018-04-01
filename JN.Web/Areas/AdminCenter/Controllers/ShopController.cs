@@ -139,18 +139,25 @@ namespace JN.Web.Areas.AdminCenter.Controllers
         }
 
         /// <summary>
-        /// 编辑商品
+        /// 编辑图书
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         public ActionResult Modify(string id)
         {
             var model = BookInfoService.Single(id);
+            if (model==null)
+            {
+                ViewBag.ErrorMsg = "抱歉，暂时找不该该数据";
+                return View("Error");
+            }
+            ViewData["BookCategory"] = new SelectList(BookCategoryService.List().OrderBy(x => x.Sort).ToList(), "ID", "Name");
+            ActMessage = "添加图书";
             return View(model);
         }
 
         /// <summary>
-        /// 添加商品
+        /// 添加图书
         /// </summary>
         /// <returns></returns>
         [HttpPost]
@@ -162,6 +169,10 @@ namespace JN.Web.Areas.AdminCenter.Controllers
               
                 var entity =new  JN.Data.BookInfo();
                 TryUpdateModel(entity, fc.AllKeys);
+                if (BookInfoService.List(x => x.BookName == entity.BookName).Count() > 0)
+                {
+                    throw new Exception("该名称已存在");
+                }
                 if (string.IsNullOrEmpty(entity.BookCategoryId))
                 {
                     throw new Exception("请选择图书分类");
@@ -214,10 +225,10 @@ namespace JN.Web.Areas.AdminCenter.Controllers
                     {
                         throw new Exception("封面上传失败");
                     }
+                    entity.ImageUrl = imgurl;
                 }
                 entity.BookState = (int)BookState.Wait;
                 entity.UId = Amodel.ID;
-                entity.ImageUrl = imgurl;
                 //加密
                 entity.CreateSign();
                 BookInfoService.Add(entity);
@@ -237,21 +248,64 @@ namespace JN.Web.Areas.AdminCenter.Controllers
         }
 
         /// <summary>
-        /// 保存商品
+        /// 修改保存商品
         /// </summary>
         /// <param name="fc"></param>
         /// <returns></returns>
         [HttpPost]
         public ActionResult Modify(FormCollection fc)
         {
+            ReturnResult result = new ReturnResult();
             try
             {
                 string id = fc["ID"];
-                var entity = BookInfoService.Single(x=>x.ID== id);
+                string bookName = fc["BookName"];
+                if (string.IsNullOrEmpty(id))
+                {
+                    throw new Exception("找不到数据");
+                }
+                if (string.IsNullOrEmpty(fc["BookCategoryId"]))
+                {
+                    throw new Exception("请选择图书分类");
+                }
+                if (string.IsNullOrEmpty(fc["BookName"]))
+                {
+                    throw new Exception("请输入图书名称");
+                }
+                if (string.IsNullOrEmpty(fc["Author"]))
+                {
+                    throw new Exception("请输入作者");
+                }
+                if (string.IsNullOrEmpty(fc["ISBN"]))
+                {
+                    throw new Exception("请输入图书ISBN码");
+                }
+               
+                var entity = BookInfoService.Single(id);
+                if (BookInfoService.List(x => x.BookName == bookName&&x.ID!=entity.ID).Count()>0)
+                {
+                    throw new Exception("该名称已存在");
+                }
                 TryUpdateModel(entity, fc.AllKeys);
-                HttpPostedFileBase file = Request.Files["imgurl"];
+                if (entity.PrintDate == null)
+                {
+                    throw new Exception("请输入印刷日期");
+                }
+                if (entity.OlaPrice <= 0)
+                {
+                    throw new Exception("请正确输入原价");
+                }
+                if (entity.CurrentPrice <= 0)
+                {
+                    throw new Exception("请正确输入售价");
+                }
+                if (entity.CurrentPrice < 0)
+                {
+                    throw new Exception("请正确输入运费");
+                }
+                HttpPostedFileBase file = Request.Files["ImageUrl"];
                 string imgurl = "";
-                if (!string.IsNullOrEmpty(file.FileName))
+                if (file != null)
                 {
                     if (!FileValidation.IsAllowedExtension(file, new FileExtension[] { FileExtension.PNG, FileExtension.JPG, FileExtension.BMP }))
                     {
@@ -267,27 +321,62 @@ namespace JN.Web.Areas.AdminCenter.Controllers
                     }
                     catch
                     {
-                        //
+                        throw new Exception("封面上传失败");
                     }
+                    entity.ImageUrl = imgurl;
                 }
-                entity.ImageUrl = imgurl;
+                entity.BookState = (int)BookState.Wait;
+                entity.UId = Amodel.ID;
+                //加密
+                entity.CreateSign();
                 BookInfoService.Update(entity);
                 SysDBTool.Commit();
-                ViewBag.SuccessMsg = "商品修改/发布成功！";
-                return View("Success");
+
+                result.Message = "修改成功";
+                result.Status = 200;
             }
             catch (Exception ex)
             {
                 logs.WriteErrorLog(HttpContext.Request.Url.ToString(), ex);
-                ViewBag.ErrorMsg = "系统异常！请查看系统日志。";
-                return View("Error");
+                ViewBag.ErrorMsg = "修改失败！";
+                result.Message = ex.Message;
+                result.Status = 500;
             }
+            return Json(result);
         }
 
-        public ActionResult Product(int? page)
+        /// <summary>
+        /// 图书列表 获取不同状态的图书
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="state"></param>
+        /// <returns></returns>
+        public ActionResult BookList(int? page,int? state)
         {
             ActMessage = "商品管理";
-            var list = BookInfoService.List(x => x.BookState==(int)BookState.Grounding).WhereDynamic(FormatQueryString(HttpUtility.ParseQueryString(Request.Url.Query))).ToList();
+            var list = BookInfoService.List().WhereDynamic(FormatQueryString(HttpUtility.ParseQueryString(Request.Url.Query))).ToList();
+            if (state != null)
+            {
+                list = list.Where(x=>x.BookState==state).OrderByDescending(x=>x.CreateTime).ToList();
+            }
+            //数据验证
+            foreach (var item in list)
+            {
+                string sign= (item.BookName + item.Author + item.ISBN + item.BookCategoryId + (Convert.ToInt32(item.CurrentPrice)).ToString() + (Convert.ToInt32(item.OlaPrice)).ToString() + item.UId
+                    + item.BookState.ToString() + (Convert.ToInt32(item.FreightPrice)).ToString()).ToLower().ToMD5();
+                if (sign!=item.Sign)
+                {
+                  
+                    if (item.BookState != (int)BookState.Bbnormal)
+                    {
+                        item.BookState = (int)BookState.Bbnormal;
+                        item.Description = "数据被非法修改";
+                        BookInfoService.Update(item);
+                        SysDBTool.Commit();
+                    }
+                  
+                }
+            }
             if (Request["IsExport"] == "1")
             {
                 string FileName = string.Format("{0}_{1}_{2}_{3}", DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute);
@@ -297,32 +386,29 @@ namespace JN.Web.Areas.AdminCenter.Controllers
             return View(list.ToPagedList(page ?? 1, 20));
         }
 
-        public ActionResult OffSales(int? page)
-        {
-            ActMessage = "下架商品管理";
-            var list = BookInfoService.List(x => x.BookState == (int)BookState.Prohibit).WhereDynamic(FormatQueryString(HttpUtility.ParseQueryString(Request.Url.Query))).ToList();
-            return View("Product", list.ToPagedList(page ?? 1, 20));
-        }
-
 
         /// <summary>
-        /// 删除商品
+        /// 删除图书
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         public ActionResult Delete(string id)
         {
+            ReturnResult result = new ReturnResult();
             var model = BookInfoService.Single(id);
-            if (model != null)
+            if (model == null)
             {
-                ActPacket = model;
+                result.Status = 500;
+                throw new Exception("找不到数据");
+            }
+            else
+            {
                 BookInfoService.Delete(id);
                 SysDBTool.Commit();
-                ViewBag.SuccessMsg = "“" + model.BookName + "”已被删除！";
-                return View("Success");
+                result.Status = 200;
+                result.Message = "“" + model.BookName + "”已被删除！";
             }
-            ViewBag.ErrorMsg = "记录不存在或已被删除！";
-            return View("Error");
+            return Json(result);
         }
 
         /// <summary>

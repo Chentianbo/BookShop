@@ -283,7 +283,7 @@ namespace JN.Data
         //生成加密串
         public void CreateSign()
         {
-            Sign = (BookName + Author + ISBN + BookCategoryId + CurrentPrice.ToString() + OlaPrice.ToString() + UId + BookState.ToString() + CreateTime + FreightPrice.ToString()).ToLower().ToMD5();
+            Sign = (BookName + Author + ISBN + BookCategoryId + (Convert.ToInt32(CurrentPrice)).ToString() + (Convert.ToInt32(OlaPrice)).ToString() + UId + BookState.ToString()  + (Convert.ToInt32(FreightPrice)).ToString()).ToLower().ToMD5();
         }
       
     }
