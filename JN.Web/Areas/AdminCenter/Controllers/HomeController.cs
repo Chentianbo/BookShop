@@ -12,6 +12,10 @@ namespace JN.Web.Areas.AdminCenter.Controllers
 {
     public class HomeController : BaseController
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        private static int[] Chartdate = new int[] { 1, 2, 3,4,5,6,7,8,9,10,11,12};
         //
         // GET: /AdminCenter/Index/
         public ActionResult Index()
@@ -82,18 +86,30 @@ namespace JN.Web.Areas.AdminCenter.Controllers
             return Json(result);
         }
 
-        public JsonResult getchardata()
+        /// <summary>
+        /// 获取用户统计数据
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult getcharUserdata()
         {
-            List<int> kdata = new List<int>();
-            List<string> kdate = new List<string>();
-            var lst = MvcCore.Unity.Get<Data.Service.IUserService>().List().Select(x => x.CreateTime).Distinct().ToList(); 
-            foreach (var item in lst)
+            List<int> data = new List<int>();
+            List<string> date = new List<string>();
+            for (int i = 0; i < Chartdate.Count(); i++)
             {
-                kdata.Add(MvcCore.Unity.Get<Data.Service.IUserService>().List(x => SqlFunctions.DateDiff("DAY", x.CreateTime, item) == 0).Count());
-                kdate.Add(item.ToShortDateString());
-                //kdata.Add(new double[] { DateTimeDiff.DateTimeToStamp(item), MvcCore.Unity.Get<Data.Service.IUserService>().List(x => SqlFunctions.DateDiff("DAY", x.CreateTime, item) == 0).Count() });
+                date.Add(Chartdate[i]+"月");
+                data.Add(MvcCore.Unity.Get<Data.Service.IUserService>().List(x => x.CreateTime.Month== Chartdate[i]).Count());
             }
-            return Json(new { datas = kdata, dates = kdate }, JsonRequestBehavior.AllowGet);
+            return Json(new { datas = data, dates = date}, JsonRequestBehavior.AllowGet);
+
+            //List<int> kdata = new List<int>();
+            //List<string> Chartdate = new List<string>();
+            //var lst = MvcCore.Unity.Get<Data.Service.IUserService>().List().Select(x => x.CreateTime).Distinct().ToList(); 
+            //foreach (var item in lst)
+            //{
+            //    kdata.Add(MvcCore.Unity.Get<Data.Service.IUserService>().List(x => SqlFunctions.DateDiff("DAY", x.CreateTime, item) == 0).Count());
+            //    kdate.Add(item.ToShortDateString());
+            //}
+            //return Json(new { datas = kdata, dates = kdate }, JsonRequestBehavior.AllowGet);
         }
     }
 }

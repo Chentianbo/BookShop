@@ -11,6 +11,7 @@ using JN.Services.Tool;
 using System.IO;
 using JN.Services.Manager;
 using JN.Data.Enum;
+using JN.Data.Common;
 //using System.Data.Entity.Validation;
 
 namespace JN.Web.Areas.AdminCenter.Controllers
@@ -42,89 +43,92 @@ namespace JN.Web.Areas.AdminCenter.Controllers
             this.BookCategoryService = bookCategoryService;
         }
 
-        public ActionResult ModifyShop(int? id)
+        /// <summary>
+        /// 图书列表 获取不同状态的图书
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="state"></param>
+        /// <returns></returns>
+        public ActionResult BookList(int? page, int? state)
         {
-            ActMessage = "编辑店铺";
-            if (id.HasValue)
-                return View(BookInfoService.Single(id));
-            else
+
+            ActMessage = "图书管理";
+            var list = BookInfoService.List().WhereDynamic(FormatQueryString(HttpUtility.ParseQueryString(Request.Url.Query))).ToList();
+            if (state != null)
             {
-                ActMessage = "添加店铺";
-                return View(new Data.User());
+                list = list.Where(x => x.BookState == state).OrderByDescending(x => x.CreateTime).ToList();
             }
+            //数据验证
+            foreach (var item in list)
+            {
+                string sign = (item.BookName + item.Author + item.ISBN + item.BookCategoryId + (Convert.ToInt32(item.CurrentPrice)).ToString() + (Convert.ToInt32(item.OlaPrice)).ToString() + item.UID
+                    + item.BookState.ToString() + (Convert.ToInt32(item.FreightPrice)).ToString()).ToLower().ToMD5();
+                if (sign != item.Sign)
+                {
+
+                    if (item.BookState != (int)BookState.Bbnormal)
+                    {
+                        item.BookState = (int)BookState.Bbnormal;
+                        item.Description = "数据被非法修改";
+                        BookInfoService.Update(item);
+                        SysDBTool.Commit();
+                    }
+
+                }
+            }
+            if (Request["IsExport"] == "1")
+            {
+                string FileName = string.Format("{0}_{1}_{2}_{3}", DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute);
+                MvcCore.Extensions.ExcelHelperV2.ToExcel(list.ToList()).SaveToExcel(Server.MapPath("/upfile/" + FileName + ".xls"));
+                return File(Server.MapPath("/upfile/" + FileName + ".xls"), "application/ms-excel", FileName + ".xls");
+            }
+            //枚举数据
+            ViewBag.EnumData = EnumExtension.GetOptions(BookState.Wait);
+            return View(list.ToPagedList(page ?? 1, 20));
         }
 
-        [HttpPost]
-        public ActionResult ModifyShop(FormCollection fc)
+        /// <summary>
+        /// 修改图书状态
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="state"></param>
+        /// <returns></returns>
+        public ActionResult ChangeBookSate(string id, string state)
         {
             ReturnResult result = new ReturnResult();
             try
             {
-                var entity = BookInfoService.SingleAndInit(fc["ID"].ToInt());
-                TryUpdateModel(entity, fc.AllKeys);
-
-                BookInfoService.Update(entity);
+                if (string.IsNullOrEmpty(id))
+                {
+                    throw new Exception("提交出错");
+                }
+                if (string.IsNullOrEmpty(state))
+                {
+                    throw new Exception("提交出错");
+                }
+                if (!EnumExtension.ExitEnum((BookState)Convert.ToInt32(state)))
+                {
+                    throw new Exception("提交出错");
+                }
+                var model = BookInfoService.Single(id);
+                if (model==null)
+                {
+                    throw new Exception("该数据不存在");
+                }
+                model.BookState = Convert.ToInt32(state);
+                model.Description = "";
+                model.CreateSign();
+                BookInfoService.Update(model);
                 SysDBTool.Commit();
                 result.Status = 200;
+                result.Message = "操作成功";
             }
             catch (Exception ex)
             {
+                result.Status = 500;
                 result.Message = ex.Message;
             }
             return Json(result);
-        }
-
-        public ActionResult ShopList(int? active, int? page)
-        {
-            ActMessage = "店铺列表";
-            int theActive = active ?? 0;
-            var list = BookInfoService.List(x => x.BookState==0).WhereDynamic(FormatQueryString(HttpUtility.ParseQueryString(Request.Url.Query))).ToList();
-            if (Request["IsExport"] == "1")
-            {
-                string FileName = string.Format("{0}_{1}_{2}_{3}", DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute);
-                MvcCore.Extensions.ExcelHelperV2.ToExcel(list.ToList()).SaveToExcel(Server.MapPath("/upfile/" + FileName + ".xls"));
-                return File(Server.MapPath("/upfile/" + FileName + ".xls"), "application/ms-excel", FileName + ".xls");
-            }
-            return View(list.ToPagedList(page ?? 1, 20));
-        }
-
-        public ActionResult ShopStatistics(int? page)
-        {
-            ActMessage = "店铺销售统计";
-            var list = BookInfoService.List(x => x.BookState == 0).WhereDynamic(FormatQueryString(HttpUtility.ParseQueryString(Request.Url.Query))).ToList();
-            return View(list.ToPagedList(page ?? 1, 20));
-        }
-
-        public ActionResult ShopLock(int? islock, int? page)
-        {
-            int theLock = islock ?? 0;
-            var list = BookInfoService.List(x => x.BookState == (int)BookState.Prohibit).WhereDynamic(FormatQueryString(HttpUtility.ParseQueryString(Request.Url.Query))).ToList();
-            if (Request["IsExport"] == "1")
-            {
-                string FileName = string.Format("{0}_{1}_{2}_{3}", DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute);
-                MvcCore.Extensions.ExcelHelperV2.ToExcel(list.ToList()).SaveToExcel(Server.MapPath("/upfile/" + FileName + ".xls"));
-                return File(Server.MapPath("/upfile/" + FileName + ".xls"), "application/ms-excel", FileName + ".xls");
-            }
-            return View(list.ToPagedList(page ?? 1, 20));
-        }
-
-
-        public ActionResult ShopCommand(string id, string state)
-        {
-            try
-            {
-                var model = BookInfoService.Single(id);
-                model.BookState = Convert.ToInt32(state);
-                BookInfoService.Update(model);
-                SysDBTool.Commit();
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-         
-            return RedirectToAction("ShopList", "Shop");
         }
 
         /// <summary>
@@ -139,24 +143,6 @@ namespace JN.Web.Areas.AdminCenter.Controllers
         }
 
         /// <summary>
-        /// 编辑图书
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public ActionResult Modify(string id)
-        {
-            var model = BookInfoService.Single(id);
-            if (model==null)
-            {
-                ViewBag.ErrorMsg = "抱歉，暂时找不该该数据";
-                return View("Error");
-            }
-            ViewData["BookCategory"] = new SelectList(BookCategoryService.List().OrderBy(x => x.Sort).ToList(), "ID", "Name");
-            ActMessage = "添加图书";
-            return View(model);
-        }
-
-        /// <summary>
         /// 添加图书
         /// </summary>
         /// <returns></returns>
@@ -166,8 +152,8 @@ namespace JN.Web.Areas.AdminCenter.Controllers
             ReturnResult result = new ReturnResult();
             try
             {
-              
-                var entity =new  JN.Data.BookInfo();
+
+                var entity = new JN.Data.BookInfo();
                 TryUpdateModel(entity, fc.AllKeys);
                 if (BookInfoService.List(x => x.BookName == entity.BookName).Count() > 0)
                 {
@@ -189,11 +175,11 @@ namespace JN.Web.Areas.AdminCenter.Controllers
                 {
                     throw new Exception("请输入图书ISBN码");
                 }
-                if (entity.PrintDate==null)
+                if (entity.PrintDate == null)
                 {
                     throw new Exception("请输入印刷日期");
                 }
-                if (entity.OlaPrice<=0)
+                if (entity.OlaPrice <= 0)
                 {
                     throw new Exception("请正确输入原价");
                 }
@@ -207,7 +193,7 @@ namespace JN.Web.Areas.AdminCenter.Controllers
                 }
                 HttpPostedFileBase file = Request.Files["ImageUrl"];
                 string imgurl = "";
-                if (file!=null)
+                if (file != null)
                 {
                     if (!FileValidation.IsAllowedExtension(file, new FileExtension[] { FileExtension.PNG, FileExtension.JPG, FileExtension.BMP }))
                     {
@@ -228,12 +214,13 @@ namespace JN.Web.Areas.AdminCenter.Controllers
                     entity.ImageUrl = imgurl;
                 }
                 entity.BookState = (int)BookState.Wait;
-                entity.UId = Amodel.ID;
+                entity.UID = Amodel.ID;
+                entity.UserName = "(管理员)"+ Amodel.AdminName;
                 //加密
                 entity.CreateSign();
                 BookInfoService.Add(entity);
                 SysDBTool.Commit();
-               
+
                 result.Message = "发布成功";
                 result.Status = 200;
             }
@@ -248,7 +235,25 @@ namespace JN.Web.Areas.AdminCenter.Controllers
         }
 
         /// <summary>
-        /// 修改保存商品
+        /// 编辑图书
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Modify(string id)
+        {
+            var model = BookInfoService.Single(id);
+            if (model==null)
+            {
+                ViewBag.ErrorMsg = "抱歉，暂时找不该该数据";
+                return View("Error");
+            }
+            ViewData["BookCategory"] = new SelectList(BookCategoryService.List().OrderBy(x => x.Sort).ToList(), "ID", "Name");
+            ActMessage = "编辑图书";
+            return View(model);
+        }
+
+        /// <summary>
+        /// 修改保存图书
         /// </summary>
         /// <param name="fc"></param>
         /// <returns></returns>
@@ -326,7 +331,6 @@ namespace JN.Web.Areas.AdminCenter.Controllers
                     entity.ImageUrl = imgurl;
                 }
                 entity.BookState = (int)BookState.Wait;
-                entity.UId = Amodel.ID;
                 //加密
                 entity.CreateSign();
                 BookInfoService.Update(entity);
@@ -343,47 +347,6 @@ namespace JN.Web.Areas.AdminCenter.Controllers
                 result.Status = 500;
             }
             return Json(result);
-        }
-
-        /// <summary>
-        /// 图书列表 获取不同状态的图书
-        /// </summary>
-        /// <param name="page"></param>
-        /// <param name="state"></param>
-        /// <returns></returns>
-        public ActionResult BookList(int? page,int? state)
-        {
-            ActMessage = "商品管理";
-            var list = BookInfoService.List().WhereDynamic(FormatQueryString(HttpUtility.ParseQueryString(Request.Url.Query))).ToList();
-            if (state != null)
-            {
-                list = list.Where(x=>x.BookState==state).OrderByDescending(x=>x.CreateTime).ToList();
-            }
-            //数据验证
-            foreach (var item in list)
-            {
-                string sign= (item.BookName + item.Author + item.ISBN + item.BookCategoryId + (Convert.ToInt32(item.CurrentPrice)).ToString() + (Convert.ToInt32(item.OlaPrice)).ToString() + item.UId
-                    + item.BookState.ToString() + (Convert.ToInt32(item.FreightPrice)).ToString()).ToLower().ToMD5();
-                if (sign!=item.Sign)
-                {
-                  
-                    if (item.BookState != (int)BookState.Bbnormal)
-                    {
-                        item.BookState = (int)BookState.Bbnormal;
-                        item.Description = "数据被非法修改";
-                        BookInfoService.Update(item);
-                        SysDBTool.Commit();
-                    }
-                  
-                }
-            }
-            if (Request["IsExport"] == "1")
-            {
-                string FileName = string.Format("{0}_{1}_{2}_{3}", DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute);
-                MvcCore.Extensions.ExcelHelperV2.ToExcel(list.ToList()).SaveToExcel(Server.MapPath("/upfile/" + FileName + ".xls"));
-                return File(Server.MapPath("/upfile/" + FileName + ".xls"), "application/ms-excel", FileName + ".xls");
-            }
-            return View(list.ToPagedList(page ?? 1, 20));
         }
 
 
@@ -411,128 +374,7 @@ namespace JN.Web.Areas.AdminCenter.Controllers
             return Json(result);
         }
 
-        /// <summary>
-        /// 订单
-        /// </summary>
-        /// <param name="page"></param>
-        /// <param name="status"></param>
-        /// <returns></returns>
-        public ActionResult Order(int? page, int? status)
-        {
-            ActMessage = "订单管理";
-            var list = ShopOrderService.List(x => x.Status == (status ?? 1)).WhereDynamic(FormatQueryString(HttpUtility.ParseQueryString(Request.Url.Query))).ToList();
-            if (Request["IsExport"] == "1")
-            {
-                string FileName = string.Format("{0}_{1}_{2}_{3}", DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute);
-                MvcCore.Extensions.ExcelHelperV2.ToExcel(list.ToList()).SaveToExcel(Server.MapPath("/upfile/" + FileName + ".xls"));
-                return File(Server.MapPath("/upfile/" + FileName + ".xls"), "application/ms-excel", FileName + ".xls");
-            }
-            return View(list.ToPagedList(page ?? 1, 20));
-        }
-
-        /// <summary>
-        /// 确认收款
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public ActionResult doFinishOrder(int id)
-        {
-            var model = ShopOrderService.Single(id);
-            if (model != null)
-            {
-                if (model.Status == (int)Data.Enum.OrderStatus.Transaction)
-                {
-
-                    //TShopInfo shop = shopinfos.GetModel(model.ShopID);
-                    //TUser Smodel = users.GetModel(shop.UID);
-                    using (System.Transactions.TransactionScope ts = new System.Transactions.TransactionScope())
-                    {
-                        model.Status = (int)JN.Data.Enum.OrderStatus.Deal;
-                        ShopOrderService.Update(model);
-                        SysDBTool.Commit();
-                        //给卖家打款
-                        //users.changeWallet(Smodel, (float)model.TotalPrice, 2006, "商品销售收入");
-                        //执行返利
-                        //users.CalculateMallBonus((int)model.ID);
-                        ts.Complete();
-                    }
-                    //ActPacket = model;
-                    if (Request.UrlReferrer != null)
-                    {
-                        ViewBag.FormUrl = Request.UrlReferrer.ToString();
-                    }
-                    ViewBag.SuccessMsg = "确认收货成功！";
-                    return View("Success");
-                }
-            }
-            ViewBag.ErrorMsg = "记录不存在或已被删除！";
-            return View("Error");
-        }
-
-        /// <summary>
-        /// 中止交易
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public ActionResult CancelOrder(int id)
-        {
-            var model = ShopOrderService.Single(id);
-            if (model != null)
-            {
-                if (model.Status == (int)Data.Enum.OrderStatus.Sales)
-                {
-                    using (System.Transactions.TransactionScope ts = new System.Transactions.TransactionScope())
-                    {
-                        var model2 = ShopOrderService.Single(x => x.OrderNumber == model.OrderNumber);
-                        if (model2 != null)
-                        {
-                            var book = BookInfoService.Single(model2.BookID);
-                            book.BookCount += model.TotalCount;
-                            BookInfoService.Update(book);
-                        }
-                        model.Status = (int)Data.Enum.OrderStatus.Cancel;
-                        ShopOrderService.Update(model);
-                        SysDBTool.Commit();
-
-                        Wallets.changeWallet(model.UID, model.TotalPrice, "商城退款");
-                        ts.Complete();
-                    }
-                    //退款
-
-                    ActPacket = model;
-                    if (Request.UrlReferrer != null)
-                    {
-                        ViewBag.FormUrl = Request.UrlReferrer.ToString();
-                    }
-                    ViewBag.SuccessMsg = "成功取消订单！";
-                    return View("Success");
-                }
-                else
-                {
-                    ViewBag.ErrorMsg = "当前交易状态无法取消。";
-                    return View("Error");
-                }
-            }
-            ViewBag.ErrorMsg = "记录不存在或已被删除！";
-            return View("Error");
-        }
-
-        public ActionResult doDeliver(int id, string logistics)
-        {
-            var model = ShopOrderService.Single(id);
-            if (model != null)
-            {
-                model.Logistics = logistics;
-                model.Status = (int)Data.Enum.OrderStatus.Transaction;
-                ShopOrderService.Update(model);
-                SysDBTool.Commit();
-                ActMessage = "订单发货成功！";
-                return Content("ok");
-            }
-            return Content("Error");
-        }
-
-
+   
         #region 书籍分类
 
         #region 书籍分类列表
@@ -595,9 +437,9 @@ namespace JN.Web.Areas.AdminCenter.Controllers
         }
         #endregion
 
-        #region 商品分类添加
+        #region 图书分类添加
         /// <summary>
-        /// 商品分类添加
+        /// 图书分类添加
         /// </summary>
         /// <returns></returns>
         public ActionResult AddBookClass()
@@ -606,7 +448,7 @@ namespace JN.Web.Areas.AdminCenter.Controllers
         }
 
         /// <summary>
-        /// 添加分类
+        /// 保存图书分类
         /// </summary>
         /// <param name="form"></param>
         /// <returns></returns>
@@ -695,9 +537,9 @@ namespace JN.Web.Areas.AdminCenter.Controllers
         }
         #endregion
 
-        #region 商品分类编辑
+        #region 图书分类编辑
         /// <summary>
-        /// 商品分类编辑
+        /// 图书分类编辑
         /// </summary>
         /// <returns></returns>
         public ActionResult ModifyBookClass(string id)
@@ -705,6 +547,12 @@ namespace JN.Web.Areas.AdminCenter.Controllers
             var PCategory = BookCategoryService.Single(id);
             return View(PCategory);
         }
+
+        /// <summary>
+        /// 修改图书分类
+        /// </summary>
+        /// <param name="form"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult ModifyBookClass(FormCollection form)
         {
@@ -783,7 +631,7 @@ namespace JN.Web.Areas.AdminCenter.Controllers
         }
         #endregion
 
-        #region 获得商品分类
+        #region 获得图书分类
 
         [HttpPost]
         public JsonResult GetCategory()

@@ -11,9 +11,9 @@ namespace JN.Data.Enum
     {
         [Description("待审核")]
         Wait = 0,
-        [Description("已上架")]
+        [Description("上架")]
         Grounding = 1,
-        [Description("已下架")]
+        [Description("下架")]
         UnderCarriage = -1,
         [Description("禁售")]
         Prohibit = -2,

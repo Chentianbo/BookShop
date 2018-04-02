@@ -180,7 +180,9 @@
     <Compile Include="Areas\AdminCenter\Controllers\HomeController.cs" />
     <Compile Include="Areas\AdminCenter\Controllers\FinanceController.cs" />
     <Compile Include="Areas\AdminCenter\Controllers\NoticeController.cs" />
+    <Compile Include="Areas\AdminCenter\Controllers\ShopCarController.cs" />
     <Compile Include="Areas\AdminCenter\Controllers\ShopController.cs" />
+    <Compile Include="Areas\AdminCenter\Controllers\ShopOrderController.cs" />
     <Compile Include="Areas\AdminCenter\Controllers\SysParamController.cs" />
     <Compile Include="Areas\AdminCenter\Controllers\UserController.cs" />
     <Compile Include="Areas\UserCenter\Controllers\BaseController.cs" />
@@ -3019,6 +3021,8 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\AdminCenter\Models\" />
+    <Folder Include="Areas\AdminCenter\Views\ShopCar\" />
+    <Folder Include="Areas\AdminCenter\Views\ShopOrder\" />
     <Folder Include="Areas\UserCenter\Views\Basics\" />
     <Folder Include="bin\" />
     <Folder Include="common\theme\scripts\plugins\forms\plupload\examples\uploads\" />

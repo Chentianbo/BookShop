@@ -13,24 +13,11 @@
 
         <li class="divider"></li>
         <li>@ViewBag.Title</li>
-        @*<li class=" pull-right" style="margin-top:5px">
-            <a class="btn btn-primary" href="@(Url.Action("ClearAllCache"))">
-                清除所有缓存
-            </a>
-            <a class="btn btn-primary" href="@(Url.Action("ClearAllCache"))">
-                关闭调试模式
-            </a>
-        </li>*@
     </ul>
     <div class="separator bottom"></div>
     <!-- // Breadcrumb END -->
     <div class="innerLR">
 
-        @*<div class="alert alert-primary" >
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            <strong>欢迎使用</strong> @(MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1).SysName)后台管理系统
-
-        </div>*@
         <div class="separator bottom"></div>
         <div class="row-fluid">
             <div class="span3">
@@ -39,123 +26,77 @@
                     <span class="glyphicons user"><i></i></span>
                     <span class="txt">所有/今日会员统计</span>
                     <div class="clearfix"></div>
-                    <span class="count label label-important">@(MvcCore.Unity.Get<JN.Data.Service.IUserService>().List(x => x.AccountState==0).Count())
+                    <span class="count label label-important">
+                        @(MvcCore.Unity.Get<JN.Data.Service.IUserService>().List(x => x.AccountState == 0).Count())
                     /
-                        @(MvcCore.Unity.Get<JN.Data.Service.IUserService>().List(x => System.Data.Entity.SqlServer.SqlFunctions.DateDiff("day", x.CreateTime, DateTime.Now) == 0).Count())
-                    </span>
-                </a>
-                <!-- // Stats Widget END -->
-            </div>
-            @*<div class="span2">
+                    @(MvcCore.Unity.Get<JN.Data.Service.IUserService>().List(x => System.Data.Entity.SqlServer.SqlFunctions.DateDiff("day", x.CreateTime, DateTime.Now) == 0).Count())
+                </span>
+            </a>
+            <!-- // Stats Widget END -->
+        </div>
+        <div class="span3">
 
-        <!-- Stats Widget -->
-        <a href="" class="widget-stats margin-bottom-none">
-            <span class="glyphicons group"><i></i></span>
-            <span class="txt">代理商总量</span>
-            <div class="clearfix"></div>
-            <span class="count label label-warning">@(MvcCore.Unity.Get<JN.Data.Service.IUserService>().List(x => x.IsAgent ?? false).Count())</span>
-        </a>
-        <!-- // Stats Widget END -->
+            <!-- Stats Widget -->
+            <a href="" class="widget-stats margin-bottom-none">
+                <span class="glyphicons coins"><i></i></span>
+                <span class="txt">所有/今日图书统计</span>
+                <div class="clearfix"></div>
+                <span class="count label label-important">
+                    @(MvcCore.Unity.Get<JN.Data.Service.IBookInfoService>().List().Count())
+                    /
+                    @(MvcCore.Unity.Get<JN.Data.Service.IBookInfoService>().List(x => System.Data.Entity.SqlServer.SqlFunctions.DateDiff("day", x.CreateTime, DateTime.Now) == 0).Count())
+                </span>
+            </a>
+            <!-- // Stats Widget END -->
 
+        </div>
+        <div class="span3">
+
+            <!-- Stats Widget -->
+            <a href="" class="widget-stats margin-bottom-none">
+                <span class="glyphicons inbox "><i></i></span>
+                <span class="txt">累计/今日接受</span>
+                <div class="clearfix"></div>
+                <span class="count label label-important">
+
+                </span>
+            </a>
+            <!-- // Stats Widget END -->
+
+        </div>
+        <div class="span3">
+
+            <!-- Stats Widget -->
+            <a href="" class="widget-stats margin-bottom-none">
+                <span class="glyphicons inbox_plus"><i></i></span>
+                <span class="txt">所有/今日匹配</span>
+                <div class="clearfix"></div>
+                <span class="count label label-important">
+
+                </span>
+            </a>
+            <!-- // Stats Widget END -->
+        </div>
     </div>
-    <div class="span2">
+    <div class="separator bottom"></div>
+    <div class="row-fluid">
+        <div class="span6">
+            <!-- Widget -->
+            <div class="widget">
+                <!-- Widget heading -->
+                <div class="widget-head">
+                    <h4 class="heading">数据图表</h4>
+                </div>
+                <!-- // Widget heading END -->
 
-        <!-- Stats Widget -->
-        <a href="" class="widget-stats margin-bottom-none">
-            <span class="glyphicons envelope"><i></i></span>
-            <span class="txt">未读留言</span>
-            <div class="clearfix"></div>
-            <span class="count label label-primary">@(MvcCore.Unity.Get<JN.Data.Service.IMessageService>().List(x => x.UID == 0 && x.IsRead == false && x.ToUID == 0).Count())</span>
-        </a>
-        <!-- // Stats Widget END -->
-
-    </div>*@
-            <div class="span3">
-
-                <!-- Stats Widget -->
-                <a href="" class="widget-stats margin-bottom-none">
-                    <span class="glyphicons coins"><i></i></span>
-                    <span class="txt">累计/今日提供单</span>
-                    <div class="clearfix"></div>
-                    <span class="count label label-important">
-
-                    </span>
-                </a>
-                <!-- // Stats Widget END -->
-
+                <div class="widget-body">
+                    <!-- Simple Chart -->
+                    <div id="chart_div" style="width: 100%;height:400px;"></div>
+                </div>
             </div>
-            <div class="span3">
-
-                <!-- Stats Widget -->
-                <a href="" class="widget-stats margin-bottom-none">
-                    <span class="glyphicons inbox "><i></i></span>
-                    <span class="txt">累计/今日接受</span>
-                    <div class="clearfix"></div>
-                    <span class="count label label-important">
-                  
-                    </span>
-                </a>
-                <!-- // Stats Widget END -->
-
-            </div>
-            <div class="span3">
-
-                <!-- Stats Widget -->
-                <a href="" class="widget-stats margin-bottom-none">
-                    <span class="glyphicons inbox_plus"><i></i></span>
-                    <span class="txt">所有/今日匹配</span>
-                    <div class="clearfix"></div>
-                    <span class="count label label-important">
-
-                    </span>                </a>
-                <!-- // Stats Widget END -->
-            </div>
+            <!-- // Widget END -->
         </div>
-        <div class="separator bottom"></div>
-        <!-- Widget -->
-        <div class="widget">
-
-            <!-- Widget heading -->
-            <div class="widget-head">
-                <h4 class="heading">数据图表</h4>
-            </div>
-            <!-- // Widget heading END -->
-
-            <div class="widget-body">
-
-                <!-- Simple Chart -->
-                <div id="chart_div" style="width: 100%;height:400px;"></div>
-            </div>
-        </div>
-        <!-- // Widget END -->
-        @*<!-- Widget -->
-        <div class="widget">
-
-            <!-- Widget heading -->
-            <div class="widget-head">
-                <h4 class="heading">Lines chart with fill & without points</h4>
-            </div>
-            <!-- // Widget heading END -->
-
-            <div class="widget-body">
-
-                <!-- Chart with lines and fill with no points -->
-                <div id="chart_lines_fill_nopoints" style="height: 250px;"></div>
-            </div>
-        </div>
-        <!-- // Widget END -->*@
-
-        @*<div class="widget">
-            <div class="widget-head progress progress-primary" id="widget-progress-bar">
-                <div class="bar" style="width: 96%;">Lorem ipsum <strong>dolor</strong> - <strong class="steps-percent">96%</strong></div>
-            </div>
-            <div class="widget-body">
-                <h4>Progress Widget</h4>
-                <p>Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.</p>
-            </div>
-            <span class="btn btn-toggle-code btn-mini btn-primary btn-icon glyphicons embed_close" data-toggle="hide" data-target="#code-2"><i></i> Source</span>
-        </div>*@
-
+    </div>
         <div class="row-fluid">
             <div class="span6">
 
@@ -170,51 +111,40 @@
 
                     <div class="widget-body list collapse in">
                         <table class="table table-bordered table-condensed">
-
-                            @*<!-- Table heading -->
-            <thead>
-                <tr>
-                    <th class="center">No.</th>
-                    <th>Column Heading</th>
-                </tr>
-            </thead>
-            <!-- // Table heading END -->*@
-                            <!-- Table body -->
                             <tbody>
                                 @{
-                                    var ggLst = MvcCore.Unity.Get<JN.Data.Service.INoticeService>().List().OrderByDescending(x => x.IsTop).ThenByDescending(x => x.ID).Take(10).ToList();
-                                    if (ggLst.Count > 0)
-                                    {
+                                var ggLst = MvcCore.Unity.Get<JN.Data.Service.INoticeService>().List().OrderByDescending(x => x.IsTop).ThenByDescending(x => x.ID).Take(10).ToList();
+                                if (ggLst.Count > 0)
+                                {
 
-                                        foreach (var notice in ggLst)
-                                        {
-                                            <tr>
-                                                <td class="center">@notice.CreateTime.ToString("yyyy-MM-dd")</td>
-                                                <td>
-                                                    <a href="@(Url.Action("Modify", "Notice", new { ID=notice.ID}))">
-                                                        @notice.Title
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        }
-
-                                    }
-                                    else
+                                    foreach (var notice in ggLst)
                                     {
-                                        <tr><td colspan="2">暂无通告</td></tr>
-                                    }
+                                        <tr>
+                                            <td class="center">@notice.CreateTime.ToString("yyyy-MM-dd")</td>
+                                            <td>
+                                                <a href="@(Url.Action("Modify", "Notice", new { ID=notice.ID}))">
+                                                    @notice.Title
+                                                </a>
+                                            </td>
+                                        </tr>
+                                }
+
+                            }
+                            else
+                            {
+                                <tr><td colspan="2">暂无通告</td></tr>
+                        }
                                 }
                             </tbody>
                             <!-- // Table body END -->
 
-                        </table> 
+                        </table>
                     </div>
                 </div>
                 <!-- Stats/List/Sparklines Widget END -->
 
             </div>
             <div class="span6">
-
                 <!-- Traffic Sources Pie Chart -->
                 <div class="widget" data-toggle="collapse-widget">
                     <div class="widget-head">
@@ -223,24 +153,24 @@
                     <div class="widget-body collapse in">
                         <table class="table table-bordered table-condensed">
                             @{
-                                var actLst = MvcCore.Unity.Get<JN.Data.Service.IActLogService>().List(x => x.Location.Contains("/Admin/Login") && x.UID == Amodel.ID.ToString()).Take(10).OrderByDescending(x => x.ID).ToList();
-                                if (actLst.Count > 0)
+                            var actLst = MvcCore.Unity.Get<JN.Data.Service.IActLogService>().List(x => x.Location.Contains("/Admin/Login") && x.UID == Amodel.ID.ToString()).Take(10).OrderByDescending(x => x.ID).ToList();
+                            if (actLst.Count > 0)
+                            {
+
+                                foreach (var log in actLst)
                                 {
+                                    <tr>
+                                        <td>@log.IP</td>
+                                        <td>@log.ActContent</td>
+                                        <td>@log.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                    </tr>
+                            }
 
-                                    foreach (var log in actLst)
-                                    {
-                                        <tr>
-                                            <td>@log.IP</td>
-                                            <td>@log.ActContent</td>
-                                            <td>@log.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                                        </tr>
-                                    }
-
-                                }
+                        }
                             }
                         </table>
 
-                   </div>
+                    </div>
                 </div>
                 <!-- // Traffic Sources Pie Chart END -->
 
@@ -273,7 +203,6 @@
 <script src="/js/echarts/echarts.min.js"></script>
 <script type="text/javascript">
     var myChart = echarts.init(document.getElementById('chart_div'));
-  
         myChart.setOption({
                     tooltip: {
                         trigger: 'axis',
@@ -307,14 +236,6 @@
                         type: 'value',
                         boundaryGap: [0, '100%']
                     },
-                    //dataZoom: [{
-                    //    type: 'inside',
-                    //    start: 0,
-                    //    end: 10
-                    //}, {
-                    //    start: 0,
-                    //    end: 10
-                    //}],
                     series: [
                         {
                             name: '新增会员',
@@ -342,9 +263,8 @@
                         }
                     ]
                 });
-
                 // 异步加载数据
-        $.get('/admincenter/home/getchardata').done(function (data) {
+                $.get('/admincenter/home/getcharUserdata').done(function (data) {
                     // 填入数据
                     myChart.setOption({
                         xAxis: {
@@ -357,19 +277,6 @@
                         }]
                     });
                 });
-                //$.ajax({
-                //    type: "POST",
-                //    url: "/admincenter/home/getchardata",
-                //    data: "t=" + new Date(),
-                //    dataType: 'json',
-                //    success: function (data) {
-                //            option.xAxis[0].data = data.dates;
-                //            option.series[0].data = data.datas;
-                //            myChart.setOption(option);
-                //    }
-                //});
-
-
 </script>
 
         <script type="text/javascript">

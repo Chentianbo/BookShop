@@ -23,31 +23,39 @@
                         全部
                     </a>
                 </li>
-                <li class="@(action == "BookList" &&  Request["state"] == ((int)JN.Data.Enum.BookState.Wait).ToString() ? "active" : "")">
-                    <a href="@(Url.Action("BookList", new { state = "0" }))">
-                        待审核
-                    </a>
-                </li>
-                <li class="@(action == "BookList" && Request["state"] == ((int)JN.Data.Enum.BookState.Grounding).ToString() ? "active" : "")">
-                    <a href="@(Url.Action("BookList", new { state = "1" }))">
-                        销售中
-                    </a>
-                </li>
-                <li class="@(action == "BookList" && Request["state"] == ((int)JN.Data.Enum.BookState.UnderCarriage).ToString() ? "active" : "")">
-                    <a href="@(Url.Action("BookList", new { state = "-1" }))">
-                        已下架
-                    </a>
-                </li>
-                <li class="@(action == "BookList" && Request["state"] == ((int)JN.Data.Enum.BookState.Grounding).ToString() ? "active" : "")">
-                    <a href="@(Url.Action("BookList", new { state = "-2" }))">
-                        禁售
-                    </a>
-                </li>
-                <li class="@(action == "BookList" && Request["state"] == ((int)JN.Data.Enum.BookState.Grounding).ToString() ? "active" : "")">
-                    <a href="@(Url.Action("BookList", new { state = "-3" }))">
-                        异常
-                    </a>
-                </li>
+                @foreach (var item in ViewBag.EnumData as List<JN.Data.Common.SelectOption>)
+                {
+                    <li class="@(action == "BookList" &&  Request["state"] == item.value ? "active" : "")">
+                        <a href="@(Url.Action("BookList", new { state =item.value }))">
+                            @item.label
+                        </a>
+                    </li>
+                }
+                @*<li class="@(action == "BookList" &&  Request["state"] == ((int)JN.Data.Enum.BookState.Wait).ToString() ? "active" : "")">
+                        <a href="@(Url.Action("BookList", new { state = "0" }))">
+                            待审核
+                        </a>
+                    </li>
+                    <li class="@(action == "BookList" && Request["state"] == ((int)JN.Data.Enum.BookState.Grounding).ToString() ? "active" : "")">
+                        <a href="@(Url.Action("BookList", new { state = "1" }))">
+                            销售中
+                        </a>
+                    </li>
+                    <li class="@(action == "BookList" && Request["state"] == ((int)JN.Data.Enum.BookState.UnderCarriage).ToString() ? "active" : "")">
+                        <a href="@(Url.Action("BookList", new { state = "-1" }))">
+                            已下架
+                        </a>
+                    </li>
+                    <li class="@(action == "BookList" && Request["state"] == ((int)JN.Data.Enum.BookState.Grounding).ToString() ? "active" : "")">
+                        <a href="@(Url.Action("BookList", new { state = "-2" }))">
+                            禁售
+                        </a>
+                    </li>
+                    <li class="@(action == "BookList" && Request["state"] == ((int)JN.Data.Enum.BookState.Grounding).ToString() ? "active" : "")">
+                        <a href="@(Url.Action("BookList", new { state = "-3" }))">
+                            异常
+                        </a>
+                    </li>*@
 
             </ul>
             <div class="filter-bar margin-bottom-none">
@@ -136,7 +144,7 @@
                     <tr>
                         <th class="center">
                         </th>
-
+                        <th>归属用户</th>
                         <th>图书名称</th>
                         <th>所属分类</th>
                         <th>图片</th>
@@ -159,138 +167,114 @@
                             创建时间
                         </th>
                         <th>备注</th>
-                        <th></th>
+                        <th colspan="2" style="text-align:center;">操作</th>
                     </tr>
                 </thead>
                 <tbody>
                     @if (Model.Count > 0)
-                {
-                    for (int i = 0; i < Model.Count; i++)
                     {
+                        for (int i = 0; i < Model.Count; i++)
+                        {
 
-                    <tr>
-                        <td class="center text-muted">
-                            @(i + 1)
-                        </td>
+                            <tr>
+                                <td class="center text-muted">
+                                    @(i + 1)
+                                </td>
+                                <td>
+                                    @Model[i].UserName
+                                </td>
+                                <td>
+                                    @Model[i].BookName
+                                </td>
+                                <td>
+                                    @{
+                                        var name = "";
+                                        var category = MvcCore.Unity.Get<JN.Data.Service.IBookCategoryService>().Single(@Model[i].BookCategoryId);
+                                        if (category != null)
+                                        {
+                                            name = category.Name;
+                                        }
+                                    }
+                                    @name
+                                </td>
+                                <td>
+                                    <img src="@Model[i].ImageUrl" height="60" />
+                                </td>
 
-                        <td>
-                            @Model[i].BookName
-                        </td>
-                        <td>
-                            @{
-            var name = "";
-            var category = MvcCore.Unity.Get<JN.Data.Service.IBookCategoryService>().Single(@Model[i].BookCategoryId);
-            if (category != null)
-            {
-                name = category.Name;
-            }
-                            }
-                            @name
-                        </td>
-                        <td>
-                            <img src="@Model[i].ImageUrl" height="60" />
-                        </td>
+                                <td>
+                                    @Model[i].ISBN
+                                </td>
+                                <td>
+                                    @Model[i].Author
+                                </td>
+                                <td>
+                                    @Model[i].Version
+                                </td>
+                                <td>
+                                    @Model[i].Publisher
+                                </td>
+                                <td>
+                                    @Model[i].PrintDate
+                                </td>
+                                <td>
+                                    @Model[i].Spec
+                                </td>
+                                <td>
+                                    @Model[i].PageCount
+                                </td>
+                                <td>
+                                    @Model[i].WordCount
+                                </td>
+                                <td>
+                                    @Model[i].BookCount
+                                </td>
+                                <td>
+                                    @Model[i].OlaPrice
+                                </td>
+                                <td>
+                                    @Model[i].CurrentPrice
+                                </td>
+                                <td>
+                                    @Model[i].FreightPrice
+                                </td>
+                                <td>
+                                    @{
+                                        var boolStr = Model[i].IsTranslate ?? false ? "是" : "否";
+                                    }
+                                    @boolStr
+                                </td>
+                                <td>
+                                    @Model[i].Translator
+                                </td>
+                                <td class="hidden-480">@Model[i].CreateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                <td class="hidden-480">@Model[i].Description</td>
+                                <td>
+                                    <select onchange="ChangeBookSate('@Model[i].ID',this.value)" style="width:100px;">
+                                        @foreach (var item in ViewBag.EnumData as List<JN.Data.Common.SelectOption>)
+                                        {
+                                            if (@Model[i].BookState.ToString() == item.value)
+                                            {
+                                                <option value="@item.value" selected="selected">@item.label</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.value">@item.label</option>
+                                            }
 
-                        <td>
-                            @Model[i].ISBN
-                        </td>
-                        <td>
-                            @Model[i].Author
-                        </td>
-                        <td>
-                            @Model[i].Version
-                        </td>
-                        <td>
-                            @Model[i].Publisher
-                        </td>
-                        <td>
-                            @Model[i].PrintDate
-                        </td>
-                        <td>
-                            @Model[i].Spec
-                        </td>
-                        <td>
-                            @Model[i].PageCount
-                        </td>
-                        <td>
-                            @Model[i].WordCount
-                        </td>
-                        <td>
-                            @Model[i].BookCount
-                        </td>
-                        <td>
-                            @Model[i].OlaPrice
-                        </td>
-                        <td>
-                            @Model[i].CurrentPrice
-                        </td>
-                        <td>
-                            @Model[i].FreightPrice
-                        </td>
-                        <td>
-                            @{
-            var boolStr = Model[i].IsTranslate ?? false ? "是" : "否";
-                            }
-                            @boolStr
-                        </td>
-                        <td>
-                            @Model[i].Translator
-                        </td>
-                        <td class="hidden-480">@Model[i].CreateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                        <td class="hidden-480">@Model[i].Description</td>
-                        <td>
-                            <a href="@(Url.Action("Modify"))/@Model[i].ID" class="btn-action glyphicons edit btn-info" data-rel="tooltip" title="编辑商品">
-                                <i></i>
-                            </a>
-                            @*@if (Model[i].IsSales)
-                    {
-                                <a href="@(Url.Action("ProductCommand", new { id = Model[i].ID, commandtype = "offsales" }))" class="btn-action glyphicons ban btn-info" data-rel="tooltip" title="下架">
-                                    <i></i>
-                                </a>
-            if (!(Model[i].IsElite ?? false))
-            {
-                                <a href="@(Url.Action("ProductCommand", new { id = Model[i].ID, commandtype = "elite" }))" class="btn-action glyphicons thumbs_up btn-info" data-rel="tooltip" title="推荐">
-                                    <i></i>
-                                </a>
-            }
-            else
-            {
-                                <a href="@(Url.Action("ProductCommand", new { id = Model[i].ID, commandtype = "unelite" }))" class="btn-action glyphicons thumbs_down btn-info" data-rel="tooltip" title="取消推荐">
-                                    <i></i>
-                                </a>
-            }
-            if (!(Model[i].IsTop ?? false))
-            {
-                                <a href="@(Url.Action("ProductCommand", new { id = Model[i].ID, commandtype = "ontop" }))" class="btn-action glyphicons up_arrow btn-info" data-rel="tooltip" title="置顶">
-                                    <i></i>
-                                </a>
-            }
-            else
-            {
-                                <a href="@(Url.Action("ProductCommand", new { id = Model[i].ID, commandtype = "untop" }))" class="btn-action glyphicons down_arrow btn-info" data-rel="tooltip" title="取消置顶">
-                                    <i></i>
-                                </a>
-            }
-            }
-            else
-            {
-                                <a href="@(Url.Action("ProductCommand", new { id = Model[i].ID, commandtype = "onsales" }))" class="btn-action glyphicons ok btn-info" data-rel="tooltip" title="上架">
-                                    <i></i>
-                                </a>
-            }
-                                        @if (!Model[i].IsSales)
-                    {
-                                <a href="###" data-value="@Model[i].ID" class="btn-action glyphicons delete btn-info del" data-rel="tooltip" title="删除">
-                                    <i></i>
-                                </a>
-                            }*@
-                            <a href="###" data-value="@Model[i].ID" class="btn-action glyphicons delete btn-info del" data-rel="tooltip" title="删除">
-                                <i></i>
-                            </a>
-                        </td>
-                    </tr>
+                                        }
+                                    </select>
+                                </td>
+                                <td>
+                                    <a href="@(Url.Action("Modify"))/@Model[i].ID" class="btn-action glyphicons edit btn-info" data-rel="tooltip" title="编辑商品">
+                                        <i></i>
+                                    </a>
+                                    <a href="###" data-value="@Model[i].ID" class="btn-action glyphicons delete btn-info del" data-rel="tooltip" title="删除">
+                                        <i></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
                     }
-                }
                 </tbody>
             </table>
 
@@ -299,7 +283,7 @@
 
                 <!-- Pagination -->
                 @Html.PagedListPager((IPagedList)Model, page => Url.Action(ViewContext.RouteData.Values["action"].ToString(),
-                       JN.Services.Tool.StringHelp.GetQueryString(HttpUtility.ParseQueryString(Request.Url.Query), page)), new PagedListRenderOptions() { ContainerDivClasses = new string[] { "pagination pagination-small pull-right" } })
+                                      JN.Services.Tool.StringHelp.GetQueryString(HttpUtility.ParseQueryString(Request.Url.Query), page)), new PagedListRenderOptions() { ContainerDivClasses = new string[] { "pagination pagination-small pull-right" } })
 
 
                 <div class="clearfix"></div>
@@ -312,9 +296,8 @@
 
 </div><!-- /.page-content -->
 @section scripts{
-<script type="text/javascript">
+    <script type="text/javascript">
         jQuery(function ($) {
-
             $(".del").on("click", function () {
                 var id = $(this).attr("data-value");
                 bootbox.confirm('您确定要删除该图书吗?', function (result) {
@@ -332,5 +315,21 @@
                 });
             });
         })
-</script>
+        //修改装填
+        function ChangeBookSate(id, state)
+        {
+             bootbox.confirm('您确定要修改该图书吗?', function (result) {
+                    if (result) {
+                        $.post('@(Url.Action("ChangeBookSate"))', { id: id, state: state}, function (data) {
+                            if(data.Status == 200) {
+                                window.location.reload();
+                               }
+                            else{
+                                 alert(data.Message);
+                            }
+                        });
+                    }
+                });
+        }
+    </script>
 }

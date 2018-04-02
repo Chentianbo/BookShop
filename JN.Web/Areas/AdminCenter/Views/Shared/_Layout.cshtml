@@ -230,9 +230,10 @@
                                                                     <ul class="STYLE3  @(curl.Contains("/shop/") ? "in" : "")" id="menu_settlement">
                                                                         <li class="@(curl.Contains("/addbookclass") ? "active" : "")"><a href="@Url.Action("addbookclass", "shop")"><span>添加分类</span></a></li>
                                                                         <li class="@(curl.Contains("/categorylist") ? "active" : "")"><a href="@Url.Action("categorylist", "shop")"><span>分类管理</span></a></li>
-                                                                        <li class="@(curl.Contains("/shop/Create") ? "active" : "")"><a href="@Url.Action("Create", "shop")"><span>发布商品</span></a></li>
-                                                                        <li class="@(curl.Contains("/shop/Order") ? "active" : "")"><a href="@Url.Action("Order", "shop")?status=1"><span>订单管理</span></a></li>
+                                                                        <li class="@(curl.Contains("/shop/Create") ? "active" : "")"><a href="@Url.Action("Create", "shop")"><span>添加图书</span></a></li>
                                                                         <li class="@(curl.Contains("/shop/BookList") ? "active" : "")"><a href="@Url.Action("BookList", "shop")"><span>图书管理</span></a></li>
+                                                                        <li class="@(curl.Contains("/shopOrder/index") ? "active" : "")"><a href="@Url.Action("index", "shopOrder")"><span>订单管理</span></a></li>
+                                                                        <li class="@(curl.Contains("/ShopCar/index") ? "active" : "")"><a href="@Url.Action("index", "ShopCar")"><span>购物车管理</span></a></li>
                                                                     </ul>
                                                                   
                                                                 </td>

@@ -198,14 +198,19 @@ namespace JN.Data
         /// </summary>  
 				[DisplayName("UId")]
 		        [MaxLength(50,ErrorMessage="最大长度为50")]
-		public string  UId { get; set; }
-		      
-       
-        
+		public string  UID { get; set; }
+
+        /// <summary>
+        /// 用户名
+        /// </summary>
+        public string UserName { get; set; }
+
+
+
         /// <summary>
         /// 
         /// </summary>  
-				[DisplayName("BookState")]
+        [DisplayName("BookState")]
 				public int  BookState { get; set; }
 		      
        
@@ -283,7 +288,7 @@ namespace JN.Data
         //生成加密串
         public void CreateSign()
         {
-            Sign = (BookName + Author + ISBN + BookCategoryId + (Convert.ToInt32(CurrentPrice)).ToString() + (Convert.ToInt32(OlaPrice)).ToString() + UId + BookState.ToString()  + (Convert.ToInt32(FreightPrice)).ToString()).ToLower().ToMD5();
+            Sign = (BookName + Author + ISBN + BookCategoryId + (Convert.ToInt32(CurrentPrice)).ToString() + (Convert.ToInt32(OlaPrice)).ToString() + UID + BookState.ToString()  + (Convert.ToInt32(FreightPrice)).ToString()).ToLower().ToMD5();
         }
       
     }
