@@ -55,10 +55,12 @@
             <!-- Stats Widget -->
             <a href="" class="widget-stats margin-bottom-none">
                 <span class="glyphicons inbox "><i></i></span>
-                <span class="txt">累计/今日接受</span>
+                <span class="txt">累计/今日下单量</span>
                 <div class="clearfix"></div>
                 <span class="count label label-important">
-
+                    @(MvcCore.Unity.Get<JN.Data.Service.IShopOrderService>().List().Count())
+                    /
+                    @(MvcCore.Unity.Get<JN.Data.Service.IShopOrderService>().List(x => System.Data.Entity.SqlServer.SqlFunctions.DateDiff("day", x.CreateTime, DateTime.Now) == 0).Count())
                 </span>
             </a>
             <!-- // Stats Widget END -->
@@ -69,10 +71,12 @@
             <!-- Stats Widget -->
             <a href="" class="widget-stats margin-bottom-none">
                 <span class="glyphicons inbox_plus"><i></i></span>
-                <span class="txt">所有/今日匹配</span>
+                <span class="txt">所有/今日加入购物车</span>
                 <div class="clearfix"></div>
                 <span class="count label label-important">
-
+                    @(MvcCore.Unity.Get<JN.Data.Service.IShopCarService>().List().Count())
+                    /
+                    @(MvcCore.Unity.Get<JN.Data.Service.IShopCarService>().List(x => System.Data.Entity.SqlServer.SqlFunctions.DateDiff("day", x.CreateTime, DateTime.Now) == 0).Count())
                 </span>
             </a>
             <!-- // Stats Widget END -->
@@ -96,7 +100,57 @@
             </div>
             <!-- // Widget END -->
         </div>
-    </div>
+        <div class="span6">
+            <!-- Widget -->
+            <div class="widget">
+                <!-- Widget heading -->
+                <div class="widget-head">
+                    <h4 class="heading">数据图表</h4>
+                </div>
+                <!-- // Widget heading END -->
+
+                <div class="widget-body">
+                    <!-- Simple Chart -->
+                    <div id="chart_div_book" style="width: 100%;height:400px;"></div>
+                </div>
+            </div>
+            <!-- // Widget END -->
+        </div>
+
+        <div class="row-fluid">
+            <div class="span6">
+                <!-- Widget -->
+                <div class="widget">
+                    <!-- Widget heading -->
+                    <div class="widget-head">
+                        <h4 class="heading">数据图表</h4>
+                    </div>
+                    <!-- // Widget heading END -->
+
+                    <div class="widget-body">
+                        <!-- Simple Chart -->
+                        <div id="chart_div_shopOrder" style="width: 100%;height:400px;"></div>
+                    </div>
+                </div>
+                <!-- // Widget END -->
+            </div>
+            <div class="span6">
+                <!-- Widget -->
+                <div class="widget">
+                    <!-- Widget heading -->
+                    <div class="widget-head">
+                        <h4 class="heading">数据图表</h4>
+                    </div>
+                    <!-- // Widget heading END -->
+
+                    <div class="widget-body">
+                        <!-- Simple Chart -->
+                        <div id="chart_div_ordercompale" style="width: 100%;height:400px;"></div>
+                    </div>
+                </div>
+                <!-- // Widget END -->
+            </div>
+        </div>
         <div class="row-fluid">
             <div class="span6">
 
@@ -202,7 +256,8 @@
 
 <script src="/js/echarts/echarts.min.js"></script>
 <script type="text/javascript">
-    var myChart = echarts.init(document.getElementById('chart_div'));
+
+        var myChart = echarts.init(document.getElementById('chart_div'));
         myChart.setOption({
                     tooltip: {
                         trigger: 'axis',
@@ -277,6 +332,236 @@
                         }]
                     });
                 });
+
+         var myBookChart = echarts.init(document.getElementById('chart_div_book'));
+        myBookChart.setOption({
+                    tooltip: {
+                        trigger: 'axis',
+                        position: function (pt) {
+                            return [pt[0], '10%'];
+                        }
+                    },
+                    title: {
+                        left: 'center',
+                        text: '图书数据统计表',
+                    },
+                    legend: {
+                        top: 'bottom',
+                        data: ['意向']
+                    },
+                    toolbox: {
+                        show: true,
+                        feature: {
+                            dataView: { show: true, readOnly: false },
+                            magicType: { show: true, type: ['line', 'bar', 'stack', 'tiled'] },
+                            restore: { show: true },
+                            saveAsImage: { show: true }
+                        }
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: []
+                    },
+                    yAxis: {
+                        type: 'value',
+                        boundaryGap: [0, '100%']
+                    },
+                    series: [
+                        {
+                            name: '新增图书',
+                            type: 'line',
+                            smooth: true,
+                            symbol: 'none',
+                            sampling: 'average',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgb(255, 70, 131)'
+                                }
+                            },
+                            areaStyle: {
+                                normal: {
+                                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                        offset: 0,
+                                        color: 'rgb(255, 158, 68)'
+                                    }, {
+                                        offset: 1,
+                                        color: 'rgb(255, 70, 131)'
+                                    }])
+                                }
+                            },
+                            data: []
+                        }
+                    ]
+                });
+                // 异步加载数据
+                $.get('/admincenter/home/getcharBookdata').done(function (data) {
+                    // 填入数据
+                    myBookChart.setOption({
+                        xAxis: {
+                            data: data.dates
+                        },
+                        series: [{
+                            // 根据名字对应到相应的系列
+                            name: '新增图书',
+                            data: data.datas
+                        }]
+                    });
+                });
+
+          var myorderChart = echarts.init(document.getElementById('chart_div_shopOrder'));
+        myorderChart.setOption({
+                    tooltip: {
+                        trigger: 'axis',
+                        position: function (pt) {
+                            return [pt[0], '10%'];
+                        }
+                    },
+                    title: {
+                        left: 'center',
+                        text: '订单统计表',
+                    },
+                    legend: {
+                        top: 'bottom',
+                        data: ['意向']
+                    },
+                    toolbox: {
+                        show: true,
+                        feature: {
+                            dataView: { show: true, readOnly: false },
+                            magicType: { show: true, type: ['line', 'bar', 'stack', 'tiled'] },
+                            restore: { show: true },
+                            saveAsImage: { show: true }
+                        }
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: []
+                    },
+                    yAxis: {
+                        type: 'value',
+                        boundaryGap: [0, '100%']
+                    },
+                    series: [
+                        {
+                            name: '新增订单',
+                            type: 'line',
+                            smooth: true,
+                            symbol: 'none',
+                            sampling: 'average',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgb(255, 70, 131)'
+                                }
+                            },
+                            areaStyle: {
+                                normal: {
+                                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                        offset: 0,
+                                        color: 'rgb(255, 158, 68)'
+                                    }, {
+                                        offset: 1,
+                                        color: 'rgb(255, 70, 131)'
+                                    }])
+                                }
+                            },
+                            data: []
+                        }
+                    ]
+                });
+                // 异步加载数据
+                $.get('/admincenter/home/getcharOrderdata').done(function (data) {
+                    // 填入数据
+                    myorderChart.setOption({
+                        xAxis: {
+                            data: data.dates
+                        },
+                        series: [{
+                            // 根据名字对应到相应的系列
+                            name: '每月订单总量',
+                            data: data.datas
+                        }]
+                    });
+                });
+
+
+          var ordercompaleChart = echarts.init(document.getElementById('chart_div_ordercompale'));
+        ordercompaleChart.setOption({
+                    tooltip: {
+                        trigger: 'axis',
+                        position: function (pt) {
+                            return [pt[0], '10%'];
+                        }
+                    },
+                    title: {
+                        left: 'center',
+                        text: '购物车数据统计表',
+                    },
+                    legend: {
+                        top: 'bottom',
+                        data: ['意向']
+                    },
+                    toolbox: {
+                        show: true,
+                        feature: {
+                            dataView: { show: true, readOnly: false },
+                            magicType: { show: true, type: ['line', 'bar', 'stack', 'tiled'] },
+                            restore: { show: true },
+                            saveAsImage: { show: true }
+                        }
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: []
+                    },
+                    yAxis: {
+                        type: 'value',
+                        boundaryGap: [0, '100%']
+                    },
+                    series: [
+                        {
+                            name: '加入购物车',
+                            type: 'line',
+                            smooth: true,
+                            symbol: 'none',
+                            sampling: 'average',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgb(255, 70, 131)'
+                                }
+                            },
+                            areaStyle: {
+                                normal: {
+                                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                        offset: 0,
+                                        color: 'rgb(255, 158, 68)'
+                                    }, {
+                                        offset: 1,
+                                        color: 'rgb(255, 70, 131)'
+                                    }])
+                                }
+                            },
+                            data: []
+                        }
+                    ]
+                });
+                // 异步加载数据
+                $.get('/admincenter/home/getshopCardata').done(function (data) {
+                    // 填入数据
+                    ordercompaleChart.setOption({
+                        xAxis: {
+                            data: data.dates
+                        },
+                        series: [{
+                            // 根据名字对应到相应的系列
+                            name: '今日累计增加',
+                            data: data.datas
+                        }]
+                    });
+                });
+
 </script>
 
         <script type="text/javascript">

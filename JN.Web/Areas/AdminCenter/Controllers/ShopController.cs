@@ -56,8 +56,9 @@ namespace JN.Web.Areas.AdminCenter.Controllers
             var list = BookInfoService.List().WhereDynamic(FormatQueryString(HttpUtility.ParseQueryString(Request.Url.Query))).ToList();
             if (state != null)
             {
-                list = list.Where(x => x.BookState == state).OrderByDescending(x => x.CreateTime).ToList();
+                list = list.Where(x => x.BookState == state).ToList();
             }
+            list = list.OrderByDescending(x => x.CreateTime).ToList();
             //数据验证
             foreach (var item in list)
             {

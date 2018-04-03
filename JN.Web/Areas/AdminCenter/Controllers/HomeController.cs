@@ -1,4 +1,5 @@
-﻿using JN.Services.Manager;
+﻿using JN.Data.Service;
+using JN.Services.Manager;
 using JN.Services.Tool;
 using MvcCore.Controls;
 using System;
@@ -16,6 +17,33 @@ namespace JN.Web.Areas.AdminCenter.Controllers
         /// 
         /// </summary>
         private static int[] Chartdate = new int[] { 1, 2, 3,4,5,6,7,8,9,10,11,12};
+
+        private readonly IUserService UserService;
+        private readonly IBookInfoService BookInfoService;
+        private readonly IShopOrderService ShopOrderService;
+        private readonly IShopCarService ShopCarService;
+        private readonly ISysDBTool SysDBTool;
+        private readonly IActLogService ActLogService;
+        private readonly ILogDBTool LogDBTool;
+        private readonly IBookCategoryService BookCategoryService;
+
+        public HomeController(ISysDBTool SysDBTool,
+            IUserService UserService,
+            IBookInfoService bookInfoService,
+            IShopOrderService ShopOrderService,
+            IShopCarService ShopCarService,
+            IBookCategoryService bookCategoryService,
+        IActLogService ActLogService, ILogDBTool LogDBTool)
+        {
+            this.UserService = UserService;
+            this.BookInfoService = bookInfoService;
+            this.ShopOrderService = ShopOrderService;
+            this.SysDBTool = SysDBTool;
+            this.ActLogService = ActLogService;
+            this.LogDBTool = LogDBTool;
+            this.BookCategoryService = bookCategoryService;
+            this.ShopCarService = ShopCarService;
+        }
         //
         // GET: /AdminCenter/Index/
         public ActionResult Index()
@@ -94,22 +122,69 @@ namespace JN.Web.Areas.AdminCenter.Controllers
         {
             List<int> data = new List<int>();
             List<string> date = new List<string>();
+            //全部用户
+            var users = UserService.List().ToList();
             for (int i = 0; i < Chartdate.Count(); i++)
             {
                 date.Add(Chartdate[i]+"月");
-                data.Add(MvcCore.Unity.Get<Data.Service.IUserService>().List(x => x.CreateTime.Month== Chartdate[i]).Count());
+                data.Add(users.Where(x => x.CreateTime.Month == Chartdate[i]).Count());
             }
             return Json(new { datas = data, dates = date}, JsonRequestBehavior.AllowGet);
+        }
 
-            //List<int> kdata = new List<int>();
-            //List<string> Chartdate = new List<string>();
-            //var lst = MvcCore.Unity.Get<Data.Service.IUserService>().List().Select(x => x.CreateTime).Distinct().ToList(); 
-            //foreach (var item in lst)
-            //{
-            //    kdata.Add(MvcCore.Unity.Get<Data.Service.IUserService>().List(x => SqlFunctions.DateDiff("DAY", x.CreateTime, item) == 0).Count());
-            //    kdate.Add(item.ToShortDateString());
-            //}
-            //return Json(new { datas = kdata, dates = kdate }, JsonRequestBehavior.AllowGet);
+        /// <summary>
+        /// 获取图书统计数据
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult getcharBookdata()
+        {
+            List<int> data = new List<int>();
+            List<string> date = new List<string>();
+            //全部用户
+            var Data = BookInfoService.List().ToList();
+            for (int i = 0; i < Chartdate.Count(); i++)
+            {
+                date.Add(Chartdate[i] + "月");
+                data.Add(Data.Where(x => x.CreateTime.Month == Chartdate[i]).Count());
+            }
+            return Json(new { datas = data, dates = date }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
+        /// 获取订单统计数据
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult getcharOrderdata()
+        {
+            List<int> data = new List<int>();
+            List<string> date = new List<string>();
+            //全部用户
+            var Data = ShopOrderService.List().ToList();
+            for (int i = 0; i < Chartdate.Count(); i++)
+            {
+                date.Add(Chartdate[i] + "月");
+                data.Add(Data.Where(x => x.CreateTime.Month == Chartdate[i]).Count());
+            }
+            return Json(new { datas = data, dates = date }, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 获取购物车统计数据
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult getshopCardata()
+        {
+            List<int> data = new List<int>();
+            List<string> date = new List<string>();
+            //全部用户
+            var Data = ShopCarService.List().ToList();
+            for (int i = 0; i < Chartdate.Count(); i++)
+            {
+                date.Add(Chartdate[i] + "月");
+                data.Add(Data.Where(x => x.CreateTime.Month == Chartdate[i]).Count());
+            }
+            return Json(new { datas = data, dates = date }, JsonRequestBehavior.AllowGet);
         }
     }
 }
