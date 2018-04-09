@@ -125,9 +125,9 @@ namespace JN.Web.Areas.UserCenter.Controllers
                     var lastOrder = ShopOrderService.List(x => x.UID == userid).OrderByDescending(x => x.ID).FirstOrDefault();
                     if (lastOrder != null)
                     {
-                        ViewBag.Province = lastOrder.Province;
-                        ViewBag.City = lastOrder.City;
-                        ViewBag.County = lastOrder.Town;
+                        //ViewBag.Province = lastOrder.Province;
+                        //ViewBag.City = lastOrder.City;
+                        //ViewBag.County = lastOrder.Town;
                         ViewBag.RecAddress = lastOrder.RecAddress;
                         ViewBag.RecLinkMan = lastOrder.RecLinkMan;
                         ViewBag.RecPhone = lastOrder.RecPhone;
@@ -206,19 +206,19 @@ namespace JN.Web.Areas.UserCenter.Controllers
                             var order = new Data.ShopOrder();
                             order.BuyMsg = "";
                             order.CreateTime = DateTime.Now;
-                            order.City = city;
+                            //order.City = city;
                             order.OrderNumber = orderNumber;
-                            order.Province = province;
+                            //order.Province = province;
                             order.RecAddress = RecAddress;
                             order.RecLinkMan = RecLinkMan;
                             order.RecPhone = RecPhone;
                             order.BookID = product.ID;
                             order.BookName = product.BookName;
-                            order.Status = (int)Data.Enum.OrderStatus.Sales;
+                            order.Status = (int)Data.Enum.OrderStatus.AlreadyPaid;
                             order.ShipFreight = product.FreightPrice;
                             order.TotalCount = Convert.ToInt32(BuyNumber);
                             order.TotalPrice = (product.CurrentPrice + (product.FreightPrice ?? 0));
-                            order.Town = county;
+                            //order.Town = county;
                             order.UID = Umodel.ID.ToString();
                             order.UserName = Umodel.UserName;
                             ShopOrderService.Add(order);
@@ -295,7 +295,7 @@ namespace JN.Web.Areas.UserCenter.Controllers
             var model = ShopOrderService.Single(id);
             if (model != null)
             {
-                if (model.Status == (int)Data.Enum.OrderStatus.Transaction)
+                if (model.Status == (int)Data.Enum.OrderStatus.AlreadyShipped)
                 {
                     if (model.UID == Umodel.ID.ToString())
                     {
@@ -306,7 +306,7 @@ namespace JN.Web.Areas.UserCenter.Controllers
                         {
                             lock (obj)
                             {
-                                model.Status = (int)JN.Data.Enum.OrderStatus.Deal;
+                                model.Status = (int)JN.Data.Enum.OrderStatus.Completed;
                                 ShopOrderService.Update(model);
                                 SysDBTool.Commit();
                                 //给卖家打款

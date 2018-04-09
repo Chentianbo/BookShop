@@ -68,8 +68,9 @@ namespace JN.Data
 		
         public <#=        tableName#>()
         {
-        //    <#=        keyField#> = Guid.NewGuid();
+            <#=        keyField#> = Guid.NewGuid().ToString();
         }
+		
       
     }
  

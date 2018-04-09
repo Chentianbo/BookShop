@@ -91,6 +91,33 @@ namespace JN.Data
 				public DateTime  CreateTime { get; set; }
 		      
        
+        
+        /// <summary>
+        /// 
+        /// </summary>  
+				[DisplayName("BookName")]
+		        [MaxLength(50,ErrorMessage="最大长度为50")]
+		public string  BookName { get; set; }
+		      
+       
+        
+        /// <summary>
+        /// 
+        /// </summary>  
+				[DisplayName("BookPrice")]
+		        [Filters.DecimalPrecision(18,2)]
+		public decimal?  BookPrice { get; set; }
+		      
+       
+        
+        /// <summary>
+        /// 
+        /// </summary>  
+				[DisplayName("TotalPrice")]
+		        [MaxLength(10,ErrorMessage="最大长度为10")]
+		public string  TotalPrice { get; set; }
+		      
+       
          
 
         /// <summary>

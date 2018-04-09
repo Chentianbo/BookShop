@@ -36,7 +36,7 @@ namespace JN.Data
         /// </summary>  
 				[DisplayName("ID")]
 		        [MaxLength(50,ErrorMessage="最大长度为50")]
-                [Key]
+		[Key]
 		public string  ID { get; set; }
 		      
        
@@ -98,9 +98,9 @@ namespace JN.Data
         /// <summary>
         /// 
         /// </summary>  
-				[DisplayName("ProductCategoryId")]
+				[DisplayName("BookCategoryId")]
 		        [MaxLength(50,ErrorMessage="最大长度为50")]
-		public string BookCategoryId { get; set; }
+		public string  BookCategoryId { get; set; }
 		      
        
         
@@ -199,18 +199,13 @@ namespace JN.Data
 				[DisplayName("UId")]
 		        [MaxLength(50,ErrorMessage="最大长度为50")]
 		public string  UID { get; set; }
-
-        /// <summary>
-        /// 用户名
-        /// </summary>
-        public string UserName { get; set; }
-
-
-
+		      
+       
+        
         /// <summary>
         /// 
         /// </summary>  
-        [DisplayName("BookState")]
+				[DisplayName("BookState")]
 				public int  BookState { get; set; }
 		      
        
@@ -269,28 +264,54 @@ namespace JN.Data
         /// <summary>
         /// 
         /// </summary>  
-				[DisplayName("运费")]
+				[DisplayName("FreightPrice")]
 		        [Filters.DecimalPrecision(18,2)]
 		public decimal?  FreightPrice { get; set; }
 		      
        
-         
+        
+        /// <summary>
+        /// 
+        /// </summary>  
+				[DisplayName("UserName")]
+		        [MaxLength(20,ErrorMessage="最大长度为20")]
+		public string  UserName { get; set; }
+		      
+       
+        
+        /// <summary>
+        /// 
+        /// </summary>  
+				[DisplayName("ShowPlace")]
+				public int?  ShowPlace { get; set; }
+		      
+       
+        
+        /// <summary>
+        /// 
+        /// </summary>  
+				[DisplayName("IsTop")]
+				public bool?  IsTop { get; set; }
+
+
+
 
         /// <summary>
         /// 构造函数
         /// </summary>
-		
+
         public BookInfo()
         {
             ID = Guid.NewGuid().ToString();
             CreateTime = DateTime.Now;
+            IsTop = false;
         }
         //生成加密串
         public void CreateSign()
         {
-            Sign = (BookName + Author + ISBN + BookCategoryId + (Convert.ToInt32(CurrentPrice)).ToString() + (Convert.ToInt32(OlaPrice)).ToString() + UID + BookState.ToString()  + (Convert.ToInt32(FreightPrice)).ToString()).ToLower().ToMD5();
+            Sign = (BookName + Author + ISBN + BookCategoryId + (Convert.ToInt32(CurrentPrice)).ToString() + (Convert.ToInt32(OlaPrice)).ToString() + UID + BookState.ToString() + (Convert.ToInt32(FreightPrice)).ToString()+ ShowPlace.ToString()+IsTop.ToString()).ToLower().ToMD5();
         }
-      
+
     }
  
     

@@ -1075,104 +1075,6 @@
             }
         }; // Scrollbar Location
 
-        var googleMap = function() {
-            if ( $().gmap3 ) {  
-                $(".map").gmap3({
-                    map:{
-                        options:{
-                            center:[32.301023, -90.193353],
-                            zoom: 6,
-                            mapTypeId: 'themesflat_style',
-                            mapTypeControlOptions: {
-                                mapTypeIds: ['themesflat_style', google.maps.MapTypeId.SATELLITE, google.maps.MapTypeId.HYBRID]
-                            },
-                            scrollwheel: false,
-                            navigationControl: true,
-                            streetViewControl: true
-                        }
-                    },
-                    getlatlng:{
-                        address:  $('.flat-maps').data('address'),
-                        callback: function(results) {
-                            if ( !results ) return;
-                            $(this).gmap3('get').setCenter(new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng()));
-                            $(this).gmap3({
-                                marker:{
-                                    latLng:results[0].geometry.location,
-                                    options:{
-                                        icon: $('.flat-maps').data('images')
-                                    }
-                                }
-                            });
-                        }
-                    },
-                    styledmaptype:{
-                        id: "themesflat_style",
-                        options:{
-                            name: "Themesflat Map"
-                        },
-                        styles:[
-                            
-                            {
-                                "featureType": "water",
-                                "elementType": "all",
-                                "stylers": [
-                                    {
-                                        "color": "#a3ccff"
-                                    },
-                                    {
-                                        "visibility": "on"
-                                    }
-                                ]
-                            }
-                        ]
-                        
-                    },  
-                });
-            }
-            $('.map').css( 'height', $('.flat-maps').data('height') );
-        }; // Google Map
-
-        var googleMap_s2 = function() {
-            var data = JSON.parse('[{"address":"Quận Bradford, Florida","content":"","status":"live"},{"address":"Quận Bibb, Georgia","content":""},{"address":"Wateree Swamp, Nam Carolina","content":""}]');
-
-            // Gmap Defaults
-            $('.map-2').gmap3({
-                map:{
-                    options:{
-                        center:[33.720972, -78.884506],
-                        mapTypeId: 'themesflat_style',
-                        mapTypeControlOptions: {
-                                mapTypeIds: ['themesflat_style', google.maps.MapTypeId.SATELLITE, google.maps.MapTypeId.HYBRID]},
-                        zoom: 6
-                    },
-                    navigationControl: true,
-                   scrollwheel: false,
-                   streetViewControl: true
-                }
-            });
-
-            // Json Loop
-            $.each(data, function(key, val) {
-                $('.map-2').gmap3({
-                    marker:{
-                        values:[{
-                            address:val.address,
-                            options:{icon: "images/icons/map.png"},
-                        }]
-                    },
-                    styledmaptype:{
-                        id: "themesflat_style",
-                        options:{
-                            name: "Themesflat Map"
-                        },
-                        styles:[
-                            
-                        ]
-                    }
-                });
-            });
-        }; // Google Map S2
 
         var goTop = function(){
             var gotop = $('.btn-scroll');
@@ -1261,8 +1163,6 @@
         scrollbarWishlist();
         scrollbarCategories();
         scrollbarSearch();
-        googleMap();
-        googleMap_s2();
         goTop();
         popup();
         removePreloader();

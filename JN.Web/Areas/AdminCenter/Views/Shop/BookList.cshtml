@@ -167,6 +167,8 @@
                             创建时间
                         </th>
                         <th>备注</th>
+                        <th>置顶</th>
+                        <th>显示区域</th>
                         <th colspan="2" style="text-align:center;">操作</th>
                     </tr>
                 </thead>
@@ -249,6 +251,36 @@
                                 <td class="hidden-480">@Model[i].CreateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
                                 <td class="hidden-480">@Model[i].Description</td>
                                 <td>
+                                    @if (!Model[i].IsTop??false)
+                                    {
+                                        <a onclick="ChangeTop('@Model[i].ID',true)" class="btn-action glyphicons up_arrow btn-info" data-rel="tooltip" title="置顶">
+                                            <i></i>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a onclick="ChangeTop('@Model[i].ID',false)" class="btn-action glyphicons down_arrow  btn-info" data-rel="tooltip" title="取消置顶">
+                                            <i></i>
+                                        </a>
+                                    }
+                                </td>
+                                <td>
+                                    <select onchange="ChangeBookPlace('@Model[i].ID',this.value)" style="width:100px;">
+                                        @foreach (var item in ViewBag.EnumPlaceData as List<JN.Data.Common.SelectOption>)
+                                        {
+                                            if (@Model[i].ShowPlace.ToString() == item.value)
+                                            {
+                                                <option value="@item.value" selected="selected">@item.label</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.value">@item.label</option>
+                                            }
+
+                                        }
+                                    </select>
+                                </td>
+                                <td>
                                     <select onchange="ChangeBookSate('@Model[i].ID',this.value)" style="width:100px;">
                                         @foreach (var item in ViewBag.EnumData as List<JN.Data.Common.SelectOption>)
                                         {
@@ -283,7 +315,7 @@
 
                 <!-- Pagination -->
                 @Html.PagedListPager((IPagedList)Model, page => Url.Action(ViewContext.RouteData.Values["action"].ToString(),
-                                      JN.Services.Tool.StringHelp.GetQueryString(HttpUtility.ParseQueryString(Request.Url.Query), page)), new PagedListRenderOptions() { ContainerDivClasses = new string[] { "pagination pagination-small pull-right" } })
+                                                JN.Services.Tool.StringHelp.GetQueryString(HttpUtility.ParseQueryString(Request.Url.Query), page)), new PagedListRenderOptions() { ContainerDivClasses = new string[] { "pagination pagination-small pull-right" } })
 
 
                 <div class="clearfix"></div>
@@ -296,7 +328,7 @@
 
 </div><!-- /.page-content -->
 @section scripts{
-    <script type="text/javascript">
+<script type="text/javascript">
         jQuery(function ($) {
             $(".del").on("click", function () {
                 var id = $(this).attr("data-value");
@@ -315,7 +347,7 @@
                 });
             });
         })
-        //修改装填
+        //修改状态
         function ChangeBookSate(id, state)
         {
              bootbox.confirm('您确定要修改该图书吗?', function (result) {
@@ -331,5 +363,36 @@
                     }
                 });
         }
-    </script>
+    //修改显示区域
+        function ChangeBookPlace(id, state){
+     bootbox.confirm('您确定要修改该图书展示位置吗?', function (result) {
+                    if (result) {
+                        $.post('@(Url.Action("ChangeBookPlace"))', { id: id, state: state}, function (data) {
+                            if(data.Status == 200) {
+                                window.location.reload();
+                               }
+                            else{
+                                 alert(data.Message);
+                            }
+                        });
+                    }
+                });
+    }
+
+        //修改显示区域
+        function ChangeTop(id, state){
+     bootbox.confirm('您确定要修改吗?', function (result) {
+                    if (result) {
+                        $.post('@(Url.Action("ChangeTop"))', { id: id, state: state}, function (data) {
+                            if(data.Status == 200) {
+                                window.location.reload();
+                               }
+                            else{
+                                 alert(data.Message);
+                            }
+                        });
+                    }
+                });
+    }
+</script>
 }

@@ -70,6 +70,7 @@
     <Compile Include="Enum\LoginInfoType.cs" />
     <Compile Include="Enum\OrderStatus.cs" />
     <Compile Include="Enum\PayStatus.cs" />
+    <Compile Include="Enum\ShowPlace.cs" />
     <Compile Include="Enum\UserLeve.cs" />
     <Compile Include="Extensions\USDOrders.cs" />
     <Compile Include="Extensions\CellOrders.cs" />

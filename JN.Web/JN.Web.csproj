@@ -2618,7 +2618,6 @@
     <Content Include="Areas\AdminCenter\Views\Shop\Modify.cshtml" />
     <Content Include="Areas\AdminCenter\Views\Shop\ModifyShop.cshtml" />
     <Content Include="Areas\AdminCenter\Views\Shop\NewShop.cshtml" />
-    <Content Include="Areas\AdminCenter\Views\Shop\Order.cshtml" />
     <Content Include="Areas\AdminCenter\Views\Shop\BookList.cshtml" />
     <Content Include="Areas\AdminCenter\Views\Shop\Release.cshtml" />
     <Content Include="Areas\AdminCenter\Views\Shop\ShopList.cshtml" />
@@ -2838,6 +2837,8 @@
     <Content Include="Areas\AdminCenter\Views\Shop\CategoryList.cshtml" />
     <Content Include="Areas\AdminCenter\Views\Shop\ModifyBookClass.cshtml" />
     <Content Include="Areas\AdminCenter\Views\Shop\Create.cshtml" />
+    <Content Include="Areas\AdminCenter\Views\ShopOrder\Index.cshtml" />
+    <Content Include="Areas\AdminCenter\Views\ShopCar\Index.cshtml" />
     <None Include="Properties\PublishProfiles\HL16082801.pubxml" />
     <None Include="Properties\PublishProfiles\LJ160227.pubxml" />
     <None Include="Properties\PublishProfiles\Q160214.pubxml" />
@@ -3021,8 +3022,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\AdminCenter\Models\" />
-    <Folder Include="Areas\AdminCenter\Views\ShopCar\" />
-    <Folder Include="Areas\AdminCenter\Views\ShopOrder\" />
     <Folder Include="Areas\UserCenter\Views\Basics\" />
     <Folder Include="bin\" />
     <Folder Include="common\theme\scripts\plugins\forms\plupload\examples\uploads\" />

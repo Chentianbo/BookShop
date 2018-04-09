@@ -1,0 +1,276 @@
+﻿@using PagedList.Mvc;
+@using PagedList;
+@model PagedList.PagedList<JN.Data.ShopOrder>
+@{
+    string action = ViewContext.RouteData.Values["action"].ToString().ToLower();
+    Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .title {
+        font-weight: 700;
+        text-align: right;
+        color:green;
+    }
+
+    .order {
+        text-align: center;
+    }
+</style>
+<!-- Content -->
+<div id="content">
+    <!-- Breadcrumb -->
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")" class="glyphicons home"><i></i> 首页</a></li>
+        <li class="divider"></li>
+        <li>@ViewBag.Title</li>
+    </ul>
+    <div class="separator bottom"></div>
+    <!-- // Breadcrumb END -->
+    <div class="innerLR">
+        <ul class="nav nav-tabs" id="myTab">
+            <li class="@(action == "Index" &&  Request["state"] == null ? "active" : "")">
+                <a href="@(Url.Action("Index", new { state = "" }))">
+                    全部
+                </a>
+            </li>
+            @foreach (var item in ViewBag.EnumData as List<JN.Data.Common.SelectOption>)
+            {
+                <li class="@(action == "Index" &&  Request["state"] == item.value ? "active" : "")">
+                    <a href="@(Url.Action("Index", new { state =item.value }))">
+                        @item.label
+                    </a>
+                </li>
+            }
+            @*<li class="@((action == "order" && Request["status"].ToInt() == 1) ? "active" : "")">
+                    <a href="@(Url.Action("Order"))?status=1">
+                        已付款的订单
+                    </a>
+                </li>
+                <li class="@((action == "order" && Request["status"].ToInt() == 2) ? "active" : "")">
+                    <a href="@(Url.Action("Order"))?status=2">
+                        已发货的订单
+                    </a>
+                </li>
+                <li class="@((action == "order" && Request["status"].ToInt() == 3) ? "active" : "")">
+                    <a href="@(Url.Action("Order"))?status=3">
+                        已完成的订单
+                    </a>
+                </li>
+                <li class="@((action == "order" && Request["status"].ToInt() == -1) ? "active" : "")">
+                    <a href="@(Url.Action("Order"))?status=-1">
+                        已取消的订单
+                    </a>
+                </li>*@
+        </ul>
+        <div class="tab-content">
+            <div class="table-responsive">
+                <div class="filter-bar margin-bottom-none">
+                    <form method="get">
+
+                        <!-- Filter -->
+                        <div>
+                            <select name="datefiled" style="width: 80px;">
+                                <option value="CreateTime" @(Request["datefiled"] == "CreateTime" ? "selected" : "")>创建时间</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>从:</label>
+                            <div class="input-append">
+                                <input type="text" name="dateform" class="input-mini datepicker" value="@Request["dateform"]" style="width: 63px;" />
+                                <span class="add-on glyphicons calendar"><i></i></span>
+                            </div>
+                        </div>
+                        <!-- // Filter END -->
+                        <!-- Filter -->
+                        <div>
+                            <label>到:</label>
+                            <div class="input-append">
+                                <input type="text" name="dateto" class="input-mini datepicker" value="@Request["dateto"]" style="width: 63px;" />
+                                <span class="add-on glyphicons calendar"><i></i></span>
+                            </div>
+                        </div>
+                        <!-- // Filter END -->
+                        <!-- Filter -->
+                        <div style="margin-left:10px">
+                            <select name="numberfiled" style="width: 80px;">
+                                <option value="Quantity" @(Request["numberfiled"] == "Quantity" ? "selected" : "")>数量</option>
+                                <option value="Price" @(Request["numberfiled"] == "Price" ? "selected" : "")>价格</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>从:</label>
+                            <div class="input-append">
+                                <input type="text" name="numberform" class="input-mini" style="width: 30px;" value="@Request["numberform"]" />
+                                <span class="add-on glyphicons euro"><i></i></span>
+                            </div>
+                        </div>
+                        <!-- // Filter END -->
+                        <!-- Filter -->
+                        <div>
+                            <label>到:</label>
+                            <div class="input-append">
+                                <input type="text" name="numberto" class="input-mini" style="width: 30px;" value="@Request["numberto"]" />
+                                <span class="add-on glyphicons euro"><i></i></span>
+                            </div>
+                        </div>
+                        <!-- // Filter END -->
+                        <!-- Filter -->
+                        <div style="margin-left:10px">
+                            <select name="keyfiled" style="width: 80px;">
+                                <option value="ShopName" @(Request["keyfiled"] == "ShopName" ? "selected" : "")>店铺名称</option>
+                                <option value="UserName" @(Request["keyfiled"] == "UserName" ? "selected" : "")>会员编号</option>
+                                <option value="Tel" @(Request["keyfiled"] == "Tel" ? "selected" : "")>手机号码</option>
+                                <option value="Address" @(Request["keyfiled"] == "Address" ? "selected" : "")>店铺地址</option>
+                            </select>
+                        </div>
+                        <div>
+                            <div class="input-append">
+                                <input type="text" name="keyword" class="input-mini" style="width: 150px;" value="@Request["keyword"]" placeholder="请输入查询关键词" />
+                                <span style="margin: 0;" class="btn-action single glyphicons circle_question_mark" data-toggle="tooltip" data-placement="top" data-original-title="使用模糊查询可在关键字前后加上“%”"><i></i></span>
+                            </div>
+                        </div>
+                        <!-- // Filter END -->
+                        <!-- Filter -->
+                        <div>
+                            <input type="hidden" name="IsAsc" value="0" />
+                            <input type="hidden" name="OrderFiled" value="ID" />
+                            <input type="hidden" name="IsExport" value="0" />
+                            <input type="submit" onclick="$('input[name=\'IsExport\']').val(0)" value="查询" />
+                            <input type="submit" onclick="$('input[name=\'IsExport\']').val(1)" value="导出" />
+                        </div>
+                        <div class="clearfix"></div>
+                        <!-- // Filter END -->
+
+                    </form>
+
+                </div>
+
+                <table class="table  table-bordered no-margin-bottom">
+                    @* <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>用户名</th>
+                            <th>商品名称</th>
+                            <th>订单编号</th>
+                           <th>商品单价</th>
+                            <th>寄件人</th>
+                                <th>寄件人电话</th>
+                            <th>寄件地址</th>
+                            <th>寄件时间</th>
+                            <th>包裹</th>
+                            <th>购买数量</th>
+                            <th>商品规格</th>
+                            <th>订单金额</th>
+                            <th>运费</th>
+                            <th>总计</th>
+                            <th>物流信息</th>
+                            <th>收件人</th>
+                            <th>收件人电话</th>
+                            <th>收件地址</th>
+                                    <th>收件时间</th>
+                                    <th>购买信息</th>
+                                    <th>下单时间</th>
+                                    <th>备注</th>
+                                    <th>状态</th>
+                                    </tr>
+                                    </thead>*@
+                    <tbody>
+                        @if (Model.Count > 0)
+                        {
+                            for (int i = 0; i < Model.Count(); i++)
+                            {
+                                <tr>
+                                    <td colspan="12"></td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="5"></td>
+                                    <td class="title">订单编号:</td>
+                                    <td>@Model[i].OrderNumber</td>
+                                    <td class="title">订单金额:</td>
+                                    <td>@Model[i].OrderPrice.ToString("F2")</td>
+
+                                    <td class="title">总计:</td>
+                                    <td>@Model[i].TotalPrice</td>
+
+                                    <td class="title">下单时间:</td>
+                                    <td>
+                                        @Model[i].CreateTime
+                                    </td>
+                                    <td class="title">购买信息</td>
+                                    <td class="title">备注：</td>
+                                    <td class="title">订单状态</td>
+                                </tr>
+                                <tr>
+                                    <td class="title">卖家：</td>
+                                    <td>@Model[i].UserName</td>
+                                    <td class="title">图书名称：</td>
+                                    <td>@Model[i].BookName</td>
+                                    <td class="title">数量：</td>
+                                    <td>@Model[i].TotalCount</td>
+                                    <td class="title">买家：</td>
+                                    <td>@Model[i].PUserName</td>
+
+                                    <td rowspan="4" class="order">@Model[i].BuyMsg</td>
+                                    <td rowspan="4" class="order">@Model[i].Remark</td>
+                                    <td rowspan="4" class="order">
+                                        @{
+                                            var state = JN.Data.Common.EnumExtension.GetDescription((JN.Data.Enum.OrderStatus)@Model[i].Status);
+                                        }@state
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="title">运费：</td>
+                                    <td>@Model[i].ShipFreight</td>
+                                    <td class="title">物流信息：</td>
+                                    <td>@Model[i].Logistics</td>
+                                    <td class="title">发货时间：</td>
+                                    <td>@Model[i].DelivertTime</td>
+                                    <td class="title">收货时间：</td>
+                                    <td>@Model[i].RecTime</td>
+
+                                </tr>
+                                <tr>
+                                    <td class="title">寄件人:</td>
+                                    <td>@Model[i].SenderMan</td>
+                                    <td class="title">联系方式:</td>
+                                    <td>@Model[i].SenderPhone</td>
+                                    <td class="title">收件人:</td>
+                                    <td>@Model[i].RecLinkMan</td>
+                                    <td class="title">联系方式:</td>
+                                    <td>@Model[i].RecPhone</td>
+                                </tr>
+                                <tr>
+                                    <td class="title">寄件地址:</td>
+                                    <td colspan="3">@Model[i].SenderProvince @Model[i].SenderCity @Model[i].SenderTown  @Model[i].SenderAddress</td>
+
+                                    <td class="title">收货地址:</td>
+                                    <td colspan="3">@Model[i].RecProvince @Model[i].RecCity @Model[i].RecTown  @Model[i].RecAddress</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="12"></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+                <div class="separator top form-inline small">
+                    <!-- Pagination -->
+                    @Html.PagedListPager((IPagedList)Model, page => Url.Action(ViewContext.RouteData.Values["action"].ToString(),
+                                                      JN.Services.Tool.StringHelp.GetQueryString(HttpUtility.ParseQueryString(Request.Url.Query), page)), new PagedListRenderOptions() { ContainerDivClasses = new string[] { "pagination pagination-small pull-right" } })
+
+
+                    <div class="clearfix"></div>
+                    <!-- // Pagination END -->
+
+                </div><!-- /.table-responsive -->
+            </div><!-- /span -->
+        </div>
+    </div>
+</div><!-- /row -->
+<!-- PAGE CONTENT ENDS -->
+@section scripts{
+    <script type="text/javascript">
+
+    </script>
+}

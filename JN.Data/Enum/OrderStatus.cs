@@ -10,21 +10,24 @@ namespace JN.Data.Enum
     public enum OrderStatus
     {
         [Description("已付款待发货")]
-        Sales = 1,
+        AlreadyPaid = 1,
 
         [Description("已发货")]
-        Transaction = 2,
+        AlreadyShipped = 2,
+
+        [Description("已收货")]
+        ConfirmReception = 3,
 
         [Description("已完成")]
-        Deal = 3,
+        Completed = 4,
 
         [Description("已取消")]
         Cancel = -1,
 
         [Description("退货中")]
-        Exit = -2,
+        ReturnOut = -2,
 
         [Description("换货")]
-        Change = -3,
+        Replace = -3,
     }
 }

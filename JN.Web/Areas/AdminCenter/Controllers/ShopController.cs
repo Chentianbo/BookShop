@@ -58,12 +58,12 @@ namespace JN.Web.Areas.AdminCenter.Controllers
             {
                 list = list.Where(x => x.BookState == state).ToList();
             }
-            list = list.OrderByDescending(x => x.CreateTime).ToList();
+            list = list.OrderBy(x=>x.IsTop).ThenByDescending(x => x.CreateTime).ToList();
             //数据验证
             foreach (var item in list)
             {
                 string sign = (item.BookName + item.Author + item.ISBN + item.BookCategoryId + (Convert.ToInt32(item.CurrentPrice)).ToString() + (Convert.ToInt32(item.OlaPrice)).ToString() + item.UID
-                    + item.BookState.ToString() + (Convert.ToInt32(item.FreightPrice)).ToString()).ToLower().ToMD5();
+                    + item.BookState.ToString() + (Convert.ToInt32(item.FreightPrice)).ToString()+item.ShowPlace.ToString()+item.IsTop.ToString()).ToLower().ToMD5();
                 if (sign != item.Sign)
                 {
 
@@ -85,6 +85,9 @@ namespace JN.Web.Areas.AdminCenter.Controllers
             }
             //枚举数据
             ViewBag.EnumData = EnumExtension.GetOptions(BookState.Wait);
+
+            //枚举数据
+            ViewBag.EnumPlaceData = EnumExtension.GetOptions(ShowPlace.MidAera);
             return View(list.ToPagedList(page ?? 1, 20));
         }
 
@@ -118,6 +121,89 @@ namespace JN.Web.Areas.AdminCenter.Controllers
                 }
                 model.BookState = Convert.ToInt32(state);
                 model.Description = "";
+                model.CreateSign();
+                BookInfoService.Update(model);
+                SysDBTool.Commit();
+                result.Status = 200;
+                result.Message = "操作成功";
+            }
+            catch (Exception ex)
+            {
+                result.Status = 500;
+                result.Message = ex.Message;
+            }
+            return Json(result);
+        }
+
+
+        /// <summary>
+        /// 修改图书显示位置
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="state"></param>
+        /// <returns></returns>
+        public ActionResult ChangeBookPlace(string id, string state)
+        {
+            ReturnResult result = new ReturnResult();
+            try
+            {
+                if (string.IsNullOrEmpty(id))
+                {
+                    throw new Exception("提交出错");
+                }
+                if (string.IsNullOrEmpty(state))
+                {
+                    throw new Exception("提交出错");
+                }
+                if (!EnumExtension.ExitEnum((ShowPlace)Convert.ToInt32(state)))
+                {
+                    throw new Exception("提交出错");
+                }
+                var model = BookInfoService.Single(id);
+                if (model == null)
+                {
+                    throw new Exception("该数据不存在");
+                }
+                model.ShowPlace = Convert.ToInt32(state);
+                model.CreateSign();
+                BookInfoService.Update(model);
+                SysDBTool.Commit();
+                result.Status = 200;
+                result.Message = "操作成功";
+            }
+            catch (Exception ex)
+            {
+                result.Status = 500;
+                result.Message = ex.Message;
+            }
+            return Json(result);
+        }
+
+        /// <summary>
+        /// 修改图书置顶
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="state"></param>
+        /// <returns></returns>
+        public ActionResult ChangeTop(string id, string state)
+        {
+            ReturnResult result = new ReturnResult();
+            try
+            {
+                if (string.IsNullOrEmpty(id))
+                {
+                    throw new Exception("提交出错");
+                }
+                if (string.IsNullOrEmpty(state))
+                {
+                    throw new Exception("提交出错");
+                }
+                var model = BookInfoService.Single(id);
+                if (model == null)
+                {
+                    throw new Exception("该数据不存在");
+                }
+                model.IsTop = Convert.ToBoolean(state);
                 model.CreateSign();
                 BookInfoService.Update(model);
                 SysDBTool.Commit();

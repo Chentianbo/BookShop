@@ -89,27 +89,27 @@ namespace JN.Data
         /// <summary>
         /// 
         /// </summary>  
-				[DisplayName("Province")]
+				[DisplayName("RecProvince")]
 		        [MaxLength(50,ErrorMessage="最大长度为50")]
-		public string  Province { get; set; }
+		public string  RecProvince { get; set; }
 		      
        
         
         /// <summary>
         /// 
         /// </summary>  
-				[DisplayName("City")]
+				[DisplayName("RecCity")]
 		        [MaxLength(50,ErrorMessage="最大长度为50")]
-		public string  City { get; set; }
+		public string  RecCity { get; set; }
 		      
        
         
         /// <summary>
         /// 
         /// </summary>  
-				[DisplayName("Town")]
+				[DisplayName("RecTown")]
 		        [MaxLength(50,ErrorMessage="最大长度为50")]
-		public string  Town { get; set; }
+		public string  RecTown { get; set; }
 		      
        
         
@@ -184,9 +184,9 @@ namespace JN.Data
         /// <summary>
         /// 
         /// </summary>  
-				[DisplayName("TotalPrice")]
+				[DisplayName("OrderPrice")]
 		        [Filters.DecimalPrecision(18,2)]
-		public decimal  TotalPrice { get; set; }
+		public decimal  OrderPrice { get; set; }
 		      
        
         
@@ -249,6 +249,104 @@ namespace JN.Data
 		public string  Spec { get; set; }
 		      
        
+        
+        /// <summary>
+        /// 
+        /// </summary>  
+				[DisplayName("SenderMan")]
+		        [MaxLength(10,ErrorMessage="最大长度为10")]
+		public string  SenderMan { get; set; }
+		      
+       
+        
+        /// <summary>
+        /// 
+        /// </summary>  
+				[DisplayName("SenderPhone")]
+		        [MaxLength(10,ErrorMessage="最大长度为10")]
+		public string  SenderPhone { get; set; }
+		      
+       
+        
+        /// <summary>
+        /// 
+        /// </summary>  
+				[DisplayName("SenderAddress")]
+		        [MaxLength(10,ErrorMessage="最大长度为10")]
+		public string  SenderAddress { get; set; }
+		      
+       
+        
+        /// <summary>
+        /// 
+        /// </summary>  
+				[DisplayName("SenderProvince")]
+		        [MaxLength(10,ErrorMessage="最大长度为10")]
+		public string  SenderProvince { get; set; }
+		      
+       
+        
+        /// <summary>
+        /// 
+        /// </summary>  
+				[DisplayName("SenderCity")]
+		        [MaxLength(10,ErrorMessage="最大长度为10")]
+		public string  SenderCity { get; set; }
+		      
+       
+        
+        /// <summary>
+        /// 
+        /// </summary>  
+				[DisplayName("SenderTown")]
+		        [MaxLength(10,ErrorMessage="最大长度为10")]
+		public string  SenderTown { get; set; }
+		      
+       
+        
+        /// <summary>
+        /// 
+        /// </summary>  
+				[DisplayName("RecTime")]
+				public DateTime?  RecTime { get; set; }
+		      
+       
+        
+        /// <summary>
+        /// 
+        /// </summary>  
+				[DisplayName("Sign")]
+		        [MaxLength(10,ErrorMessage="最大长度为10")]
+		public string  Sign { get; set; }
+		      
+       
+        
+        /// <summary>
+        /// 
+        /// </summary>  
+				[DisplayName("TotalPrice")]
+		        [Filters.DecimalPrecision(18,2)]
+		public decimal  TotalPrice { get; set; }
+		      
+       
+        
+        /// <summary>
+        /// 
+        /// </summary>  
+				[DisplayName("PUID")]
+		        [MaxLength(50,ErrorMessage="最大长度为50")]
+		public string  PUID { get; set; }
+		      
+       
+        
+        /// <summary>
+        /// 
+        /// </summary>  
+				[DisplayName("PUserName")]
+		        [MaxLength(50,ErrorMessage="最大长度为50")]
+		public string  PUserName { get; set; }
+		      
+       
          
 
         /// <summary>
@@ -257,9 +355,13 @@ namespace JN.Data
 		
         public ShopOrder()
         {
-        //    ID = Guid.NewGuid();
+            ID = Guid.NewGuid().ToString();
         }
-      
+
+        public void CreateSign()
+        {
+            Sign = (UID + BookID + OrderNumber + RecLinkMan + RecPhone + Convert.ToInt32(TotalPrice).ToString() + Logistics + Convert.ToInt32(ShipFreight) + Status.ToString() + SenderMan + SenderPhone).ToLower().ToMD5();
+        }
     }
  
     
