@@ -50,7 +50,7 @@ namespace JN.Web.Areas.UserCenter.Controllers
                 }
                 else
                 {
-                    Response.Redirect("/UserCenter/Login");
+                    Response.Redirect("/UserCenter/Shopping");
                     filterContext.Result = new EmptyResult();
                 }
             }
@@ -65,13 +65,13 @@ namespace JN.Web.Areas.UserCenter.Controllers
                 string actionName = filterContext.RouteData.Values["action"].ToString().ToLower();
                 if (Umodel.AccountState!= (int)AccountState.Normal)
                 {
-                    Response.Redirect("/UserCenter/Login");
+                    Response.Redirect("/UserCenter/Shopping");
                     filterContext.Result = new EmptyResult();
                 }
             }
             else
             {
-                Response.Redirect("/UserCenter/Login");
+                Response.Redirect("/UserCenter/Shopping");
                 filterContext.Result = new EmptyResult();
             }
         }
@@ -117,7 +117,7 @@ namespace JN.Web.Areas.UserCenter.Controllers
             }
             else
             {
-                Response.Redirect("/UserCenter/Login");
+                Response.Redirect("/UserCenter/Shopping");
                 filterContext.Result = new EmptyResult();
             }
         }

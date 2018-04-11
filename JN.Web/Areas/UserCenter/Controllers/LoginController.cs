@@ -42,6 +42,11 @@ namespace JN.Web.Areas.UserCenter.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 登录页登录
+        /// </summary>
+        /// <param name="fc"></param>
+        /// <returns></returns>
         [HttpPost]
         public JsonResult Index(FormCollection fc)
         {
@@ -119,6 +124,79 @@ namespace JN.Web.Areas.UserCenter.Controllers
             return Json(result);
         }
 
+        /// <summary>
+        /// 商城页面弹窗登录
+        /// </summary>
+        /// <param name="fc"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult UserLogin(string username,string password, string rp)
+        {
+            //string username = fc["username"];
+            //string password = fc["password"];
+            //string rp = fc["password"];
+            ReturnResult result = new ReturnResult();
+            try
+            {
+                if (string.IsNullOrEmpty(username) | string.IsNullOrEmpty(password)) throw new Exception("用户名或密码不能为空");
+
+                var entity = UserLoginHelper.GetUserLoginBy(username, password);
+
+                if (entity != null)
+                {
+                    if (entity.AccountState == (int)AccountState.Lock) throw new Exception("您的帐号已被冻结,请联系管理员!");
+                    if (entity.AccountState == (int)AccountState.UnActivation) throw new Exception("你的账号未激活！");
+                    if (entity.AccountState == (int)AccountState.Exceptiona) throw new Exception("你的账号存在异常！");
+
+                    var log = new ActLog();
+                    log.ActContent = "用户“" + username + "”登录成功！";
+                    log.CreateTime = DateTime.Now;
+                    log.IP = Request.UserHostAddress;
+                    if (Request.UrlReferrer != null)
+                        log.Location = Request.UrlReferrer.ToString();
+                    log.Platform = "会员";
+                    log.Source = "";
+                    log.UID = entity.ID.ToString();
+                    log.UserName = entity.UserName;
+                    ActLogService.Add(log);
+                    LogDBTool.Commit();
+
+                    result.Status = 200;
+                    if (entity.AccountState == (int)AccountState.Normal)
+                        Response.Redirect("/UserCenter/Shop");//
+                    else
+                        throw new Exception("你的账号存在异常！");
+
+                    //如果勾选记住密码，则保存密码一个星期
+                    DateTime expiration = DateTime.Now.AddMinutes(20);
+                    if (rp == "1")
+                        expiration = DateTime.Now.AddDays(7);
+
+                    // 设置Ticket信息
+                    FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
+                        1,
+                        entity.ID.ToString(),
+                        DateTime.Now,
+                        expiration,
+                        false, LoginInfoType.User.ToString());
+
+                    // 加密验证票据
+                    string strTicket = FormsAuthentication.Encrypt(ticket);
+                    // 使用新userdata保存cookie
+                    HttpCookie cookie = new HttpCookie(FormsAuthentication.FormsCookieName, strTicket);
+                    cookie.Expires = ticket.Expiration;
+                    this.Response.Cookies.Add(cookie);
+                }
+                else
+                    throw new Exception("用户名或密码错误");
+            }
+            catch (Exception ex)
+            {
+                result.Status = 500;
+                result.Message = ex.Message;
+            }
+            return Json(result);
+        }
 
         public FileResult GetCodeImage(int? width, int? height)
         {

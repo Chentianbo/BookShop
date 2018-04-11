@@ -47,7 +47,8 @@ namespace JN.Web.Areas.UserCenter.Controllers
         //网站首页
         public ActionResult Index()
         {
-            return View();
+            return Redirect("/UserCenter/Shopping");
+            //return View();
         }
 
 

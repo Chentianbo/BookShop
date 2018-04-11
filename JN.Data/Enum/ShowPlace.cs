@@ -9,13 +9,14 @@ namespace JN.Data.Enum
 {
     public enum ShowPlace
     {
-        [Description("中区")]
-        MidAera = 0,
+      
         [Description("热卖区")]
-        HotAera = 1,
-        [Description("左侧区")]
+        HotAera = 0,
+        [Description("中区")]
+        MidAera = 1,
+        [Description("上侧区")]
         LSideAera = 2,
-        [Description("右侧区")]
+        [Description("下侧区")]
         RSideAera = 3,
         [Description("幻灯片区")]
         SwichAera = 4,

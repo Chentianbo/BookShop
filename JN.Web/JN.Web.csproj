@@ -216,11 +216,9 @@
     <Content Include="Areas\UserCenter\Views\Finance\PinCode.cshtml" />
     <Content Include="Areas\UserCenter\Views\Home\ChangePassword.cshtml" />
     <Content Include="Areas\UserCenter\Views\Home\Wait.cshtml" />
-    <Content Include="Areas\UserCenter\Views\Login\cfb.cshtml" />
     <Content Include="Areas\UserCenter\Views\Login\GetPwd.cshtml" />
     <Content Include="Areas\UserCenter\Views\Login\GetPwd2.cshtml" />
     <Content Include="Areas\UserCenter\Views\Login\GetPwd3.cshtml" />
-    <Content Include="Areas\UserCenter\Views\Login\metronic.cshtml" />
     <Content Include="Areas\UserCenter\Views\Login\neon.cshtml" />
     <Content Include="Areas\UserCenter\Views\Login\ultimo.cshtml" />
     <Content Include="Areas\UserCenter\Views\Mail\Write.cshtml" />
@@ -2839,6 +2837,9 @@
     <Content Include="Areas\AdminCenter\Views\Shop\Create.cshtml" />
     <Content Include="Areas\AdminCenter\Views\ShopOrder\Index.cshtml" />
     <Content Include="Areas\AdminCenter\Views\ShopCar\Index.cshtml" />
+    <Content Include="Areas\UserCenter\Views\Shopping\BookDetail.cshtml" />
+    <Content Include="Areas\UserCenter\Views\Shopping\SearchBook.cshtml" />
+    <Content Include="Areas\UserCenter\Views\Shared\_NoLoginLayout.cshtml" />
     <None Include="Properties\PublishProfiles\HL16082801.pubxml" />
     <None Include="Properties\PublishProfiles\LJ160227.pubxml" />
     <None Include="Properties\PublishProfiles\Q160214.pubxml" />

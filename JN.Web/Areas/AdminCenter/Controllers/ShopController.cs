@@ -611,9 +611,10 @@ namespace JN.Web.Areas.AdminCenter.Controllers
                 BookCategoryService.Add(cate);
                 SysDBTool.Commit();
 
-                ViewBag.SuccessMsg = "操作成功！";
+                //ViewBag.SuccessMsg = "操作成功！";
                 ActPacket = cate;
-                return View("Success");
+                //return View("Success");
+                return RedirectToAction("CategoryList", "shop");
 
             }
             catch (Exception ex)
@@ -694,18 +695,22 @@ namespace JN.Web.Areas.AdminCenter.Controllers
                 if (catePid != Cate.ID)
                 {
                     var model = BookCategoryService.Single(catePid);
-                    entity.Ppacth = model.Ppacth + model.ID + ",";
-                    entity.parentName = model.Name;
-                    entity.ParentId = catePid;
+                    if (model!=null)
+                    {
+                        entity.Ppacth = model.Ppacth + model.ID + ",";
+                        entity.parentName = model.Name;
+                        entity.ParentId = catePid;
+                    }
                 }
 
                 #endregion
 
                 BookCategoryService.Update(entity);
                 SysDBTool.Commit();
+                return RedirectToAction("CategoryList", "shop");
                 //result.Status = 200;
-                ViewBag.SuccessMsg = "商品分类编辑成功！";
-                return View("Success");
+                //ViewBag.SuccessMsg = "图书分类编辑成功！";
+                //return View("Success");
             }
             catch (Exception ex)
             {

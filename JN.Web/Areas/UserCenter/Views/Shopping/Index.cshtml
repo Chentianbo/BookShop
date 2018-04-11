@@ -1,284 +1,406 @@
-﻿
+﻿@using PagedList.Mvc;
+@using PagedList;
 @{
-    Layout = "~/Areas/UserCenter/Views/Shared/_Layout.cshtml";
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Layout = "~/Areas/UserCenter/Views/Shared/_NoLoginLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Areas/UserCenter/Views/Shared/_Layout.cshtml";
+    }
     ViewBag.Title = "职师二手图书网";
+    var BookCategoryData = MvcCore.Unity.Get<JN.Data.Service.IBookCategoryService>().List().OrderBy(x => x.Sort).ThenByDescending(x => x.CreateTime).ToList();
 }
-<div class="row">
-    <div class="col-md-3">
-        <div id="logo" class="logo">
-            <a href="index.html" title="">
-                <img src="~/Thame/images/logos/logo.png" alt="" />
-            </a>
-        </div><!-- /#logo -->
-    </div><!-- /.col-md-3 -->
-    <div class="col-md-6">
-        <div class="top-search">
-            <form action="#" method="get" class="form-search" accept-charset="utf-8">
-                <div class="cat-wrap">
-                    <select name="category">
-                        <option hidden=hidden value="">All Category</option>
-                        <option hidden=hidden value="">Cameras</option>
-                        <option hidden=hidden value="">Computer</option>
-                        <option hidden=hidden value="">Laptops</option>
-                    </select>
-                    <span><i class="fa fa-angle-down" aria-hidden="true"></i></span>
-                    <div class="all-categories">
-                        <div class="cat-list-search">
-                            <div class="title">
-                                Electronics
-                            </div>
-                            <ul>
-                                <li>Components</li>
-                                <li>Laptop</li>
-                                <li>Monitor</li>
-                                <li>Mp3 player</li>
-                                <li>Scanners</li>
-                            </ul>
-                        </div><!-- /.cat-list-search -->
-                        <div class="cat-list-search">
-                            <div class="title">
-                                Furniture
-                            </div>
-                            <ul>
-                                <li>Bookcases</li>
-                                <li>Barstools</li>
-                                <li>TV stands</li>
-                                <li>Desks</li>
-                                <li>Accent chairs</li>
-                            </ul>
-                        </div><!-- /.cat-list-search -->
-                        <div class="cat-list-search">
-                            <div class="title">
-                                Accessories
-                            </div>
-                            <ul>
-                                <li>Software</li>
-                                <li>Mobile</li>
-                                <li>TV stands</li>
-                                <li>Printers</li>
-                                <li>Media</li>
-                            </ul>
-                        </div><!-- /.cat-list-search -->
-                    </div><!-- /.all-categories -->
-                </div><!-- /.cat-wrap -->
-                <div class="box-search">
-                    <input type="text" name="search" placeholder="Search what you looking for ?" />
-                    <span class="btn-search">
-                        <button type="submit" class="waves-effect"><img src="~/Thame/images/icons/search.png" alt="" /></button>
-                    </span>
-                    <div class="search-suggestions">
-                        <div class="box-suggestions">
-                            <div class="title">
-                                Search Suggestions
-                            </div>
-                            <ul>
-                                <li>
-                                    <div class="image">
-                                        <img src="~/Thame/images/product/other/s05.jpg" alt="" />
+<div class="bodyMain">
+    <section class="flat-row flat-slider">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="slider owl-carousel">
+                        <!-- 加载幻灯区图书信息 -->
+                        @foreach (var item in MvcCore.Unity.Get<JN.Data.Service.IBookInfoService>
+                            ().List(/*x => x.BookState == 1 && x.ShowPlace == 4*/).OrderBy(x => x.IsTop).ThenByDescending(x => x.CreateTime).Take(6).ToList())
+                        {
+                            <div class="slider-item">
+                                <div class="item-text">
+                                    <div class="header-item">
+                                        <p>作者:<span>@item.Author</span></p>
+                                        <h2 class="name">@item.BookName</h2>
+                                        <p>
+                                            @item.Introduction
+                                        </p>
                                     </div>
-                                    <div class="info-product">
-                                        <div class="name">
-                                            <a href="#" title="">Razer RZ02-01071500-R3M1</a>
-                                        </div>
+                                    <div class="divider65"></div>
+                                    <div class="content-item">
                                         <div class="price">
-                                            <span class="sale">
-                                                $50.00
+                                            <span class="sale">现价: @item.CurrentPrice.ToString("F2") 元</span>
+                                            <span class="btn-shop">
+                                                <a href="@Url.Action("BookDetail", new { id = @item.ID })" title="">查看<img src="~/Thame/images/icons/right-2.png" alt=""></a>
                                             </span>
-                                            <span class="regular">
-                                                $2,999.00
-                                            </span>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div class="regular">
+                                            原价:@item.OlaPrice.ToString("F2") 元
                                         </div>
                                     </div>
-                                </li>
-                                <li>
-                                    <div class="image">
-                                        <img src="~/Thame/images/product/other/s06.jpg" alt="" />
-                                    </div>
-                                    <div class="info-product">
-                                        <div class="name">
-                                            <a href="#" title="">Notebook Black Spire V Nitro VN7-591G</a>
-                                        </div>
-                                        <div class="price">
-                                            <span class="sale">
-                                                $24.00
-                                            </span>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="image">
-                                        <img src="~/Thame/images/product/other/14.jpg" alt="" />
-                                    </div>
-                                    <div class="info-product">
-                                        <div class="name">
-                                            <a href="#" title="">Apple iPad Mini G2356</a>
-                                        </div>
-                                        <div class="price">
-                                            <span class="sale">
-                                                $90.00
-                                            </span>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="image">
-                                        <img src="~/Thame/images/product/other/02.jpg" alt="" />
-                                    </div>
-                                    <div class="info-product">
-                                        <div class="name">
-                                            <a href="#" title="">Razer RZ02-01071500-R3M1</a>
-                                        </div>
-                                        <div class="price">
-                                            <span class="sale">
-                                                $50.00
-                                            </span>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="image">
-                                        <img src="~/Thame/images/product/other/l01.jpg" alt="" />
-                                    </div>
-                                    <div class="info-product">
-                                        <div class="name">
-                                            <a href="#" title="">Apple iPad Mini G2356</a>
-                                        </div>
-                                        <div class="price">
-                                            <span class="sale">
-                                                $24.00
-                                            </span>
-                                            <span class="regular">
-                                                $2,999.00
-                                            </span>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="image">
-                                        <img src="~/Thame/images/product/other/s08.jpg" alt="" />
-                                    </div>
-                                    <div class="info-product">
-                                        <div class="name">
-                                            <a href="#" title="">Beats Snarkitecture Headphones</a>
-                                        </div>
-                                        <div class="price">
-                                            <span class="sale">
-                                                $90.00
-                                            </span>
-                                            <span class="regular">
-                                                $2,999.00
-                                            </span>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div><!-- /.box-suggestions -->
-                        <div class="box-cat">
-                            <div class="cat-list-search">
-                                <div class="title">
-                                    Categories
                                 </div>
-                                <ul>
-                                    <li>
-                                        <a href="#">Networking & Internet Devices</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Laptops, Desktops & Monitors</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Hard Drives & Memory Cards</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Printers & Ink</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Networking & Internet Devices</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Computer Accessories</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Software</a>
-                                    </li>
-                                </ul>
-                            </div><!-- /.cat-list-search -->
-                        </div><!-- /.box-cat -->
-                    </div><!-- /.search-suggestions -->
-                </div><!-- /.box-search -->
-            </form><!-- /.form-search -->
-        </div><!-- /.top-search -->
-    </div><!-- /.col-md-6 -->
-    <div class="col-md-3">
-        <div class="box-cart">
-            <div class="inner-box">
-                <ul class="menu-compare-wishlist">
-                    <li class="compare">
-                        <a href="#" title="">
-                            <img src="~/Thame/images/icons/compare.png" alt="" />
-                        </a>
-                    </li>
-                    <li class="wishlist">
-                        <a href="wishlist.html" title="">
-                            <img src="~/Thame/images/icons/wishlist.png" alt="" />
-                        </a>
-                    </li>
-                </ul><!-- /.menu-compare-wishlist -->
-            </div><!-- /.inner-box -->
-            <div class="inner-box">
-                <a href="#" title="">
-                    <div class="icon-cart">
-                        <img src="~/Thame/images/icons/cart.png" alt="" />
-                        <span>4</span>
+                                <div class="item-image">
+                                    @*<div class="sale-off">
+                                            数量<span>@item.BookCount</span>
+                                        </div>*@
+                                    <img src="@item.ImageUrl" alt="@item.BookName">
+                                </div>
+                                <div class="clearfix"></div>
+                            </div><!-- /.slider -->
+                        }
+                    </div><!-- /.slider -->
+                </div><!-- /.col-md-12 -->
+            </div><!-- /.row -->
+        </div><!-- /.container -->
+    </section><!-- /.flat-slider -->
+
+    <section class="flat-imagebox">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="product-tab">
+                        <ul class="tab-list">
+                            @foreach (var item in BookCategoryData)
+                            {
+                                <li>@item.Name</li>
+                            }
+                        </ul>
+                    </div><!-- /.product-tab -->
+                </div><!-- /.col-md-12 -->
+            </div><!-- /.row -->
+            <div class="box-product">
+                @foreach (var cate in BookCategoryData)
+                {
+                    <div class="row">
+                        @foreach (var item in MvcCore.Unity.Get<JN.Data.Service.IBookInfoService>
+                            ().List(x => x.BookCategoryId == cate.ID/*x => x.BookState == 1 && x.ShowPlace == 4*/).OrderBy(x => x.IsTop).ThenByDescending(x => x.CreateTime).Take(8).ToList())
+                        {
+
+                            <div class="col-lg-3 col-sm-3">
+                                <div class="product-box">
+                                    <div class="imagebox">
+                                        @*<span class="item-new">NEW</span>*@
+                                        <ul class="box-image owl-carousel-1">
+                                            <li>
+                                                <a href="@Url.Action("BookDetail", new { id = @item.ID })" title="@item.BookName" target="_blank">
+                                                    <img src="~/Thame/images/product/other/01.jpg" alt="@item.BookName">
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="@Url.Action("BookDetail", new { id = @item.ID })" title="@item.BookName" target="_blank">
+                                                    <img src="~/Thame/images/product/other/01.jpg" alt="@item.BookName">
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="@Url.Action("BookDetail", new { id = @item.ID })" title="@item.BookName" target="_blank">
+                                                    <img src="~/Thame/images/product/other/01.jpg" alt="@item.BookName">
+                                                </a>
+                                            </li>
+                                            @*<li>
+                                                    <a href="#" title="@item.BookName">
+                                                        <img src="@item.ImageUrl" alt="@item.BookName">
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" title="">
+                                                        <img src="@item.ImageUrl" alt="@item.BookName">
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" title="">
+                                                        <img src="@item.ImageUrl" alt="@item.BookName">
+                                                    </a>
+                                                </li>*@
+                                        </ul><!-- /.box-image -->
+                                        <div class="box-content">
+                                            <div class="cat-name">
+                                                <a href="#" title="">发布者:@item.UserName</a>
+                                            </div>
+                                            <div class="product-name">
+                                                <a href="@Url.Action("BookDetail", new { id = @item.ID })" title="@item.BookName" target="_blank">
+                                                    @item.BookName (@item.Version)<br /> 出版社:@item.Publisher
+                                                </a>
+                                            </div>
+                                            <div class="price">
+                                                <span class="sale">现价:@item.CurrentPrice.ToString("F2")元</span>
+                                                <span class="regular">原价:@item.OlaPrice.ToString("F2")元</span>
+                                            </div>
+                                        </div><!-- /.box-content -->
+                                        <div class="box-bottom">
+                                            <div class="btn-add-cart">
+                                                <a href="#" title="">
+                                                    <img src="~/Thame/images/icons/add-cart.png" alt="">加入购物车
+                                                </a>
+                                            </div>
+                                            @*<div class="compare-wishlist">
+                                                    <a href="#" class="compare" title="">
+                                                        <img src="~/Thame/images/icons/compare.png" alt="">Compare
+                                                    </a>
+                                                    <a href="#" class="wishlist" title="">
+                                                        <img src="~/Thame/images/icons/wishlist.png" alt="">Wishlist
+                                                    </a>
+                                                </div>*@
+                                        </div><!-- /.box-bottom -->
+                                    </div><!-- /.imagebox -->
+                                </div>
+                            </div>
+
+                        }
+                    </div><!-- /.row -->
+                }
+            </div><!-- /.box-product -->
+        </div><!-- /.container -->
+    </section><!-- /.flat-imagebox -->
+
+    <section class="flat-imagebox style1">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="flat-row-title">
+                        <h3>热卖图书</h3>
                     </div>
-                    <div class="price">
-                        $0.00
-                    </div>
-                </a>
-                <div class="dropdown-box">
-                    <ul>
-                        <li>
-                            <div class="img-product">
-                                <img src="~/Thame/images/product/other/img-cart-1.jpg" alt="" />
-                            </div>
-                            <div class="info-product">
-                                <div class="name">
-                                    Samsung - Galaxy S6 4G LTE <br />with 32GB Memory Cell Phone
-                                </div>
-                                <div class="price">
-                                    <span>1 x</span>
-                                    <span>$250.00</span>
-                                </div>
-                            </div>
-                            <div class="clearfix"></div>
-                            <span class="delete">x</span>
-                        </li>
-                        <li>
-                            <div class="img-product">
-                                <img src="~/Thame/images/product/other/img-cart-2.jpg" alt="" />
-                            </div>
-                            <div class="info-product">
-                                <div class="name">
-                                    Sennheiser - Over-the-Ear Headphone System - Black
-                                </div>
-                                <div class="price">
-                                    <span>1 x</span>
-                                    <span>$250.00</span>
-                                </div>
-                            </div>
-                            <div class="clearfix"></div>
-                            <span class="delete">x</span>
-                        </li>
-                    </ul>
-                    <div class="total">
-                        <span>Subtotal:</span>
-                        <span class="price">$1,999.00</span>
-                    </div>
-                    <div class="btn-cart">
-                        <a href="shop-cart.html" class="view-cart" title="">View Cart</a>
-                        <a href="shop-checkout.html" class="check-out" title="">Checkout</a>
-                    </div>
+                </div><!-- /.col-md-12 -->
+            </div><!-- /.row -->
+            <div class="row ">
+                <div class="col-md-12 owl-carousel-10">
+                    @{
+                        var bookdata = MvcCore.Unity.Get<JN.Data.Service.IBookInfoService>
+                ().List(/*x => x.BookState == 1 && x.ShowPlace == 4*/).OrderBy(x => x.IsTop).ThenByDescending(x => x.CreateTime).Take(30).ToList();
+                    }
+
+                    @for (int j = 0; j < bookdata.Count / 2; j++)
+                    {
+                        <div class="owl-carousel-item">
+                            <div class="product-box style1">
+                                <div class="imagebox style1">
+                                    <div class="box-image">
+                                        <a href="@Url.Action("BookDetail", new { id = @bookdata[j].ID })" title="" target="_blank">
+                                            <img src="~/Thame/images/product/other/s01.jpg" alt="">
+                                        </a>
+                                    </div><!-- /.box-image -->
+                                    <div class="box-content">
+                                        <div class="cat-name">
+                                            <a href="@Url.Action("BookDetail", new { id = @bookdata[j].ID })" title="@bookdata[j].Author" target="_blank">作者:@bookdata[j].Author</a>
+                                        </div>
+                                        <div class="product-name">
+                                            <a href="@Url.Action("BookDetail", new { id = @bookdata[j].ID })" title="" target="_blank">@bookdata[j].BookName<br />@bookdata[j].Version</a>
+                                        </div>
+                                        <div class="price">
+                                            <span class="regular">原价:@bookdata[j].OlaPrice.ToString("F2") 元</span>
+                                            <span class="sale">现价:@bookdata[j].CurrentPrice.ToString("F2") 元</span>
+                                        </div>
+                                    </div><!-- /.box-content -->
+                                    <div class="box-bottom">
+                                        <div class="compare-wishlist">
+                                            <a href="#" class="compare" title="">
+                                                <img src="~/Thame/images/icons/compare.png" alt="">Compare
+                                            </a>
+                                            <a href="#" class="wishlist" title="">
+                                                <img src="~/Thame/images/icons/wishlist.png" alt="">Wishlist
+                                            </a>
+                                        </div>
+                                        <div class="btn-add-cart">
+                                            <a href="#" title="">
+                                                加入购物车
+                                            </a>
+                                        </div>
+                                    </div><!-- /.box-bottom -->
+                                </div><!-- /.imagebox style1 -->
+                            </div><!-- /.product-box style1 -->
+
+                            <div class="product-box style1">
+                                <div class="imagebox style1">
+                                    <div class="box-image">
+                                        <a href="@Url.Action("BookDetail", new { id = @bookdata[j + (bookdata.Count / 2)].ID })" title="@bookdata[j + (bookdata.Count / 2)].BookName" target="_blank">
+                                            <img src="~/Thame/images/product/other/s01.jpg" alt="">
+                                        </a>
+                                    </div><!-- /.box-image -->
+                                    <div class="box-content">
+                                        <div class="cat-name">
+                                            <a href="@Url.Action("BookDetail", new { id = @bookdata[j + (bookdata.Count / 2)].ID })" title="" target="_blank">作者:@bookdata[j + (bookdata.Count / 2)].Author</a>
+                                        </div>
+                                        <div class="product-name">
+                                            <a href="@Url.Action("BookDetail", new { id = @bookdata[j + (bookdata.Count / 2)].ID })" title="@bookdata[j + (bookdata.Count / 2)].BookName" target="_blank">@bookdata[j + (bookdata.Count / 2)].BookName<br />@bookdata[j + (bookdata.Count / 2)].Version</a>
+                                        </div>
+                                        <div class="price">
+                                            <span class="regular">原价:@bookdata[j + (bookdata.Count / 2)].OlaPrice.ToString("F2") 元</span>
+                                            <span class="sale">现价:@bookdata[j + (bookdata.Count / 2)].CurrentPrice.ToString("F2") 元</span>
+                                        </div>
+                                    </div><!-- /.box-content -->
+                                    <div class="box-bottom">
+                                        <div class="compare-wishlist">
+                                            <a href="#" class="compare" title="">
+                                                <img src="~/Thame/images/icons/compare.png" alt="">Compare
+                                            </a>
+                                            <a href="#" class="wishlist" title="">
+                                                <img src="~/Thame/images/icons/wishlist.png" alt="">Wishlist
+                                            </a>
+                                        </div>
+                                        <div class="btn-add-cart">
+                                            <a href="#" title="">
+                                                加入购物车
+                                            </a>
+                                        </div>
+                                    </div><!-- /.box-bottom -->
+                                </div><!-- /.imagebox style1 -->
+                            </div><!-- /.product-box style1 -->
+                        </div><!-- /.owl-carousel-item -->
+                    }
                 </div>
-            </div><!-- /.inner-box -->
-        </div><!-- /.box-cart -->
-    </div><!-- /.col-md-3 -->
-</div><!-- /.row -->
+            </div><!-- /.row -->
+        </div><!-- /.container -->
+    </section><!-- /.flat-imagebox style1 -->
+
+    <section class="flat-imagebox style4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="flat-row-title">
+                        <h3>必看图书</h3>
+                    </div>
+                </div><!-- /.col-md-12 -->
+            </div><!-- /.row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="owl-carousel-3">
+
+                        @foreach (var item in MvcCore.Unity.Get<JN.Data.Service.IBookInfoService>
+().List(/*x => x.BookState == 1 && x.ShowPlace == 4*/).OrderBy(x => x.IsTop).ThenByDescending(x => x.CreateTime).Take(30).ToList())
+                        {
+                            <div class="imagebox style4">
+                                <div class="box-image">
+                                    <a href="@Url.Action("BookDetail", new { id = item.ID })" title="@item.BookName" target="_blank">
+                                        <img src="~/Thame/images/product/other/09.jpg" alt="">
+                                    </a>
+                                </div><!-- /.box-image -->
+                                <div class="box-content">
+                                    <div class="cat-name">
+                                        <a href="@Url.Action("BookDetail", new { id = item.ID })" title="@item.Author">作者:@item.Author</a>
+                                    </div>
+                                    <div class="product-name">
+                                        <a href="@Url.Action("BookDetail", new { id = item.ID })" title="@item.BookName" target="_blank">@item.BookName<br />@item.Version</a>
+                                    </div>
+                                    <div class="price">
+                                        <span class="sale">现价:@item.CurrentPrice.ToString("F2") 元</span>
+                                        <span class="regular">@item.OlaPrice.ToString("F2")元</span>
+                                    </div>
+                                </div><!-- /.box-content -->
+                            </div><!-- /.imagebox style4 -->
+                        }
+
+                    </div><!-- /.owl-carousel-3 -->
+                </div><!-- /.col-md-12 -->
+            </div><!-- /.row -->
+        </div><!-- /.container -->
+    </section><!-- /.flat-imagebox style4 -->
+
+    <section class="flat-highlights">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="flat-row-title">
+                        <h3>月排行</h3>
+                    </div>
+                    <ul class="product-list style1">
+                        @foreach (var item in MvcCore.Unity.Get<JN.Data.Service.IBookInfoService>
+().List(/*x => x.BookState == 1 && x.ShowPlace == 4*/).OrderBy(x => x.IsTop).ThenByDescending(x => x.CreateTime).Take(3).ToList())
+                        {
+                            <li>
+                                <div class="img-product">
+                                    <a href="@Url.Action("BookDetail", new { id = item.ID })" title="@item.BookName" target="_blank">
+                                        <img src="~/Thame/images/product/highlights/10.jpg" alt="@item.BookName">
+                                    </a>
+                                </div>
+                                <div class="info-product">
+                                    <div class="name">
+                                        <a href="@Url.Action("BookDetail", new { id = item.ID })" title="@item.BookName" target="_blank">@item.BookName (@item.Version)</a>
+                                    </div>
+                                    <div class="queue">
+                                        <p>作者:@item.Author</p>
+                                        <p>出版社:@item.Publisher</p>
+                                    </div>
+                                    <div class="price">
+                                        <span class="sale">现价:@item.CurrentPrice.ToString("F2") 元</span>
+                                        <span class="regular">@item.OlaPrice.ToString("F2")元</span>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </li>
+                        }
+
+                    </ul><!-- /.product-list style1 -->
+                </div><!-- /.col-md-4 -->
+                <div class="col-md-4">
+                    <div class="flat-row-title">
+                        <h3>周排行</h3>
+                    </div>
+                    <ul class="product-list style1">
+                        @foreach (var item in MvcCore.Unity.Get<JN.Data.Service.IBookInfoService>
+().List(/*x => x.BookState == 1 && x.ShowPlace == 4*/).OrderBy(x => x.IsTop).ThenByDescending(x => x.CreateTime).Take(3).ToList())
+                        {
+                            <li>
+                                <div class="img-product">
+                                    <a href="@Url.Action("BookDetail", new { id = item.ID })" title="@item.BookName" target="_blank">
+                                        <img src="~/Thame/images/product/highlights/3.jpg" alt="@item.BookName">
+                                    </a>
+                                </div>
+                                <div class="info-product">
+                                    <div class="name">
+                                        <a href="@Url.Action("BookDetail", new { id = item.ID })" title="@item.BookName" target="_blank">@item.BookName (@item.Version)</a>
+                                    </div>
+                                    <div class="queue">
+                                        <p>作者:@item.Author</p>
+                                        <p>出版社:@item.Publisher</p>
+                                    </div>
+                                    <div class="price">
+                                        <span class="sale">现价:@item.CurrentPrice.ToString("F2") 元</span>
+                                        <span class="regular">@item.OlaPrice.ToString("F2")元</span>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </li>
+                        }
+                    </ul>
+                </div><!-- /.col-md-4 -->
+                <div class="col-md-4">
+                    <div class="flat-row-title">
+                        <h3>日排行</h3>
+                    </div>
+                    <ul class="product-list style1">
+                        @foreach (var item in MvcCore.Unity.Get<JN.Data.Service.IBookInfoService>
+().List(/*x => x.BookState == 1 && x.ShowPlace == 4*/).OrderBy(x => x.IsTop).ThenByDescending(x => x.CreateTime).Take(3).ToList())
+                        {
+                            <li>
+                                <div class="img-product">
+                                    <a href="@Url.Action("BookDetail", new { id = item.ID })" title="@item.BookName" target="_blank">
+                                        <img src="~/Thame/images/product/highlights/11.jpg" alt="@item.BookName">
+                                    </a>
+                                </div>
+                                <div class="info-product">
+                                    <div class="name">
+                                        <a href="@Url.Action("BookDetail", new { id = item.ID })" title="@item.BookName" target="_blank">@item.BookName (@item.Version)</a>
+                                    </div>
+                                    <div class="queue">
+                                        <p>作者:@item.Author</p>
+                                        <p>出版社:@item.Publisher</p>
+                                    </div>
+                                    <div class="price">
+                                        <span class="sale">现价:@item.CurrentPrice.ToString("F2") 元</span>
+                                        <span class="regular">@item.OlaPrice.ToString("F2")元</span>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </li>
+                        }
+                    </ul>
+                </div><!-- /.col-md-4 -->
+            </div><!-- /.row -->
+        </div><!-- /.container -->
+    </section><!-- /.flat-highlights -->
+</div>
