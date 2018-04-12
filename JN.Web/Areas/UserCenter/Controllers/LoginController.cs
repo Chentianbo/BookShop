@@ -52,17 +52,18 @@ namespace JN.Web.Areas.UserCenter.Controllers
         {
             string username = fc["username"];
             string password = fc["password"];
-            string lang = fc["lang"];
-            string code = fc["code"];
+            //string lang = fc["lang"];
+            //string code = fc["code"];
             string oldurl = Request["oldUrl"];
-            string vcode = (Session["UserValidateCode"] ?? "").ToString();
-            Session.Remove("UserValidateCode");
+            string remember = fc["remember"];
+            //string vcode = (Session["UserValidateCode"] ?? "").ToString();
+            //Session.Remove("UserValidateCode");
 
             ReturnResult result = new ReturnResult();
             try
             {
-                if (string.IsNullOrEmpty(vcode) || string.IsNullOrEmpty(code) || !vcode.Equals(code, StringComparison.InvariantCultureIgnoreCase))
-                    throw new Exception("验证码错误");
+                //if (string.IsNullOrEmpty(vcode) || string.IsNullOrEmpty(code) || !vcode.Equals(code, StringComparison.InvariantCultureIgnoreCase))
+                //    throw new Exception("验证码错误");
 
                 if (string.IsNullOrEmpty(username) | string.IsNullOrEmpty(password)) throw new Exception("用户名或密码不能为空");
                                 
@@ -72,6 +73,7 @@ namespace JN.Web.Areas.UserCenter.Controllers
                 {
                     if (entity.AccountState==(int)AccountState.Lock) throw new Exception("您的帐号已被冻结,请联系管理员!");
                     if (entity.AccountState == (int)AccountState.UnActivation) throw new Exception("你的账号未激活！");
+                    if (entity.AccountState == (int)AccountState.Exceptiona) throw new Exception("你的账号存在异常！");
                     var log = new ActLog();
                     log.ActContent = "用户“" + username + "”登录成功！";
                     log.CreateTime = DateTime.Now;
@@ -88,14 +90,14 @@ namespace JN.Web.Areas.UserCenter.Controllers
                     result.Status = 200;
                     if (entity.AccountState == (int)AccountState.Normal)
                         //result.Message = oldurl ?? "/UserCenter/Home?lang=" + lang;
-                        result.Message = oldurl ?? "/UserCenter/Shop?lang=" + lang;
+                        result.Message = oldurl ?? "/UserCenter/Shopping";
                     else
-                        result.Message = oldurl ?? "/UserCenter/User/doPass";
+                        throw new Exception("你的账号存在异常！");
 
                     //如果勾选记住密码，则保存密码一个星期
                     DateTime expiration = DateTime.Now.AddMinutes(20);
-                    //if (rp == "1")
-                    //    expiration = DateTime.Now.AddDays(7);
+                    if (remember == "1")
+                        expiration = DateTime.Now.AddDays(7);
 
                     // 设置Ticket信息
                     FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
@@ -163,7 +165,7 @@ namespace JN.Web.Areas.UserCenter.Controllers
 
                     result.Status = 200;
                     if (entity.AccountState == (int)AccountState.Normal)
-                        Response.Redirect("/UserCenter/Shop");//
+                        Response.Redirect("/UserCenter/Shopping");//
                     else
                         throw new Exception("你的账号存在异常！");
 

@@ -36,60 +36,14 @@ namespace JN.Web.Areas.UserCenter.Controllers
             this.LogDBTool = LogDBTool;
         }
 
+
         public ActionResult Index()
         {
             ActMessage = "商城首页";
             return View();
         }
 
-        public ActionResult Product(int? page, string c)
-        {
-            ActMessage = "所有商品";
-            var list = new List<BookInfo>();
-            if (string.IsNullOrEmpty(c))
-            {
-                list = BookInfoService.List(x => x.BookState==0).WhereDynamic(FormatQueryString(HttpUtility.ParseQueryString(Request.Url.Query))).OrderByDescending(x => x.CreateTime).ToList();
-            }
-            else
-            {
-                list = BookInfoService.List(x => x.BookState == 0 && x.BookCategoryId == c).WhereDynamic(FormatQueryString(HttpUtility.ParseQueryString(Request.Url.Query))).OrderByDescending(x => x.ID).ToList();
-            }
-
-            return View(list.ToPagedList(page ?? 1, 20));
-        }
-
-        public ActionResult ShopList(int? page)
-        {
-            ActMessage = "营业中的店铺";
-            var list = BookInfoService.List(x=> x.BookState == 0).OrderByDescending(x => x.CreateTime).ToList();
-            return View(list.ToPagedList(page ?? 1, 20));
-        }
-
-        public ActionResult Detail(int id)
-        {
-            ActMessage = "商品详情";
-            var entity = BookInfoService.Single(id);
-            if (entity != null)
-                return View(entity);
-            else
-            {
-                ViewBag.ErrorMsg = "记录不存在或已被删除";
-                return View("Error");
-            }
-        }
-
-        public ActionResult ShopDetail(int id)
-        {
-            ActMessage = "店铺详情";
-            var entity = BookInfoService.Single(id);
-            if (entity != null)
-                return View(entity);
-            else
-            {
-                ViewBag.ErrorMsg = "记录不存在或已被删除";
-                return View("Error");
-            }
-        }
+       
 
 
         [HttpPost]

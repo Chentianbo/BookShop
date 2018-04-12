@@ -114,8 +114,8 @@ namespace JN.Data
         /// 
         /// </summary>  
 				[DisplayName("TotalPrice")]
-		        [MaxLength(10,ErrorMessage="最大长度为10")]
-		public string  TotalPrice { get; set; }
+        [Filters.DecimalPrecision(18, 2)]
+        public decimal? TotalPrice { get; set; }
 		      
        
          

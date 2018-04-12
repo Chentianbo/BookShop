@@ -1166,6 +1166,7 @@
         goTop();
         popup();
         removePreloader();
+
     });
 
 })(jQuery);

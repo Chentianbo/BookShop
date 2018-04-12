@@ -1,8 +1,15 @@
 ﻿@model JN.Data.BookInfo
 @{
     string action = ViewContext.RouteData.Values["action"].ToString().ToLower();
-    Layout = "~/Areas/UserCenter/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "图书明细";
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Layout = "~/Areas/UserCenter/Views/Shared/_NoLoginLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Areas/UserCenter/Views/Shared/_Layout.cshtml";
+    }
+    ViewBag.Title = "图书详细";
 }
 <section class="flat-breadcrumb">
     <div class="container">

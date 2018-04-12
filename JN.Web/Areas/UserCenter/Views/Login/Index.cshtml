@@ -1,99 +1,66 @@
 ﻿@{
-    Layout = null;
-    var sysEntity = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);
+    Layout = "~/Areas/UserCenter/Views/Shared/_LoginLayout.cshtml";
 }
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
-    <title>@(sysEntity.SysName)</title>
-    <link href="Content/login.css" rel="stylesheet" type="text/css" />
-    <link rel=stylesheet type=text/css href="/Theme/Public/css/login20.css">
-
-
-
-</head>
-<body>
-    <form action="/user/login/logins" method="post" id="frmLogin">
-        <div id="login_layout">
-            <img src="@sysEntity.LogoImage" />
-            <div class="login_01">
-                <ul>
-
-                    <li>
-                        <span>账号</span>
-                        <input value="" name="username" id="username" type="text" maxlength="20" class="input_0 ipt_text ipt_style" />
-                    </li>
-                    <li>
-                        <span>密码</span>
-                        <input value="" name="password" id="password" type="password" maxlength="20" class="input_0 ipt_text ipt_style" />
-                    </li>
-                    <li>
-                        <span>验证码</span>
-                        <input value="" name="code" id="user_ck" type="text" check="Require" warning="请输入验证码" maxlength="6" class="input_0  ipt_text" style="width: 140px; float: left;" />
-                        <input type="hidden" name="ajax" value="1" />
-                        <img id="imgCode" src="/UserCenter/Login/GetCodeImage?id=1" onclick="ChangeCheckCode();return false;" border="0" alt="点击刷新验证码" style="cursor: pointer; float: left; margin: 20px; " align="absmiddle" width="150" />
-                        <!--<img id="verifyImg" src="Public/yam.png" width="90" onClick="freshVerify()" border="0" alt="点击刷新验证码" style="cursor:pointer;" align="absmiddle" />-->
-                    </li>
-                    <li>
-                        <input type="button" name="" value="" class="btn_0" id="btnlogin" />
-
-                    </li>
-                </ul>
-                <div class="for_m">
-
-                    <a class="forget" href="/UserCenter/Login/GetPwd" target="_blank">忘记密码?</a>
-                </div>
+<section class="flat-account background">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
             </div>
-
-
-
-            <div class="error"><span id="result"></span></div>
-
-        </div>
-    </form>
-
-    <script type="text/javascript" src="/theme/mmm/js/roud.js"></script>
-    <script type="text/javascript" src="/theme/mmm/js/roud1.js"></script>
-
-
-
-    <!-- Vendor scripts -->
-
-    <script type="text/javascript" async="" src="/theme/mmm/js/_Incapsula_Resource"></script>
-
-
-
-    <script src="/theme/mmm/js/jquery-ui.min.js"></script>
-
-    <script src="/theme/mmm/js/jquery.slimscroll.min.js"></script>
-
-    <script src="/theme/mmm/js/bootstrap.min.js"></script>
-
-    <script src="/theme/mmm/js/metisMenu.min.js"></script>
-
-    <script src="/theme/mmm/js/icheck.min.js"></script>
-
-    <script src="/theme/mmm/js/index.js"></script>
-
-    <script src="/theme/mmm/js/toastr.min.js"></script>
-
-    <script src="/theme/mmm/js/alert.js"></script>
-    <!-- App scripts -->
-
-    <script src="/theme/mmm/js/homer.js"></script>
-
-    <script src="~/js/jquery.form.js"></script>
-    <script type="text/javascript">
-        function ChangeCheckCode() {
-            var oldUrl = $('#imgCode').attr("src");
-            $('#imgCode').attr("src", oldUrl + '1');
-        }
-
+            <div class="col-md-6">
+                <div class="form-login">
+                    <div class="title">
+                        <h3>用户登录</h3>
+                    </div>
+                    <form id="form-login">
+                        <div class="form-box">
+                            <label for="name-login">账号 * <span id="umsg" style="color:red"></span></label>
+                            <input type="text" id="name-login" name="username" placeholder="账号" />
+                        </div><!-- /.form-box -->
+                        <div class="form-box">
+                            <label for="password-login">密码 * <span id="pmsg" style="color:red"></span> </label>
+                            <input type="password" id="password" name="password" placeholder="密码" />
+                        </div><!-- /.form-box -->
+                        <div class="form-box checkbox">
+                            <input type="checkbox" id="remember" checked="checked" name="remember" value="1" />
+                            <label for="remember">记住密码</label>
+                        </div><!-- /.form-box -->
+                        <div class="form-box">
+                            <button id="frmLogin" class="login">登录</button>
+                            <a href="#" title="">忘记密码?</a>
+                            |
+                            <a href="@Url.Action("index","reg")" title="">没有账号?</a>
+                        </div><!-- /.form-box -->
+                    </form><!-- /#form-login -->
+                </div><!-- /.form-login -->
+            </div><!-- /.col-md-6 -->
+        </div><!-- /.row -->
+    </div><!-- /.container -->
+</section><!-- /.flat-account -->
+<script src="~/js/jquery.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/js/jquery.form.js"></script>
+<script type="text/javascript">
+        //function ChangeCheckCode() {
+        //    var oldUrl = $('#imgCode').attr("src");
+        //    $('#imgCode').attr("src", oldUrl + '1');
+        //}
         jQuery(function ($) {
-            $("#btnlogin").click(function () {
-                $("#frmLogin").ajaxSubmit({
+            $("#frmLogin").click(function () {
+               
+                var username = $("input[name='username']").val();
+                if (username == "") {
+                    $("#umsg").text("请输入账号");
+                    $("input[name='username']").focus();
+                    return false;
+                }
+                var pwd = $("input[name='password']").val();
+                if (pwd == "") {
+                    $("#pmsg").text("请输入密码");
+                    $("input[name='password']").focus();
+                    return false;
+                }
+
+                $("#form-login").ajaxForm({
                     url: "@Url.Action("Index")",
                     type: "post",
                 success: function (data) {
@@ -101,37 +68,24 @@
                         alert("登录成功，即将为您跳转！");
                         location.href = data.Message;
                     } else {
-                        alert("登录失败：" + data.Message);
-                        ChangeCheckCode();
+                        $("#umsg").text(data.Message);
                     }
                 },
                 error: function (error) {
-                    alert(error);
+                    alert("登录失败：" + data.Message);
                 }
             });
-        });
-        });
+            });
 
-    </script>
-
-    <!-- 市场购买实况 scripts -->
-    <script src="~/Scripts/jquery.js"></script>
-    <script src="~/Scripts/scroll.js"></script>
-    <script type="text/javascript">
-        //$(document).ready(function () {
-        //    $('.list_lh li:even').addClass('lieven');
-        //})
-        $(function () {
-            $("div.list_lh").myScroll({
-                speed: 40, //数值越大，速度越慢
-                rowHeight: 100 //li的高度
+            $("input[name='username']").click(function () {
+                $("#umsg").text("");
+                $("#pmsg").text("");
+            });
+            $("input[name='passwor']").click(function () {
+                $("#pmsg").text("");
+                $("#umsg").text("");
             });
         });
 
-    </script>
 
-
-
-</body>
-
-</html>
+</script>

@@ -28,6 +28,8 @@
     <!-- Reponsive -->
     <link href="~/Thame/stylesheets/responsive.css" rel="stylesheet" />
 
+    <link href="~/Plugin/sweetalert/sweetalert.css" rel="stylesheet" />
+    <script src="~/Plugin/sweetalert/sweetalert.min.js"></script>
 </head>
 <body class="header_sticky">
     <div class="boxed">
@@ -48,7 +50,7 @@
                                 <h2>用户登录</h2>
                                 <br /><p style="color:red" id="msg"></p>
                                 <div class="form-popup">
-                                    <form action="/UserCenter/Login/UserLogin" id="UserLogin" class="subscribe-form" method="post" accept-charset="utf-8" onsubmit="return BeforePost()">
+                                    <form id="UserLogin" class="subscribe-form">
                                         <div class="subscribe-content">
                                             <input type="text" name="username" class="subscribe-email" placeholder="请输入你的账号">
                                         </div>
@@ -57,9 +59,9 @@
                                             <input type="password" name="password" class="subscribe-email" placeholder="请输入你的密码">
                                         </div>
                                         <div class="checkbox">
-                                            <input type="checkbox" id="popup-not-show" name="rp" value="1">
+                                            <input type="checkbox" id="popup-not-show" name="remember" value="1">
                                             <label for="popup-not-show">记住密码</label>
-                                        </div><button type="submit" style="background-color:#ff6a00">登   录</button>
+                                        </div><button id="frmLogin" style="background-color:#ff6a00">登   录</button>
                                     </form><!-- /.subscribe-form -->
                                 </div>
                             </div><!-- /.form-popup -->
@@ -95,7 +97,7 @@
                         <div class="col-md-4">
                             <ul class="flat-unstyled">
                                 <li class="account">
-                                    欢迎光临! 请点击<a href="javascript:ShowLogin()" title="用户登录" style="color:#ff6a00">登录</a>
+                                    欢迎光临!<a href="javascript:ShowLogin()" title="用户登录" style="color:#ff6a00">登录</a> |<a href="@Url.Action("Index", "reg")" title="用户注册" style="color:#ff6a00">注册</a>
                                 </li>
                             </ul><!-- /.flat-unstyled -->
                         </div><!-- /.col-md-4 -->
@@ -147,66 +149,25 @@
                                                 </a>
                                             </li>*@
                                         <li class="wishlist">
-                                            <a href="wishlist.html" title="">
+                                            <a href="javascript:alert('请先登录')" title="">
                                                 <img src="~/Thame/images/icons/wishlist.png" alt="" />
                                             </a>
                                         </li>
                                     </ul>
                                 </div>
                                 <div class="inner-box">
-                                    <a href="#" title="">
+                                    <a href="javascript:alert('请先登录')" title="">
                                         <div class="icon-cart">
                                             <img src="~/Thame/images/icons/cart.png" alt="" />
-                                            <span>4</span>
+                                            @*<span>4</span>*@
                                         </div>
                                         <div class="price">
-                                            $0.00
+                                            0.00
                                         </div>
                                     </a>
-                                    <div class="dropdown-box">
-                                        <ul>
-                                            <li>
-                                                <div class="img-product">
-                                                    <img src="~/Thame/images/product/other/img-cart-1.jpg" alt="" />
-                                                </div>
-                                                <div class="info-product">
-                                                    <div class="name">
-                                                        Samsung - Galaxy S6 4G LTE <br />with 32GB Memory Cell Phone
-                                                    </div>
-                                                    <div class="price">
-                                                        <span>1 x</span>
-                                                        <span>$250.00</span>
-                                                    </div>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                                <span class="delete">x</span>
-                                            </li>
-                                            <li>
-                                                <div class="img-product">
-                                                    <img src="~/Thame/images/product/other/img-cart-2.jpg" alt="" />
-                                                </div>
-                                                <div class="info-product">
-                                                    <div class="name">
-                                                        Sennheiser - Over-the-Ear Headphone System - Black
-                                                    </div>
-                                                    <div class="price">
-                                                        <span>1 x</span>
-                                                        <span>$250.00</span>
-                                                    </div>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                                <span class="delete">x</span>
-                                            </li>
-                                        </ul>
-                                        <div class="total">
-                                            <span>Subtotal:</span>
-                                            <span class="price">$1,999.00</span>
-                                        </div>
-                                        <div class="btn-cart">
-                                            <a href="shop-cart.html" class="view-cart" title="">View Cart</a>
-                                            <a href="shop-checkout.html" class="check-out" title="">Checkout</a>
-                                        </div>
-                                    </div>
+                                    @*<div class="dropdown-box">
+                                            <a href="javascript:ShowLogin()"><span style="color:red;font-size:20px;">请先登录</span></a>
+                                        </div>*@
                                 </div><!-- /.inner-box -->
                             </div><!-- /.box-cart -->
                         </div><!-- /.col-md-3 -->
@@ -399,37 +360,79 @@
     <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
     <script src="~/js/jquery.form.js"></script>
     <script>
-        $(document).ready(function () {
-            $("#UserLogin").ajaxForm(function (data) {
-                if (data.Status == 200) {
-                    $("#msg").text(data.Message);
+        //$(document).ready(function () {
+        //    $("#UserLogin").ajaxForm(function (data) {
+        //        if (data.Status == 200) {
+        //            $("#msg").text(data.Message);
+        //        }
+        //        else {
+        //            $("#msg").text(data.Message);
+        //        }
+        //    });
+        //    $("input[name='username']").click(function () {
+        //        $("#msg").text("");
+        //    });
+        //    $("input[name='passwor']").click(function () {
+        //        $("#msg").text("");
+        //    });
+        //});
+        ////提交登录之前
+        //function BeforePost() {
+        //    var username = $("input[name='username']").val();
+        //    if (username == "") {
+        //        $("#msg").text("请输入账号");
+        //        $("input[name='username']").focus();
+        //        return false;
+        //    }
+        //    var pwd = $("input[name='password']").val();
+        //    if (pwd == "") {
+        //        $("#msg").text("请输入密码");
+        //        $("input[name='password']").focus();
+        //        return false;
+        //    }
+        //}
+
+         jQuery(function ($) {
+             $("#frmLogin").click(function () {
+                var username = $("input[name='username']").val();
+                if (username == "") {
+                    $("#msg").text("请输入账号");
+                    $("input[name='username']").focus();
+                    return false;
                 }
-                else {
+                var pwd = $("input[name='password']").val();
+                if (pwd == "") {
+                    $("#pmsg").text("请输入密码");
+                    $("input[name='password']").focus();
+                    return false;
+                }
+
+                $("#UserLogin").ajaxForm({
+                    url: "@Url.Action("Index","Login")",
+                    type: "post",
+                success: function (data) {
+                    if (data.Status == 200) {
+                        alert("登录成功，即将为您跳转！");
+                        location.href = data.Message;
+                    } else {
+                        $("#msg").text(data.Message);
+                        $("input[name='username']").focus();
+                    }
+                },
+                error: function (error) {
                     $("#msg").text(data.Message);
                 }
             });
+            });
+
             $("input[name='username']").click(function () {
                 $("#msg").text("");
+
             });
-            $("input[name='passwor']").click(function () {
+            $("input[name='password']").click(function () {
                 $("#msg").text("");
             });
         });
-        //提交登录之前
-        function BeforePost() {
-            var username = $("input[name='username']").val();
-            if (username == "") {
-                $("#msg").text("请输入账号");
-                $("input[name='username']").focus();
-                return false;
-            }
-            var pwd = $("input[name='password']").val();
-            if (pwd == "") {
-                $("#msg").text("请输入密码");
-                $("input[name='password']").focus();
-                return false;
-            }
-        }
 
         //显示登录
         function ShowLogin() {
@@ -455,11 +458,6 @@
     <script type="text/javascript" src="~/Thame/javascript/waves.min.js"></script>
     <script type="text/javascript" src="~/Thame/javascript/jquery.countdown.js"></script>
     <script type="text/javascript" src="~/Thame/javascript/main.js"></script>
-    <script>
-        $(document).ready(function () {
-            $(".popup-newsletter").css("display", "none");
-            $(".overlay").css("display", "none");
-    </script>
 
 </body>
 </html>

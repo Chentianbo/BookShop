@@ -13,6 +13,10 @@
         Response.Redirect(Url.Action("Index", "Shopping"));
     }
     var BookCategoryData = MvcCore.Unity.Get<JN.Data.Service.IBookCategoryService>().List().OrderBy(x => x.Sort).ThenByDescending(x => x.CreateTime).ToList();
+    //用户购物车
+    var shopCarData = MvcCore.Unity.Get<JN.Data.Service.IShopCarService>().List(x => x.UID == Umodel.ID).OrderByDescending(x => x.CreateTime).ToList();
+
+    var shopCarTotal = shopCarData.Sum(x=>x.TotalPrice);
 }
 <!DOCTYPE html>
 <!--[if IE 8 ]><html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"> <![endif]-->
@@ -37,6 +41,10 @@
     <!-- Reponsive -->
     <link href="~/Thame/stylesheets/responsive.css" rel="stylesheet" />
 
+    <!-- sweetalert -->
+    <link href="~/Plugin/sweetalert/sweetalert.css" rel="stylesheet" />
+    <script src="~/Plugin/sweetalert/sweetalert.min.js"></script>
+
 </head>
 <body class="header_sticky">
     <div class="boxed">
@@ -47,42 +55,6 @@
                 <span></span>
             </div>
         </div><!-- /.preloader -->
-        @*<div class="popup-newsletter">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-2">
-
-                        </div>
-                        <div class="col-sm-8">
-                            <div class="popup">
-                                <span></span>
-                                <div class="popup-text">
-                                    <h2>Join our newsletter and <br />get discount!</h2>
-                                    <p class="subscribe">Subscribe to the newsletter to receive updates about new products.</p>
-                                    <div class="form-popup">
-                                        <form action="#" class="subscribe-form" method="get" accept-charset="utf-8">
-                                            <div class="subscribe-content">
-                                                <input type="text" name="email" class="subscribe-email" placeholder="请输入你的账号">
-                                                <button type="submit"><img src="~/Thame/images/icons/right-2.png" alt=""></button>
-                                            </div>
-                                        </form><!-- /.subscribe-form -->
-                                        <div class="checkbox">
-                                            <input type="checkbox" id="popup-not-show" name="category">
-                                            <label for="popup-not-show">Don't show this popup again</label>
-                                        </div>
-                                    </div><!-- /.form-popup -->
-                                </div><!-- /.popup-text -->
-                                <div class="popup-image">
-                                    <img src="~/Thame/images/banner_boxes/popup.png" alt="">
-                                </div><!-- /.popup-text -->
-                            </div><!-- /.popup -->
-                        </div><!-- /.col-sm-8 -->
-                        <div class="col-sm-2">
-
-                        </div>
-                    </div><!-- /.row -->
-                </div><!-- /.container -->
-            </div><!-- /.popup-newsletter -->*@
         <section id="header" class="header">
             <div class="header-top">
                 <div class="container">
@@ -110,7 +82,7 @@
                         <div class="col-md-4">
                             <ul class="flat-unstyled">
                                 <li class="account">
-                                    <a href="#" title="">欢迎你 @Umodel.UserName<i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                                    <a href="#" title="">@Umodel.UserName<i class="fa fa-angle-down" aria-hidden="true"></i></a>
                                     <ul class="unstyled">
                                         <li>
                                             <a href="#" title="">我的图书</a>
@@ -125,21 +97,10 @@
                                             <a href="my-account.html" title="">我的账户</a>
                                         </li>
                                         <li>
-                                            <a href="shop-checkout.html" title="">退出登录</a>
+                                            <a href="@Url.Action("Logout","home")" title="">退出登录</a>
                                         </li>
                                     </ul><!-- /.unstyled -->
                                 </li>
-                                @*<li>
-                                        <a href="#" title="">USD<i class="fa fa-angle-down" aria-hidden="true"></i></a>
-                                        <ul class="unstyled">
-                                            <li>
-                                                <a href="#" title="">Euro</a>
-                                            </li>
-                                            <li>
-                                                <a href="#" title="">Dolar</a>
-                                            </li>
-                                        </ul>
-                                    </li>*@
                             </ul><!-- /.flat-unstyled -->
                         </div><!-- /.col-md-4 -->
                     </div><!-- /.row -->
@@ -200,31 +161,36 @@
                                     <a href="#" title="">
                                         <div class="icon-cart">
                                             <img src="~/Thame/images/icons/cart.png" alt="" />
-                                            <span>4</span>
+                                            <span>@shopCarData.Count()</span>
                                         </div>
                                         <div class="price">
-                                            $0.00
+                                            @shopCarTotal
                                         </div>
                                     </a>
                                     <div class="dropdown-box">
                                         <ul>
+                                            @foreach (var item in shopCarData as List<JN.Data.ShopCar>)
+                                        {
+                                           var bookinfo= MvcCore.Unity.Get<JN.Data.Service.BookInfoService>().Single(x => x.ID == item.BookID&&x.BookState==1);
                                             <li>
                                                 <div class="img-product">
-                                                    <img src="~/Thame/images/product/other/img-cart-1.jpg" alt="" />
+                                                    <img src="@bookinfo.ImageUrl" alt="" />
                                                 </div>
                                                 <div class="info-product">
                                                     <div class="name">
-                                                        Samsung - Galaxy S6 4G LTE <br />with 32GB Memory Cell Phone
+                                                        @bookinfo.BookName <br />作者:@bookinfo.Author
                                                     </div>
                                                     <div class="price">
-                                                        <span>1 x</span>
-                                                        <span>$250.00</span>
+                                                        <span>@item.Amount x</span>
+                                                        <span>@bookinfo.CurrentPrice.ToString("F2")</span>
                                                     </div>
                                                 </div>
                                                 <div class="clearfix"></div>
                                                 <span class="delete">x</span>
                                             </li>
-                                            <li>
+                                            }
+
+                                            @*<li>
                                                 <div class="img-product">
                                                     <img src="~/Thame/images/product/other/img-cart-2.jpg" alt="" />
                                                 </div>
@@ -239,15 +205,15 @@
                                                 </div>
                                                 <div class="clearfix"></div>
                                                 <span class="delete">x</span>
-                                            </li>
+                                            </li>*@
                                         </ul>
                                         <div class="total">
-                                            <span>Subtotal:</span>
-                                            <span class="price">$1,999.00</span>
+                                            <span>总计:</span>
+                                            <span class="price">@shopCarTotal 元</span>
                                         </div>
                                         <div class="btn-cart">
-                                            <a href="shop-cart.html" class="view-cart" title="">View Cart</a>
-                                            <a href="shop-checkout.html" class="check-out" title="">Checkout</a>
+                                            <a href="shop-cart.html" class="view-cart" title="">查看购物车</a>
+                                            <a href="@Url.Action("Logout","home")" class="check-out" title="">退出登录</a>
                                         </div>
                                     </div>
                                 </div><!-- /.inner-box -->
@@ -275,7 +241,7 @@
                                                 </span>
                                             </a>
                                             <div class="drop-menu" style="width:400px;">
-                                                <div class="one-third" >
+                                                <div class="one-third">
                                                     <div class="cat-title">
                                                         @item.Name
                                                     </div>
@@ -307,6 +273,9 @@
                                         </li><!-- /.column-1 -->
                                         <li class="column-1">
                                             <a href="#" title="">发布图书</a>
+                                        </li><!-- /.column-1 -->
+                                        <li class="column-1">
+                                            <a href="#" title="">我的发布</a>
                                         </li><!-- /.column-1 -->
                                         <li class="column-1">
                                             <a href="#" title="">公告</a>
