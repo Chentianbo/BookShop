@@ -1,0 +1,101 @@
+﻿@model List<JN.Data.ShopCar>
+@{
+    ViewBag.Title = "我的购物车";
+    Layout = "~/Areas/UserCenter/Views/Shared/_Layout.cshtml";
+}
+
+<section class="flat-shop-cart">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="flat-row-title style1">
+                    <h3>购物车</h3>
+                </div>
+                <div class="table-cart">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>图书名称</th>
+                                <th>数量</th>
+                                <th>总计</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                var book = MvcCore.Unity.Get<JN.Data.Service.IBookInfoService>().Single(item.BookID);
+                                <tr>
+                                    <td>
+                                        <div class="img-product">
+                                            <img src="@book.ImageUrl" alt="@book.BookName">
+                                        </div>
+                                        <div class="name-product">
+                                            @book.BookName<br /> @book.Author
+                                        </div>
+                                        <div class="price">
+                                            @book.CurrentPrice.ToString("F2") 元
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </td>
+                                    <td>
+                                        <div class="quanlity">
+                                            <span class="btn-down"></span>
+                                            <input type="text" name="number" value="@item.Amount" min="1" max="@book.BookCount"  placeholder="Quanlity">
+                                            <span class="btn-up"></span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="total">
+                                            @item.TotalPrice 元
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a href="#" title="">
+                                            <img src="images/icons/delete.png" alt="">
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="form-coupon">
+                        <form action="#" method="get" accept-charset="utf-8">
+                            <div class="coupon-input">
+                                <input type="text" name="coupon code" placeholder="Coupon Code">
+                                <button type="submit">Apply Coupon</button>
+                            </div>
+                        </form>
+                    </div><!-- /.form-coupon -->
+                </div><!-- /.table-cart -->
+            </div><!-- /.col-lg-8 -->
+            <div class="col-lg-4">
+                <div class="cart-totals">
+                    <h3>Cart Totals</h3>
+                    <form action="#" method="get" accept-charset="utf-8">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>数量</td>
+                                    <td class="subtotal">@Model.Count</td>
+                                </tr>
+                                <tr>
+                                    <td>运费</td>
+                                    <td class="subtotal">0</td>
+                                </tr>
+                                <tr>
+                                    <td>总计</td>
+                                    <td class="price-total">@Model.Sum(x=>x.TotalPrice)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="btn-cart-totals">
+                            <a href="#" class="update" title="">更新购物车</a>
+                            <a href="#" class="checkout" title="">结算</a>
+                        </div><!-- /.btn-cart-totals -->
+                    </form><!-- /form -->
+                </div><!-- /.cart-totals -->
+            </div><!-- /.col-lg-4 -->
+        </div><!-- /.row -->
+    </div><!-- /.container -->
+</section><!-- /.flat-shop-cart -->

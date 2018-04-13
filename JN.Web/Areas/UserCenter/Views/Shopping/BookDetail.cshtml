@@ -106,13 +106,13 @@
                                 </div>*@
                             <div class="quanlity">
                                 <span class="btn-down"></span>
-                                <input type="text" name="number" value="1" min="1" max="@Model.BookCount" placeholder="购买数量">
+                                <input type="text" name="number" value="1" min="1" max="@Model.BookCount" id="number" placeholder="购买数量">
                                 <span class="btn-up"></span>
                             </div>
                         </div><!-- /.quanlity-box -->
                         <div class="box-cart style2">
                             <div class="btn-add-cart">
-                                <a href="#" title=""><img src="images/icons/add-cart.png" alt="">加入购物车</a>
+                                <a href="javascript:addCar('@Model.ID')" title="加入购物车"><img src="images/icons/add-cart.png" alt="">加入购物车</a>
                             </div>
                         </div><!-- /.box-cart -->
                     </div><!-- /.footer-detail -->
@@ -386,6 +386,21 @@
 </section><!-- /.flat-product-content -->
 <script src="~/js/jquery-1.10.2.min.js"></script>
 <script type="text/javascript">
+    function addCar(id) {
+        var count = $("#number").val();
+        if (count == 0 || count == "0" || count == "") {
+            swal({
+                title: "温馨提示",
+                text: '请选择正确的数量',
+                type: "success",
+                showCancelButton: false,
+                confirmButtonText: "确定",
+                closeOnConfirm: true
+            });
+            return false;
+        }
+        AddShopCar(id, count);
+    }
     $(document).ready(function () {
     var max=parseInt(@Model.BookCount);
          $(".btn-up").on("click", function () {

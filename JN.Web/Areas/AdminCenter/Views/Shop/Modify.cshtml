@@ -323,7 +323,13 @@
               alert("请输入运费");
                $("input[name='FreightPrice']").focus();
               return false;
-          }
+            }
+            var bookcount = $("input[name='BookCount']").val();
+            if (parseInt(bookcount) <= 0) {
+                alert("请输入正确的数量");
+                $("input[name='BookCount']").focus();
+                return false;
+            }
         }
     </script>
 }

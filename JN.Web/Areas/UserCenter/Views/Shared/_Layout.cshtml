@@ -91,7 +91,7 @@
                                             <a href="wishlist.html" title="">我的订单</a>
                                         </li>
                                         <li>
-                                            <a href="shop-cart.html" title="">我的购物车</a>
+                                            <a href="@Url.Action("ShopCar","Shop")" title="">我的购物车</a>
                                         </li>
                                         <li>
                                             <a href="my-account.html" title="">我的账户</a>
@@ -158,7 +158,7 @@
                                     </ul>
                                 </div>
                                 <div class="inner-box">
-                                    <a href="#" title="">
+                                    <a href="@Url.Action("ShopCar","Shop")" title="">
                                         <div class="icon-cart">
                                             <img src="~/Thame/images/icons/cart.png" alt="" />
                                             <span>@shopCarData.Count()</span>
@@ -170,49 +170,49 @@
                                     <div class="dropdown-box">
                                         <ul>
                                             @foreach (var item in shopCarData as List<JN.Data.ShopCar>)
-                                        {
-                                           var bookinfo= MvcCore.Unity.Get<JN.Data.Service.BookInfoService>().Single(x => x.ID == item.BookID&&x.BookState==1);
-                                            <li>
-                                                <div class="img-product">
-                                                    <img src="@bookinfo.ImageUrl" alt="" />
-                                                </div>
-                                                <div class="info-product">
-                                                    <div class="name">
-                                                        @bookinfo.BookName <br />作者:@bookinfo.Author
+                                            {
+                                                var bookinfo = MvcCore.Unity.Get<JN.Data.Service.BookInfoService>().Single(x => x.ID == item.BookID /*&& x.BookState == 1*/);
+                                                <li>
+                                                    <div class="img-product">
+                                                        <img src="@bookinfo.ImageUrl" alt="" />
                                                     </div>
-                                                    <div class="price">
-                                                        <span>@item.Amount x</span>
-                                                        <span>@bookinfo.CurrentPrice.ToString("F2")</span>
+                                                    <div class="info-product">
+                                                        <div class="name">
+                                                            @bookinfo.BookName <br />作者:@bookinfo.Author
+                                                        </div>
+                                                        <div class="price">
+                                                            <span>@item.Amount x</span>
+                                                            <span>@bookinfo.CurrentPrice.ToString("F2")</span>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                                <span class="delete">x</span>
-                                            </li>
+                                                    <div class="clearfix"></div>
+                                                    <span class="delete">x</span>
+                                                </li>
                                             }
 
                                             @*<li>
-                                                <div class="img-product">
-                                                    <img src="~/Thame/images/product/other/img-cart-2.jpg" alt="" />
-                                                </div>
-                                                <div class="info-product">
-                                                    <div class="name">
-                                                        Sennheiser - Over-the-Ear Headphone System - Black
+                                                    <div class="img-product">
+                                                        <img src="~/Thame/images/product/other/img-cart-2.jpg" alt="" />
                                                     </div>
-                                                    <div class="price">
-                                                        <span>1 x</span>
-                                                        <span>$250.00</span>
+                                                    <div class="info-product">
+                                                        <div class="name">
+                                                            Sennheiser - Over-the-Ear Headphone System - Black
+                                                        </div>
+                                                        <div class="price">
+                                                            <span>1 x</span>
+                                                            <span>$250.00</span>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                                <span class="delete">x</span>
-                                            </li>*@
+                                                    <div class="clearfix"></div>
+                                                    <span class="delete">x</span>
+                                                </li>*@
                                         </ul>
                                         <div class="total">
                                             <span>总计:</span>
                                             <span class="price">@shopCarTotal 元</span>
                                         </div>
                                         <div class="btn-cart">
-                                            <a href="shop-cart.html" class="view-cart" title="">查看购物车</a>
+                                            <a href="@Url.Action("ShopCar","Shop")" class="view-cart" title="">查看购物车</a>
                                             <a href="@Url.Action("Logout","home")" class="check-out" title="">退出登录</a>
                                         </div>
                                     </div>
@@ -266,13 +266,13 @@
                                 <div id="mainnav" class="mainnav">
                                     <ul class="menu">
                                         <li class="column-1">
-                                            <a href="@Url.Action("index")" title="">首页</a>
+                                            <a href="@Url.Action("index","shopping")" title="">首页</a>
                                         </li><!-- /.column-1 -->
                                         <li class="column-1">
-                                            <a href="@Url.Action("index")" title="">图书商城</a>
+                                            <a href="@Url.Action("index","shopping")" title="">图书商城</a>
                                         </li><!-- /.column-1 -->
                                         <li class="column-1">
-                                            <a href="#" title="">发布图书</a>
+                                            <a href="@Url.Action("Create","shop")" title="发布图书">发布图书</a>
                                         </li><!-- /.column-1 -->
                                         <li class="column-1">
                                             <a href="#" title="">我的发布</a>
@@ -425,6 +425,52 @@
     <script type="text/javascript" src="~/Thame/javascript/waves.min.js"></script>
     <script type="text/javascript" src="~/Thame/javascript/jquery.countdown.js"></script>
     <script type="text/javascript" src="~/Thame/javascript/main.js"></script>
+    <script src="~/Thame/javascript/view/shopindex.js"></script>
 
+    <script type="text/javascript">
+
+        function AddShopCar(id, value) {
+            @*var user = @JN.Services.UserLoginHelper.CurrentUser();
+            if (user == null) {
+                swal({
+                    title: "温馨提示",
+                    text: data.Message,
+                    type: "warning",
+                    showCancelButton: false,
+                    confirmButtonText: "确定",
+                    closeOnConfirm: true
+                });
+                ShowLogin();
+                return
+            }*@
+            if (value == null || value == "") {
+                value = 1;
+            }
+            $.post('@Url.Action("AddShopCar", "Shop")', { id: id, amount:value }, function (data) {
+                if (data.Status == 200) {
+                    swal({
+                        title: "温馨提示",
+                        text: data.Message,
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonText: "确定",
+                        closeOnConfirm: true
+                    }, function () {
+                        //window.location.reload();
+                        });
+                }
+                else {
+                    swal({
+                        title: "温馨提示",
+                        text: data.Message,
+                        type: "warning",
+                        showCancelButton: false,
+                        confirmButtonText: "确定",
+                        closeOnConfirm: true
+                    });
+                }
+            });
+        }
+    </script>
 </body>
 </html>

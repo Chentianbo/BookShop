@@ -1,0 +1,220 @@
+﻿@model JN.Data.BookInfo
+@{
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Layout = "~/Areas/UserCenter/Views/Shared/_NoLoginLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Areas/UserCenter/Views/Shared/_Layout.cshtml";
+    }
+    ViewBag.Title = "发布图书";
+}
+<section class="flat-account background" style="margin-bottom:5%;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-6">
+                <div class="form-login" style="height:auto">
+                    <div class="title">
+                        <h3>发布图书</h3>
+                        <p style="color:red;">"*" 为必填（资料越完善卖得越好哦！）</p>
+                    </div>
+                    <form id="AddBook" enctype="multipart/form-data" method="post" action="@Url.Action("AddBookInfo")" onsubmit="return BeforePost()">
+                        <div class="form-box">
+                            <label for="name-login">图书分类 * <span id="BookCategory" style="color:red"></span></label>
+                            @Html.DropDownList("BookCategoryId", ViewData["BookCategory"] as SelectList, new { @class = "form-control" })
+                        </div><!-- /.form-box -->
+                        <div class="form-box">
+                            <label for="name-login">图书名称 * <span id="BookNamemsg" style="color:red"></span></label>
+                            <input type="text" name="BookName" placeholder="请输入图书名称" />
+                        </div><!-- /.form-box -->
+                        <div class="form-box">
+                            <label for="name-login">图书简介  <span id="Introduction" style="color:red"></span></label>
+                            <textarea type="text" name="Introduction" placeholder="图书简介"></textarea>
+                        </div><!-- /.form-box -->
+
+                        <div class="form-box">
+                            <label for="name-login">作者  <span id="Authormsg" style="color:red"></span></label>
+                            <input type="text" name="Author" placeholder="请输入作者" />
+                        </div><!-- /.form-box -->
+
+                        <div class="form-box">
+                            <label for="name-login">作者简介  <span id="AuthorIntroductionmsg" style="color:red"></span></label>
+                            <textarea type="text" name="AuthorIntroduction" placeholder="作者简介"></textarea>
+                        </div><!-- /.form-box -->
+
+                        <div class="form-box">
+                            <label for="name-login">封面  <span id="ImageUrlmsg" style="color:red"></span></label>
+                            <input type="file" name="ImageUrl" placeholder="选择文件" />
+                        </div><!-- /.form-box -->
+                        <div class="form-box">
+                            <label for="name-login">ISBN码*  <span id="ISBNmsg" style="color:red"></span></label>
+                            <input type="text" name="ISBN" placeholder="请输入ISBN" />
+                        </div><!-- /.form-box -->
+                        <div class="form-box">
+                            <label for="name-login">出版社  <span id="Publishermsg" style="color:red"></span></label>
+                            <input type="text" name="Publisher" placeholder="请输入出版社" />
+                        </div><!-- /.form-box -->
+                        <div class="form-box">
+                            <label for="name-login">版本  <span id="Versionmsg" style="color:red"></span></label>
+                            <input type="text" name="Version" placeholder="请输入版本" />
+                        </div><!-- /.form-box -->
+                        <div class="form-box">
+                            <label for="name-login">印刷日期  <span id="PrintDatenmsg" style="color:red"></span></label>
+                            <input type="date" name="PrintDate" placeholder="请输入印刷日期" />
+                        </div><!-- /.form-box -->
+                        <div class="form-box">
+                            <label for="name-login">规格  <span id="Specmsg" style="color:red"></span></label>
+                            <input type="text" name="Spec" placeholder="请输入重量" />
+                        </div><!-- /.form-box -->
+                        <div class="form-box">
+                            <label for="name-login">页数  <span id="PageCountmsg" style="color:red"></span></label>
+                            <input type="text" name="PageCount" placeholder="请输入页数" />
+                        </div><!-- /.form-box -->
+                        <div class="form-box">
+                            <label for="name-login">字数  <span id="WordCountmsg" style="color:red"></span></label>
+                            <input type="text" name="WordCount" placeholder="请输入字数" />
+                        </div><!-- /.form-box -->
+                        <div class="form-box">
+                            <label for="name-login">原价*  <span id="OlaPricemsg" style="color:red"></span></label>
+                            <input type="text" name="OlaPrice" placeholder="每本的价格（单位元）" />
+                        </div><!-- /.form-box -->
+                        <div class="form-box">
+                            <label for="name-login">现价*  <span id="CurrentPricemsg" style="color:red"></span></label>
+                            <input type="text" name="CurrentPrice" placeholder="每本的价格（单位元）" />
+                        </div><!-- /.form-box -->
+                        <div class="form-box">
+                            <label for="name-login">运费* 包邮请填“0” <span id="FreightPricemsg" style="color:red"></span></label>
+                            <input type="text" name="FreightPrice" placeholder="" />
+                        </div><!-- /.form-box -->
+                        <div class="form-box">
+                            <label for="name-login">数量 <span id="BookCountmsg" style="color:red"></span></label>
+                            <input type="text" name="BookCount" placeholder="请输入数量" />
+                        </div><!-- /.form-box -->
+                        <div class="form-box">
+                            <label for="name-login">图书目录  <span id="Catalogmsg" style="color:red"></span></label>
+                            <textarea type="text" name="Catalog" placeholder="请输入图书目录"></textarea>
+                        </div><!-- /.form-box -->
+                        <div class="form-box">
+                            <label for="name-login">前言  <span id="Prefacemsg" style="color:red"></span></label>
+                            <textarea type="text" name="Preface" placeholder="请输入图书前言"></textarea>
+                        </div><!-- /.form-box -->
+                        <div class="form-box">
+                            <label for="name-login">是否译本  <span id="Prefacemsg" style="color:red"></span></label>
+                            <input name="IsTranslate" value="true" type="radio" />
+                            <span class="lbl"> 是</span>
+                            <input name="IsTranslate" value="false" checked="checked" type="radio" />
+                            <span class="lbl"> 否</span>
+                        </div><!-- /.form-box -->
+                        <div class="form-box">
+                            <label for="name-login">译者 <span id="Translatormsg" style="color:red"></span></label>
+                            <input type="text" name="Translator" placeholder="请输入译者" />
+                        </div><!-- /.form-box -->
+                        <div class="form-box">
+                            <label for="name-login">译者简介  <span id="TranslatorIntroductionmsg" style="color:red"></span></label>
+                            <textarea type="text" name="TranslatorIntroduction" placeholder="请输入译者简介"></textarea>
+                        </div><!-- /.form-box -->
+                <div class="form-box">
+                    <button id="frmreg" class="login">发布</button>
+                </div><!-- /.form-box -->
+                </form><!-- /#form-login -->
+            </div><!-- /.form-login -->
+            </div><!-- /.col-md-6 -->
+        </div><!-- /.row -->
+    </div><!-- /.container -->
+</section><!-- /.flat-account -->
+<!-- page specific plugin styles -->
+<script src="~/js/jquery.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/js/jquery.form.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#validation-form").ajaxForm(function (data) {
+            if (data.Status == 200) {
+                alert(data.Message);
+                window.location.reload();
+            }
+            else {
+                alert(data.Message);
+            }
+        });
+
+        //点击输入 清除提示
+        $("input").click(function () {
+            $(this).click(function () {
+                $(".form-box span").text("");
+            });
+        });
+    });
+    function BeforePost() {
+        var BookCategoty = $("select[name='BookCategoryId']").val();
+        if (BookCategoty == "") {
+            $("#BookCategorymsg").text("请选择分类");
+            $("select[name='BookCategotyId']").focus();
+
+            return false;
+
+        }
+
+        var name = $("input[name='BookName']").val();
+        if (name == "") {
+            $("#BookNamemsg").text("图书名称不能为空");
+            $("input[name='BookName']").focus();
+            return false;
+
+        }
+        var Author = $("input[name='Author']").val();
+        if (Author == "") {
+            $("#Authormsg").text("作者不能为空");
+            $("input[name='Author']").focus();
+            return false;
+        }
+        var ISBN = $("input[name='ISBN']").val();
+        if (ISBN == "") {
+            $("#ISBNmsg").text("ISBN不能为空");
+            $("input[name='ISBN']").focus();
+            return false;
+
+        }
+        var PrintDate = $("input[name='PrintDate']").val();
+        if (PrintDate == "") {
+            $("#PrintDatemsg").text("印刷日期不能为空");
+            $("input[name='PrintDate']").focus();
+            return false;
+
+        }
+
+        var OlaPrice = $("input[name='OlaPrice']").val();
+        if (OlaPrice=="") {
+            $("#OlaPricemsg").text("请输入正确数字");
+            $("input[name='OlaPrice']").focus();
+            return false;
+        }
+
+        var CurrentPrice = $("input[name='CurrentPrice']").val();
+        if (CurrentPrice=="") {
+            $("#CurrentPricemsg").text("请输入正确数字");
+            $("input[name='CurrentPrice']").focus();
+            return false;
+        }
+
+        var FreightPrice = $("input[name='FreightPrice']").val();
+        if (FreightPrice=="") {
+            $("#FreightPricemsg").text("请输入正确数字");
+            $("input[name='FreightPrice']").focus();
+            return false;
+        }
+
+        var bookcount = $("input[name='BookCount']").val();
+        if (bookcount="") {
+            $("#BookCountmsg").text("请输入正确的数量");
+            $("input[name='BookCount']").focus();
+            return false;
+        }
+
+    }
+
+
+</script>

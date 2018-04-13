@@ -2534,6 +2534,8 @@
     <Content Include="Areas\UserCenter\Views\Shared\_NoLoginLayout.cshtml" />
     <Content Include="Areas\UserCenter\Views\Shared\_LoginLayout.cshtml" />
     <Content Include="Areas\UserCenter\Views\Reg\Index.cshtml" />
+    <Content Include="Areas\UserCenter\Views\Shop\ShopCar.cshtml" />
+    <Content Include="Areas\UserCenter\Views\Shop\Create.cshtml" />
     <None Include="Properties\PublishProfiles\HL16082801.pubxml" />
     <None Include="Properties\PublishProfiles\LJ160227.pubxml" />
     <None Include="Properties\PublishProfiles\Q160214.pubxml" />
@@ -2675,6 +2677,7 @@
     <Content Include="Thame\javascript\owl.carousel.js" />
     <Content Include="Thame\javascript\smoothscroll.js" />
     <Content Include="Thame\javascript\tether.min.js" />
+    <Content Include="Thame\javascript\view\shopindex.js" />
     <Content Include="Thame\javascript\waves.min.js" />
     <Content Include="Thame\javascript\waypoints.min.js" />
     <Content Include="Thame\stylesheets\bootstrap.min.css" />

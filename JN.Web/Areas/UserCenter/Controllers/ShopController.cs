@@ -8,6 +8,9 @@ using JN.Data.Service;
 using MvcCore.Controls;
 using PagedList;
 using JN.Services.Manager;
+using JN.Data.Enum;
+using JN.Services.Tool;
+using System.IO;
 
 namespace JN.Web.Areas.UserCenter.Controllers
 {
@@ -22,11 +25,15 @@ namespace JN.Web.Areas.UserCenter.Controllers
         private readonly ILogDBTool LogDBTool;
         private readonly IShopOrderService ShopOrderService;
         private readonly IBookInfoService BookInfoService;
+        private readonly IShopCarService ShopCarService;
+        private readonly IBookCategoryService BookCategoryService;
         public ShopController(ISysDBTool SysDBTool, 
             IUserService UserService,
             IBookInfoService bookInfoService,
             IShopOrderService ShopOrderService,
-            IActLogService ActLogService, ILogDBTool LogDBTool)
+            IShopCarService shopCarService,
+            IBookCategoryService BookCategoryService,
+        IActLogService ActLogService, ILogDBTool LogDBTool)
         {
             this.UserService = UserService;
             this.BookInfoService =bookInfoService;
@@ -34,6 +41,8 @@ namespace JN.Web.Areas.UserCenter.Controllers
             this.SysDBTool = SysDBTool;
             this.ActLogService = ActLogService;
             this.LogDBTool = LogDBTool;
+            this.BookCategoryService = BookCategoryService;
+            this.ShopCarService = shopCarService;
         }
 
 
@@ -43,9 +52,187 @@ namespace JN.Web.Areas.UserCenter.Controllers
             return View();
         }
 
-       
 
+        /// <summary>
+        /// 添加图书
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Create()
+        {
+            ViewData["BookCategory"] = new SelectList(BookCategoryService.List().OrderBy(x => x.Sort).ToList(), "ID", "Name");
+            ActMessage = "添加图书";
+            return View();
+        }
 
+        /// <summary>
+        /// 添加图书
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult AddBookInfo(FormCollection fc)
+        {
+            ReturnResult result = new ReturnResult();
+            try
+            {
+
+                var entity = new JN.Data.BookInfo();
+                TryUpdateModel(entity, fc.AllKeys);
+                if (BookInfoService.List(x => x.BookName == entity.BookName).Count() > 0)
+                {
+                    throw new Exception("该名称已存在");
+                }
+                if (string.IsNullOrEmpty(entity.BookCategoryId))
+                {
+                    throw new Exception("请选择图书分类");
+                }
+                if (string.IsNullOrEmpty(entity.BookName))
+                {
+                    throw new Exception("请输入图书名称");
+                }
+                if (string.IsNullOrEmpty(entity.Author))
+                {
+                    throw new Exception("请输入作者");
+                }
+                if (string.IsNullOrEmpty(entity.ISBN))
+                {
+                    throw new Exception("请输入图书ISBN码");
+                }
+                if (entity.PrintDate == null)
+                {
+                    throw new Exception("请输入印刷日期");
+                }
+                if (entity.OlaPrice <= 0)
+                {
+                    throw new Exception("请正确输入原价");
+                }
+                if (entity.CurrentPrice <= 0)
+                {
+                    throw new Exception("请正确输入售价");
+                }
+                if (entity.CurrentPrice < 0)
+                {
+                    throw new Exception("请正确输入运费");
+                }
+                HttpPostedFileBase file = Request.Files["ImageUrl"];
+                string imgurl = "";
+                if (file != null)
+                {
+                    if (!FileValidation.IsAllowedExtension(file, new FileExtension[] { FileExtension.PNG, FileExtension.JPG, FileExtension.BMP }))
+                    {
+                        ViewBag.ErrorMsg = "非法上传，您只可以上传图片格式的文件！";
+                        return View("Error");
+                    }
+                    var newfilename = Guid.NewGuid() + Path.GetExtension(file.FileName).ToLower();
+                    var fileName = Path.Combine(Request.MapPath("~/upfile"), newfilename);
+                    try
+                    {
+                        file.SaveAs(fileName);
+                        imgurl = "/upfile/" + newfilename;
+                    }
+                    catch
+                    {
+                        throw new Exception("封面上传失败");
+                    }
+                    entity.ImageUrl = imgurl;
+                }
+                entity.BookState = (int)BookState.Wait;
+                entity.UID = Umodel.ID;
+                entity.UserName = Umodel.UserName;
+                //加密
+                entity.CreateSign();
+                BookInfoService.Add(entity);
+                SysDBTool.Commit();
+
+                result.Message = "发布成功";
+                result.Status = 200;
+            }
+            catch (Exception ex)
+            {
+                logs.WriteErrorLog(HttpContext.Request.Url.ToString(), ex);
+                ViewBag.ErrorMsg = "发布失败！";
+                result.Message = ex.Message;
+                result.Status = 500;
+            }
+            return Json(result);
+        }
+
+        /// <summary>
+        /// 个人购物车
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ShopCar(int ?page=1)
+        {
+            var list = ShopCarService.List(x => x.UID == Umodel.ID).ToList();
+            return View(list);
+        }
+
+        /// <summary>
+        /// 加入购物车
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+       public ActionResult AddShopCar(string id,int amount=1)
+       {
+            ReturnResult result = new ReturnResult();
+            try
+            {
+                if(string.IsNullOrEmpty(id))
+                {
+                    throw new Exception("添加失败");
+                }
+                var book = BookInfoService.Single(id);
+                if (book==null)
+                {
+                    throw new Exception("数据不存在");
+                }
+                if (book.BookCount< amount)
+                {
+                    throw new Exception("图书数量不足 "+ amount);
+                }
+                using (System.Transactions.TransactionScope ts = new System.Transactions.TransactionScope())
+                {
+                    //已存在 相同图书
+                    var shopcar = ShopCarService.Single(x=>x.BookID==id);
+                    if (shopcar!=null)
+                    {
+                        shopcar.Amount += amount;
+                        ShopCarService.Update(shopcar);
+                    }
+                    else
+                    {
+                        var order = new Data.ShopCar();
+                        order.Amount = amount;
+                        order.BookID = book.ID;
+                        order.UID = Umodel.ID;
+                        order.BookName = book.BookName;
+                        order.BookPrice = book.CurrentPrice;
+                        order.CreateTime = DateTime.Now;
+                        order.UserName = Umodel.UserName;
+                        order.TotalPrice = order.Amount * order.BookPrice;
+                        ShopCarService.Add(order);
+                    }
+                    SysDBTool.Commit();
+                    ts.Complete();
+                    result.Status = 200;
+                    result.Message = "加入成功";
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                result.Status=500;
+                result.Message = ex.Message;
+            }
+            return Json(result);
+        }
+
+        /// <summary>
+        /// 购买
+        /// </summary>
+        /// <param name="form"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult Buy(FormCollection form)
         {
@@ -114,7 +301,11 @@ namespace JN.Web.Areas.UserCenter.Controllers
             return View(list.ToPagedList(page ?? 1, 20));
         }
         
-
+        /// <summary>
+        /// 购买图书
+        /// </summary>
+        /// <param name="form"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult Pay(FormCollection form)
         {
@@ -204,7 +395,10 @@ namespace JN.Web.Areas.UserCenter.Controllers
             }
         }
 
-        //生成真实订单号
+        /// <summary>
+        /// 生成真实订单号
+        /// </summary>
+        /// <returns></returns>
         public string GetOrderNumber()
         {
             DateTime dateTime = DateTime.Now;
@@ -233,7 +427,11 @@ namespace JN.Web.Areas.UserCenter.Controllers
             return result;
         }
 
-        //检查订单号是否重复
+        /// <summary>
+        /// 检查订单号是否重复
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
         private bool IsHave(string number)
         {
             return ShopOrderService.List(x => x.OrderNumber == number).Count() > 0;

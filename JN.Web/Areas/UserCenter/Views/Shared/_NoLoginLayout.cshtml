@@ -218,13 +218,13 @@
                                 <div id="mainnav" class="mainnav">
                                     <ul class="menu">
                                         <li class="column-1">
-                                            <a href="@Url.Action("index")" title="">首页</a>
+                                            <a href="@Url.Action("index","shopping")" title="">首页</a>
                                         </li><!-- /.column-1 -->
                                         <li class="column-1">
-                                            <a href="@Url.Action("index")" title="">图书商城</a>
+                                            <a href="@Url.Action("index","shopping")" title="">图书商城</a>
                                         </li><!-- /.column-1 -->
                                         <li class="column-1">
-                                            <a href="#" title="">发布图书</a>
+                                            <a href="javascript:alert('请先登录')" title="发布图书" >发布图书</a>
                                         </li><!-- /.column-1 -->
                                         <li class="column-1">
                                             <a href="#" title="">公告</a>
@@ -359,88 +359,58 @@
     <script src="~/js/jquery.min.js"></script>
     <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
     <script src="~/js/jquery.form.js"></script>
-    <script>
-        //$(document).ready(function () {
-        //    $("#UserLogin").ajaxForm(function (data) {
-        //        if (data.Status == 200) {
-        //            $("#msg").text(data.Message);
-        //        }
-        //        else {
-        //            $("#msg").text(data.Message);
-        //        }
-        //    });
-        //    $("input[name='username']").click(function () {
-        //        $("#msg").text("");
-        //    });
-        //    $("input[name='passwor']").click(function () {
-        //        $("#msg").text("");
-        //    });
-        //});
-        ////提交登录之前
-        //function BeforePost() {
-        //    var username = $("input[name='username']").val();
-        //    if (username == "") {
-        //        $("#msg").text("请输入账号");
-        //        $("input[name='username']").focus();
-        //        return false;
-        //    }
-        //    var pwd = $("input[name='password']").val();
-        //    if (pwd == "") {
-        //        $("#msg").text("请输入密码");
-        //        $("input[name='password']").focus();
-        //        return false;
-        //    }
-        //}
+    <script src="~/Thame/javascript/view/shopindex.js"></script>
+    <script type="text/javascript">
+        jQuery(function ($) {
+    $("#frmLogin").click(function () {
+        var username = $("input[name='username']").val();
+        if (username == "") {
+            $("#msg").text("请输入账号");
+            $("input[name='username']").focus();
+            return false;
+        }
+        var pwd = $("input[name='password']").val();
+        if (pwd == "") {
+            $("#pmsg").text("请输入密码");
+            $("input[name='password']").focus();
+            return false;
+        }
 
-         jQuery(function ($) {
-             $("#frmLogin").click(function () {
-                var username = $("input[name='username']").val();
-                if (username == "") {
-                    $("#msg").text("请输入账号");
-                    $("input[name='username']").focus();
-                    return false;
-                }
-                var pwd = $("input[name='password']").val();
-                if (pwd == "") {
-                    $("#pmsg").text("请输入密码");
-                    $("input[name='password']").focus();
-                    return false;
-                }
-
-                $("#UserLogin").ajaxForm({
-                    url: "@Url.Action("Index","Login")",
-                    type: "post",
-                success: function (data) {
-                    if (data.Status == 200) {
-                        alert("登录成功，即将为您跳转！");
-                        location.href = data.Message;
-                    } else {
-                        $("#msg").text(data.Message);
-                        $("input[name='username']").focus();
-                    }
-                },
-                error: function (error) {
+        $("#UserLogin").ajaxForm({
+            url: "@Url.Action("Index","Login")",
+            type: "post",
+            success: function (data) {
+                if (data.Status == 200) {
+                    alert("登录成功，即将为您跳转！");
+                    location.href = data.Message;
+                } else {
                     $("#msg").text(data.Message);
+                    $("input[name='username']").focus();
                 }
-            });
-            });
-
-            $("input[name='username']").click(function () {
-                $("#msg").text("");
-
-            });
-            $("input[name='password']").click(function () {
-                $("#msg").text("");
-            });
+            },
+            error: function (error) {
+                $("#msg").text(data.Message);
+            }
         });
+    });
 
-        //显示登录
-        function ShowLogin() {
+    $("input[name='username']").click(function () {
+        $("#msg").text("");
 
-            $(".popup-newsletter").css("display", "block");
-            $(".overlay").css("display", "block");
-            $(".overlay").css("opacity", 1);
-            $(".overlay").css("z-index", 89999);
+    });
+    $("input[name='password']").click(function () {
+        $("#msg").text("");
+    });
+});
+        function AddShopCar(id, value) {
+            swal({
+                title: "温馨提示",
+                text: "请先登录",
+                type: "warning",
+                showCancelButton: false,
+                confirmButtonText: "确定",
+                closeOnConfirm: true
+            });
         }
     </script>
     <!-- Javascript -->

@@ -66,7 +66,7 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="realname">图书封面</label>
+                    <label class="control-label" for="ImageUrl">图书封面</label>
                     <div class="controls">
                         <div class="clearfix">
                             <img src="" id="ImageUrl" height="80" />
@@ -156,7 +156,6 @@
 
                 <div class="control-group">
                     <label class="control-label" for="FreightPrice">运费</label>
-
                     <div class="controls">
                         <div class="input-group">
                             <input type="text" name="FreightPrice" placeholder="单位元" style="width:250px" value="" class="form-control" />
@@ -331,7 +330,16 @@
               alert("请输入运费");
                $("input[name='FreightPrice']").focus();
               return false;
-          }
+            }
+
+            var bookcount = $("input[name='BookCount']").val();
+            if (parseInt(bookcount)<=0) {
+                alert("请输入正确的数量");
+                $("input[name='BookCount']").focus();
+                return false;
+            }
         }
+        
+
     </script>
 }
